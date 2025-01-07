@@ -5,6 +5,9 @@ import Login from "./Login";
 import Oneday from "./Userpage/Oneday";
 import Triprest from "./Userpage/Triprest";
 import ResponsiveAppBar from "./Component/menubar";
+import EditPro from "./Editpro";
+import Dashboard from "./Adminpage/Dashboard";
+import Register from "./Register";
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Onedaytrip" element={<Oneday />} />
         <Route path="/Trip&Rest" element={<Triprest />} />
+        <Route path="/Editprofile" element={<EditPro />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

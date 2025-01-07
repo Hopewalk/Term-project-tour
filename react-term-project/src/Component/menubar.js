@@ -15,9 +15,14 @@ import { useNavigate } from "react-router-dom";
 const pages = [
   { label: "One day trip", path: "/Onedaytrip" },
   { label: "Trip & Rest", path: "/Trip&Rest" },
+  { label: "Login", path: "/Login" },
 ];
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  { label: "Profile", path: "/Editprofile" },
+  { label: "Dashboard", path: "/Dashboard" },
+  { label: "Logout" },
+];
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -91,9 +96,12 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleMenuClick(setting.path)}
+                >
                   <Typography sx={{ textAlign: "center" }}>
-                    {setting}
+                    {setting.label}
                   </Typography>
                 </MenuItem>
               ))}

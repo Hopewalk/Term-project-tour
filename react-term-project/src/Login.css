@@ -14,8 +14,8 @@ body {
 
 .login-container {
   display: flex;
-  width: 70%;
-  height: 60%;
+  width: 75%;
+  height: 65%;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);

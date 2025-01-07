@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,7 +14,25 @@ const Login = () => {
       <div className="login-container">
         <div className="login-left">
           <form className="login-form">
-            <h2>เข้าสู่ระบบ</h2>
+            <h2>สมัครเพื่อเข้าสู่ระบบ</h2>
+            <div className="form-group">
+              <label htmlFor="firstname">First name</label>
+              <input
+                type="firstname"
+                id="firstname"
+                placeholder="Enter your first name"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="lastname">Last name</label>
+              <input
+                type="lastname"
+                id="lastname"
+                placeholder="Enter your last name"
+                required
+              />
+            </div>
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
@@ -33,17 +51,9 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="form-options">
-              <label>
-                <input type="checkbox" /> Remember me
-              </label>
-            </div>
             <button type="submit" className="login-button">
-              Login
+              Sign Up
             </button>
-            <p className="signup-link">
-              Don't have an account? <a href="/Register">Sign up</a>
-            </p>
           </form>
         </div>
         <div className="login-right">
@@ -54,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
