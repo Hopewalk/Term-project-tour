@@ -4,24 +4,26 @@ import Home from "./Home";
 import Login from "./Login";
 import Oneday from "./Userpage/Oneday";
 import Triprest from "./Userpage/Triprest";
-import ResponsiveAppBar from "./Component/menubar";
+import MenuAdmin from "./Component/menubarAM";
 import EditPro from "./Editpro";
 import Dashboard from "./Adminpage/Dashboard";
 import Register from "./Register";
+import Createoredit from "./Adminpage/Createoredit";
 
 function App() {
   return (
     <BrowserRouter>
-      <ResponsiveAppBar />
+      <MenuAdmin />
       <Routes>
         <Route path="/" element={<Navigate to="/Home" />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Onedaytrip" element={<Oneday />} />
         <Route path="/Trip&Rest" element={<Triprest />} />
-        <Route path="/Editprofile" element={<EditPro />} />
+        <Route path="/Profile" element={<EditPro />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/Createoredittrip" element={<Createoredit />} />
       </Routes>
     </BrowserRouter>
   );

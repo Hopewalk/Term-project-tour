@@ -8,14 +8,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 95vh;
-  background-color: #e0eaff;
+  height: 90vh;
 }
 
 .login-container {
   display: flex;
   width: 75%;
-  height: 65%;
+  height: 70%;
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);

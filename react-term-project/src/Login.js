@@ -47,7 +47,7 @@ const Login = () => {
           </form>
         </div>
         <div className="login-right">
-          <img src="./Images/loginpic.jpg" />
+          <img src="./Images/" />
         </div>
       </div>
     </div>
