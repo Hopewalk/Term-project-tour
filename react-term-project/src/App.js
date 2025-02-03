@@ -9,6 +9,8 @@ import EditPro from "./Editpro";
 import Dashboard from "./Adminpage/Dashboard";
 import Register from "./Register";
 import Createoredit from "./Adminpage/Createoredit";
+import TripOverview from "./Userpage/Overview";
+import Pay from "./Userpage/Payment";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Createoredittrip" element={<Createoredit />} />
+        <Route path="/trip" element={<TripOverview />} />
+        <Route path="/Payment" element={<Pay />} />
       </Routes>
     </BrowserRouter>
   );
