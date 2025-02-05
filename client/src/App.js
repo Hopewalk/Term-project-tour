@@ -9,7 +9,8 @@ import Triprest from "./User/Triprest.js";
 import MenuUnden from "./Component/menu.js";
 import MenuAdmin from "./Admin/Component/menubarAM.js";
 import MenuUser from "./User/Component/menubarUS.js";
-import EditPro from "./Editpro.js";
+import ProfileAm from "./Admin/Editpro.js";
+import EditProfile from "./User/Editpro.js";
 import Dashboard from "./Admin/Dashboard.js";
 import Register from "./Auth/Register.js";
 import Createoredit from "./Admin/Createoredit.js";
@@ -31,6 +32,7 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/Onedaytrip" element={<Oneday />} />
           <Route path="/Trip&Rest" element={<Triprest />} />
+          <Route path="/Trip" element={<TripOverview />} />
         </Routes>
       </BrowserRouter>
     );
@@ -50,7 +52,7 @@ function App() {
               <Route path="/Onedaytrip" element={<Oneday />} />
               <Route path="/Trip&Rest" element={<Triprest />} />
               <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/Profile" element={<EditPro />} />
+              <Route path="/Profile" element={<ProfileAm />} />
               <Route path="/Createoredittrip" element={<Createoredit />} />
               <Route path="/Status" element={<Status />} />
             </>
@@ -61,7 +63,7 @@ function App() {
               <Route path="/Home" element={<Home />} />
               <Route path="/Onedaytrip" element={<Oneday />} />
               <Route path="/Trip&Rest" element={<Triprest />} />
-              <Route path="/Profile" element={<EditPro />} />
+              <Route path="/Profile" element={<EditProfile />} />
               <Route path="/Trip" element={<TripOverview />} />
               <Route path="/Payment" element={<Pay />} />
             </>

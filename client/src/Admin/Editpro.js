@@ -1,6 +1,6 @@
 import React from "react";
 
-function EditPro() {
+function ProfileAm() {
   return (
     <div className="App">
       <p>Edit profile</p>
@@ -8,4 +8,4 @@ function EditPro() {
   );
 }
 
-export default EditPro;
+export default ProfileAm;
