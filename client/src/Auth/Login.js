@@ -3,7 +3,7 @@ import ax from "../conf/ax";
 import { useSetState } from "react-use";
 import { AuthContext } from "../context/Auth.context";
 
-export default function LoginScreen(props) {
+export default function Login() {
   const { state: ContextState, login } = useContext(AuthContext);
   const { isLoginPending, isLoggedIn, loginError } = ContextState;
   const [formState, setFormState] = useSetState({ username: "", password: "" });

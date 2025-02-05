@@ -11,7 +11,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthContext } from "../../context/Auth.context";
 
-export default function MenuAdmin() {
+export default function MenuUser() {
   const {
     state: { isLoggedIn },
     logout,
@@ -29,7 +29,7 @@ export default function MenuAdmin() {
   );
 
   const navigation = [
-    { name: "Home", href: "/Home" },
+    { name: "หน้าหลัก", href: "/Home" },
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
   ];
@@ -63,6 +63,7 @@ export default function MenuAdmin() {
               <div className="flex space-x-4">
                 {navigation.map((item) => (
                   <MenuLink
+                    key={item.name}
                     item={item}
                     className={`rounded-md px-3 py-2 text-sm font-medium ${
                       item.current

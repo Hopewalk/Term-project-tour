@@ -1,35 +1,44 @@
 import React, { useState } from "react";
 import "./Login.css";
+import ax from "../conf/ax";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted", { email, password });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await ax.post("/auth/local/register", form);
+      navigate("/Login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="login-wrapper">
       <div className="login-container">
         <div className="login-left">
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleSubmit}>
             <h2>สมัครเพื่อเข้าสู่ระบบ</h2>
             <div className="form-group">
-              <label htmlFor="firstname">First name</label>
+              <label htmlFor="username">Username</label>
               <input
-                type="firstname"
-                id="firstname"
-                placeholder="Enter your first name"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="lastname">Last name</label>
-              <input
-                type="lastname"
-                id="lastname"
-                placeholder="Enter your last name"
+                type="text"
+                id="username"
+                value={form.username}
+                onChange={handleChange}
+                placeholder="Enter your username"
                 required
               />
             </div>
@@ -38,6 +47,8 @@ const Register = () => {
               <input
                 type="email"
                 id="email"
+                value={form.email}
+                onChange={handleChange}
                 placeholder="Enter your email"
                 required
               />
@@ -47,6 +58,8 @@ const Register = () => {
               <input
                 type="password"
                 id="password"
+                value={form.password}
+                onChange={handleChange}
                 placeholder="Enter your password"
                 required
               />
@@ -57,7 +70,7 @@ const Register = () => {
           </form>
         </div>
         <div className="login-right">
-          <img src="./Images/loginpic.jpg" />
+          <img src="./Images/loginpic.jpg" alt="Login" />
         </div>
       </div>
     </div>

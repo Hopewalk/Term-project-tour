@@ -16,7 +16,7 @@ export default function MenuAdmin() {
   const { isLoggedIn } = ContextState;
 
   const navigation = [
-    { name: "Home", href: "/Home" },
+    { name: "หน้าหลัก", href: "/Home" },
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
   ];
@@ -36,7 +36,7 @@ export default function MenuAdmin() {
     { name: "Profile", href: "/Profile" },
     { name: "Dashboard", href: "/Dashboard" },
     { name: "Add Trip", href: "/Createoreditrip" },
-    { name: "สถานะการจอง", href: "#" },
+    { name: "Set Status", href: "/Status" },
   ];
 
   return (
@@ -64,6 +64,7 @@ export default function MenuAdmin() {
               <div className="flex space-x-4">
                 {navigation.map((item) => (
                   <MenuLink
+                    key={item.name}
                     item={item}
                     className={`rounded-md px-3 py-2 text-sm font-medium ${
                       item.current

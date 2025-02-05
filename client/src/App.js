@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/Auth.context.js";
 import Home from "./Home.js";
-import LoginScreen from "./Auth/Login.js";
+import Login from "./Auth/Login.js";
 import Oneday from "./User/Oneday.js";
 import Triprest from "./User/Triprest.js";
 import MenuUnden from "./Component/menu.js";
@@ -15,6 +15,7 @@ import Register from "./Auth/Register.js";
 import Createoredit from "./Admin/Createoredit.js";
 import TripOverview from "./User/Overview.js";
 import Pay from "./User/Payment.js";
+import Status from "./Admin/Status.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -26,7 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/Home" />} />
           <Route path="/Home" element={<Home />} />
-          <Route path="/Login" element={<LoginScreen />} />
+          <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Onedaytrip" element={<Oneday />} />
           <Route path="/Trip&Rest" element={<Triprest />} />
@@ -35,37 +36,39 @@ function App() {
     );
   }
 
-  const role = state.user.role;
-  return (
-    <BrowserRouter>
-      <div>{role === "Admin" ? <MenuAdmin /> : <MenuUser />}</div>
-      <Routes>
-        {role === "Admin" ? (
-          <>
-            <Route path="/Login" element={<Navigate to={"/"} />} />
-            <Route path="/" element={<Navigate to="/Home" />} />
-            <Route path="/Home" element={<Home />} />
-            <Route path="/Onedaytrip" element={<Oneday />} />
-            <Route path="/Trip&Rest" element={<Triprest />} />
-            <Route path="/Dashboard" element={<Dashboard />} />
-            <Route path="/Profile" element={<EditPro />} />
-            <Route path="/Createoredittrip" element={<Createoredit />} />
-          </>
-        ) : (
-          <>
-            <Route path="/Login" element={<Navigate to={"/"} />} />
-            <Route path="/" element={<Navigate to="/Home" />} />
-            <Route path="/Home" element={<Home />} />
-            <Route path="/Onedaytrip" element={<Oneday />} />
-            <Route path="/Trip&Rest" element={<Triprest />} />
-            <Route path="/Profile" element={<EditPro />} />
-            <Route path="/trip" element={<TripOverview />} />
-            <Route path="/Payment" element={<Pay />} />
-          </>
-        )}
-      </Routes>
-    </BrowserRouter>
-  );
+  if (state.isLoggedIn) {
+    const role = state.user.role;
+    return (
+      <BrowserRouter>
+        <div>{role === "Admin" ? <MenuAdmin /> : <MenuUser />}</div>
+        <Routes>
+          {role === "Admin" ? (
+            <>
+              <Route path="/Login" element={<Navigate to={"/"} />} />
+              <Route path="/" element={<Navigate to="/Home" />} />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/Onedaytrip" element={<Oneday />} />
+              <Route path="/Trip&Rest" element={<Triprest />} />
+              <Route path="/Dashboard" element={<Dashboard />} />
+              <Route path="/Profile" element={<EditPro />} />
+              <Route path="/Createoredittrip" element={<Createoredit />} />
+              <Route path="/Status" element={<Status />} />
+            </>
+          ) : (
+            <>
+              <Route path="/Login" element={<Navigate to={"/"} />} />
+              <Route path="/" element={<Navigate to="/Home" />} />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/Onedaytrip" element={<Oneday />} />
+              <Route path="/Trip&Rest" element={<Triprest />} />
+              <Route path="/Profile" element={<EditPro />} />
+              <Route path="/Trip" element={<TripOverview />} />
+              <Route path="/Payment" element={<Pay />} />
+            </>
+          )}
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 }
-
 export default App;
