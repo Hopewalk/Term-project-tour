@@ -51,5 +51,3 @@ export default function Triprest() {
     </div>
   );
 }
-
-// ดึงจาก strapi
