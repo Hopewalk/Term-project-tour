@@ -13,7 +13,7 @@ import ProfileAm from "./Admin/Profile.js";
 import EditProfile from "./User/Profile.js";
 import Dashboard from "./Admin/Dashboard.js";
 import Register from "./Auth/Register.js";
-import Createoredit from "./Admin/Createoredit.js";
+import AddTrip from "./Admin/Addtrip.js";
 import TripOverview from "./User/Overview.js";
 import Pay from "./User/Payment.js";
 import Status from "./Admin/Status.js";
@@ -53,7 +53,7 @@ function App() {
               <Route path="/Trip&Rest" element={<Triprest />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Profile" element={<ProfileAm />} />
-              <Route path="/Createoredittrip" element={<Createoredit />} />
+              <Route path="/Create" element={<AddTrip />} />
               <Route path="/Status" element={<Status />} />
             </>
           ) : (

@@ -20,7 +20,7 @@ export default function MenuAdmin() {
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
     { name: "Dashboard", href: "/Dashboard" },
-    { name: "Add Trip", href: "/Createoreditrip" },
+    { name: "Add Trip", href: "/Create" },
     { name: "Set Status", href: "/Status" },
   ];
 
