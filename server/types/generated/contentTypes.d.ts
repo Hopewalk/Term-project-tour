@@ -369,6 +369,200 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAccommodationAccommodation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'accommodations';
+  info: {
+    description: '';
+    displayName: 'Accommodation';
+    pluralName: 'accommodations';
+    singularName: 'accommodation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contact_info: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::accommodation.accommodation'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    name: Schema.Attribute.String;
+    price: Schema.Attribute.Decimal;
+    publishedAt: Schema.Attribute.DateTime;
+    rating: Schema.Attribute.Decimal;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
+  collectionName: 'bookings';
+  info: {
+    displayName: 'Booking';
+    pluralName: 'bookings';
+    singularName: 'booking';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    booking_date: Schema.Attribute.DateTime;
+    booking_status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::booking.booking'
+    > &
+      Schema.Attribute.Private;
+    payment_status: Schema.Attribute.Enumeration<['paid', 'unpaid']> &
+      Schema.Attribute.DefaultTo<'unpaid'>;
+    publishedAt: Schema.Attribute.DateTime;
+    total_price: Schema.Attribute.Decimal;
+    tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
+  collectionName: 'payments';
+  info: {
+    displayName: 'Payment';
+    pluralName: 'payments';
+    singularName: 'payment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal;
+    booking: Schema.Attribute.Relation<'oneToOne', 'api::booking.booking'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment.payment'
+    > &
+      Schema.Attribute.Private;
+    payment_date: Schema.Attribute.DateTime;
+    payment_method: Schema.Attribute.Enumeration<
+      ['credit card', 'bank transfer', 'paypal', 'cash']
+    >;
+    payment_status: Schema.Attribute.Enumeration<['successful', 'failed']>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTourCategoryTourCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'tour_categories';
+  info: {
+    displayName: 'Tour_Category';
+    pluralName: 'tour-categories';
+    singularName: 'tour-category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    category_name: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::tour-category.tour-category'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTourTour extends Struct.CollectionTypeSchema {
+  collectionName: 'tours';
+  info: {
+    description: '';
+    displayName: 'Tour';
+    pluralName: 'tours';
+    singularName: 'tour';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    accommodations: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::accommodation.accommodation'
+    >;
+    bookings: Schema.Attribute.Relation<'oneToMany', 'api::booking.booking'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    destination: Schema.Attribute.String;
+    end_date: Schema.Attribute.DateTime;
+    image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::tour.tour'> &
+      Schema.Attribute.Private;
+    max_participants: Schema.Attribute.Integer;
+    price: Schema.Attribute.Decimal;
+    publishedAt: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.DateTime;
+    tour_categories: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::tour-category.tour-category'
+    >;
+    tour_name: Schema.Attribute.String;
+    tour_status: Schema.Attribute.Enumeration<['available', 'unavailable']> &
+      Schema.Attribute.DefaultTo<'unavailable'>;
+    tour_type: Schema.Attribute.Enumeration<
+      ['One Day Trip', 'Package with Accommodation']
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -828,6 +1022,7 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    bookings: Schema.Attribute.Relation<'manyToMany', 'api::booking.booking'>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
@@ -878,6 +1073,11 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::accommodation.accommodation': ApiAccommodationAccommodation;
+      'api::booking.booking': ApiBookingBooking;
+      'api::payment.payment': ApiPaymentPayment;
+      'api::tour-category.tour-category': ApiTourCategoryTourCategory;
+      'api::tour.tour': ApiTourTour;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

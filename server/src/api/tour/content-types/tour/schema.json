@@ -1,0 +1,80 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tours",
+  "info": {
+    "singularName": "tour",
+    "pluralName": "tours",
+    "displayName": "Tour",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tour_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "start_date": {
+      "type": "datetime"
+    },
+    "end_date": {
+      "type": "datetime"
+    },
+    "tour_type": {
+      "type": "enumeration",
+      "enum": [
+        "One Day Trip",
+        "Package with Accommodation"
+      ]
+    },
+    "destination": {
+      "type": "string"
+    },
+    "max_participants": {
+      "type": "integer"
+    },
+    "tour_status": {
+      "type": "enumeration",
+      "enum": [
+        "available",
+        "unavailable"
+      ],
+      "default": "unavailable"
+    },
+    "accommodations": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::accommodation.accommodation",
+      "inversedBy": "tours"
+    },
+    "bookings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::booking.booking",
+      "mappedBy": "tour"
+    },
+    "tour_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tour-category.tour-category",
+      "mappedBy": "tours"
+    },
+    "image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}
