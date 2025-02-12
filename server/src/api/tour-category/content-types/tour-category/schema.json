@@ -4,7 +4,8 @@
   "info": {
     "singularName": "tour-category",
     "pluralName": "tour-categories",
-    "displayName": "Tour_Category"
+    "displayName": "Tour_Category",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +20,9 @@
       "relation": "manyToMany",
       "target": "api::tour.tour",
       "inversedBy": "tour_categories"
+    },
+    "description": {
+      "type": "string"
     }
   }
 }
