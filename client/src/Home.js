@@ -7,12 +7,12 @@ import TourGrid from "./Component/homepage/TourGrid";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  console.log("sc",selectedCategory);
+  console.log("sc", selectedCategory);
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
       <div
-        className="h-[300px] relative bg-cover bg-center"
+        className="h-[400px] relative bg-cover bg-center"
         style={{
           backgroundImage: `url(${Thailandbg})`,
         }}
