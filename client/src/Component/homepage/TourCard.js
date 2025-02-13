@@ -1,8 +1,8 @@
-import { Card } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Card } from 'antd';
+import { useNavigate } from 'react-router-dom';
 const { Meta } = Card;
 
-const TourCard = ({ tour }) => {
+const TourCard = ({  tour  }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/Trip/${tour.documentId}`);
@@ -10,7 +10,7 @@ const TourCard = ({ tour }) => {
   return (
     <Card
       hoverable
-      style={{ width: 240 }}
+      style={{ width: 240, height: 300 }}
       cover={<img alt="image" src={tour.image} />}
       onClick={handleClick}
     >
