@@ -12,15 +12,9 @@ export default function TripOverview() {
     try {
       const response = await ax.get(`/tours/${documentId}?populate=*`);
       const detail = response.data.data;
-      //log detail and image
-      console.log("detail", detail);
-      try {
-        console.log("image", detail.map(
-          (item) => `${ax.defaults.baseURL.replace("/api", "")}${item.image[0].url}`
-        ) || "No image");
-      } catch (error) { console.error("log image error", error); }
 
       const product = {
+        documentId: detail.documentId,
         name: detail.tour_name,
         price: detail.price,
         description: detail.description,
