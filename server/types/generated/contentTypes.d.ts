@@ -487,6 +487,7 @@ export interface ApiTourCategoryTourCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'tour_categories';
   info: {
+    description: '';
     displayName: 'Tour_Category';
     pluralName: 'tour-categories';
     singularName: 'tour-category';
@@ -499,6 +500,7 @@ export interface ApiTourCategoryTourCategory
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
