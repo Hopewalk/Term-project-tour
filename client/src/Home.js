@@ -3,7 +3,8 @@ import { FilterSidebar } from "./Component/Filters";
 import Category from "./Component/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
 import SearchBar from "./Component/Search";
-
+import TourGrid from "./Component/homepage/TourGrid";
+import { Tour } from "antd";
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
@@ -25,7 +26,7 @@ export default function Home() {
         <Category />
         <div className="flex gap-8 mt-8">
           <FilterSidebar />
-          <h1>card or grid for tour packages</h1>
+          <TourGrid />
         </div>
       </div>
     </main>

@@ -4,5 +4,6 @@ const conf = {
   jwtUserEndpoint: "/users/me",
   jwtSessionStorageKey: "auth.jwt",
 };
-
+const UrlPrefix = "http://localhost:1337";
+export { UrlPrefix };
 export default conf;

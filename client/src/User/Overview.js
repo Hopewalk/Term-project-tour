@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import ax from "../conf/ax";
+import { useParams } from "react-router";
 
 export default function TripOverview() {
+  const { documentId } = useParams();
   const [tour, settour] = useState(null);
 
   const fetchDetail = async () => {
     try {
-      const response = await ax.get(`/tours?populate=*`);
+      const response = await ax.get(`/tours/${documentId}?populate=*`);
       const detail = response.data.data;
       //log detail and image
       console.log("detail", detail);
@@ -23,9 +25,8 @@ export default function TripOverview() {
         price: detail.price,
         description: detail.description,
         location: detail.destination,
-        images: detail.map((img) => ({
-          src: `${ax.defaults.baseURL.replace("/api", "")}${img.image[0].url}`,
-          alt: img.alternativeText || "Tour Image",
+        images: detail.image.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
         })),
         breadcrumbs: [
           { id: 1, name: "Home", href: "/Home" },
@@ -40,7 +41,7 @@ export default function TripOverview() {
 
   useEffect(() => {
     fetchDetail();
-  }, []);
+  }, [documentId]);
 
   if (!tour) return <div>ไม่สามารถดูได้</div>;
 
@@ -85,7 +86,6 @@ export default function TripOverview() {
             tour.images.map((img, index) => (
               <img
                 key={index}
-                alt={img.alt || "Tour Image"}
                 src={img.src}
                 className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-auto"
               />
