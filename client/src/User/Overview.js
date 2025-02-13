@@ -8,15 +8,23 @@ export default function TripOverview() {
 
   const fetchDetail = async () => {
     try {
-      const response = await ax.get(`/tours/${waiting}?populate=*`);
+      const response = await ax.get(`/tours?populate=*`);
       const detail = response.data.data;
+      //log detail and image
+      console.log("detail", detail);
+      try {
+        console.log("image", detail.map(
+          (item) => `${ax.defaults.baseURL.replace("/api", "")}${item.image[0].url}`
+        ) || "No image");
+      } catch (error) { console.error("log image error", error); }
+
       const product = {
         name: detail.tour_name,
         price: detail.price,
         description: detail.description,
         location: detail.destination,
-        images: detail.image.map((img) => ({
-          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+        images: detail.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.image[0].url}`,
           alt: img.alternativeText || "Tour Image",
         })),
         breadcrumbs: [
