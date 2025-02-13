@@ -12,11 +12,15 @@ export default function TripOverview() {
     try {
       const response = await ax.get(`/tours/${documentId}?populate=*`);
       const detail = response.data.data;
+
       const product = {
+        documentId: detail.documentId,
         name: detail.tour_name,
         price: detail.price,
         description: detail.description,
         location: detail.destination,
+        start: detail.start_date,
+        end: detail.end_date,
         images: detail.image.map((img) => ({
           src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
         })),
@@ -95,6 +99,18 @@ export default function TripOverview() {
             </h1>
             {/* Location */}
             <p className="mt-2 text-lg text-gray-600">{tour.location}</p>
+
+            {/* Start and End Date */}
+            <div className="mt-4 text-lg text-gray-600">
+              <p>
+                <strong>วันเดินทาง:</strong>{" "}
+                {new Date(tour.start).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>วันสิ้นสุดการเดินทาง:</strong>{" "}
+                {new Date(tour.end).toLocaleDateString()}
+              </p>
+            </div>
           </div>
 
           {/* Options */}

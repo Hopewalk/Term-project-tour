@@ -6,6 +6,7 @@ import {
   MenuItem,
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import logotour from "../Images/logotour.png";
 
 const navigation = [
   { name: "หน้าหลัก", href: "/Home" },
@@ -39,7 +40,7 @@ export default function MenuUnden() {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <a href="/Home" className="flex shrink-0 items-center">
-              <img alt="Logo" src="./Images/" className="h-8 w-auto" />
+              <img alt="Logo" src={logotour} className="h-12 w-auto" />
             </a>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
