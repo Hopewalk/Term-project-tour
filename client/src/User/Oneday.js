@@ -71,11 +71,19 @@ export default function TourCard() {
 
                 {/* Tour Date & Price */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
-                  <div>
-                    <p className="text-gray-600">เริ่มเดินทาง</p>
-                    <p className="font-medium">
-                      {new Date(tour.start).toLocaleDateString()}
-                    </p>
+                  <div className="flex flex-row gap-20">
+                    <div>
+                      <p className="text-gray-600">เริ่มเดินทาง</p>
+                      <p className="font-medium">
+                        {new Date(tour.start).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">สิ้นสุดการเดินทาง</p>
+                      <p className="font-medium">
+                        {new Date(tour.end).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                   <div className="mt-2 sm:mt-0">
                     <p className="text-sm text-gray-600">ราคาเริ่มต้น</p>
