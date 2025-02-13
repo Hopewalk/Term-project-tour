@@ -8,7 +8,7 @@ export default function TripOverview() {
 
   const fetchDetail = async () => {
     try {
-      const response = await ax.get(`/tours/${waiting}?populate=*`);
+      const response = await ax.get(`/tours/?populate=*`);
       const detail = response.data.data;
       const product = {
         name: detail.tour_name,
