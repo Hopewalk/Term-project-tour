@@ -32,7 +32,7 @@ function App() {
           <Route path="/Register" element={<Register />} />
           <Route path="/Onedaytrip" element={<Oneday />} />
           <Route path="/Trip&Rest" element={<Triprest />} />
-          <Route path="/Trip" element={<TripOverview />} />
+          <Route path="/Trip/:documentId" element={<TripOverview />} />
         </Routes>
       </BrowserRouter>
     );
@@ -55,6 +55,7 @@ function App() {
               <Route path="/Profile" element={<ProfileAm />} />
               <Route path="/Create" element={<AddTrip />} />
               <Route path="/Status" element={<Status />} />
+              <Route path="/Trip/:documentId" element={<TripOverview />} />
             </>
           ) : (
             <>
@@ -64,7 +65,7 @@ function App() {
               <Route path="/Onedaytrip" element={<Oneday />} />
               <Route path="/Trip&Rest" element={<Triprest />} />
               <Route path="/Profile" element={<EditProfile />} />
-              <Route path="/Trip" element={<TripOverview />} />
+              <Route path="/Trip/:documentId" element={<TripOverview />} />
               <Route path="/Payment" element={<Pay />} />
             </>
           )}
