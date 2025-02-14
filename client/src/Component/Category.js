@@ -1,28 +1,46 @@
-import {
-  AppstoreOutlined,
-  HomeOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
 import { Button } from "antd";
+import { TeamOutlined, EnvironmentOutlined, HomeOutlined, AppstoreOutlined } from "@ant-design/icons";
 
-const categories = [
-  { icon: TeamOutlined, label: "ทัวร์ท่องเที่ยว" },
-  { icon: HomeOutlined, label: "แพ็กเกจพร้อมที่พัก" },
-  { icon: AppstoreOutlined, label: "ทั้งหมด" },
-];
+const fetchCategories = async () => {
+  return [
+    //{ icon: TeamOutlined, label: "ทัวร์ท่องเที่ยว" },
+    { icon: EnvironmentOutlined, label: "One Day Trip", params: "One Day Trip"},
+    { icon: HomeOutlined, label: "แพ็กเกจพร้อมที่พัก", params: "Package with Accommodation" },
+    { icon: AppstoreOutlined, label: "ทั้งหมด", params: ""},
+  ];
+};
 
-export default function Category() {
+const Category = ({ setSelectedCategory }) => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const categoriesData = await fetchCategories();
+      setCategories(categoriesData);
+    };
+
+    getCategories();
+  }, []);
+
+  const handleClick = (params) => {
+    setSelectedCategory(params);
+  };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      {categories.map((category) => (
+      {categories.map((cat, index) => (
         <Button
-          key={category.label}
+          key={index}
+          icon={<cat.icon />}
+          onClick={() => handleClick(cat.params)}
           className="flex flex-col items-center justify-center p-10 rounded-lg border border-input bg-background hover:bg-accent transition-colors"
         >
-          <category.icon className="h-6 w-6 mb-2" />
-          <span className="text-sm text-center">{category.label}</span>
+          {cat.label}
         </Button>
       ))}
     </div>
   );
-}
+};
+
+export default Category;
