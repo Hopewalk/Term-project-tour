@@ -48,18 +48,20 @@ export default function TourCard() {
         tours.map((tour) => (
           <Card
             key={tour.id}
-            className="w-full mb-8 shadow-md hover:shadow-lg transition-shadow"
+            className="w-full mb-4 shadow-md hover:shadow-lg transition-shadow"
           >
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-20">
               {/* Tour Image */}
-              {tour.image && (
-                <div className="relative w-full md:w-2/5 aspect-[8/3]">
+              {tour.image.length > 0 ? (
+                tour.image.map((img, index) => (
                   <img
-                    src={tour.image}
-                    alt="Tour Image"
-                    className="w-full h-full object-cover rounded-md"
+                    key={index}
+                    src={img.src}
+                    className="size-full w-60 h-40 object-cover sm:rounded-lg"
                   />
-                </div>
+                ))
+              ) : (
+                <div>No images available</div>
               )}
 
               {/* Tour Details */}
@@ -91,14 +93,13 @@ export default function TourCard() {
                       {tour.price} ฿
                     </p>
                   </div>
+                  <button
+                    className="w-full md:w-auto mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={() => handleClick(tour.documentId)}
+                  >
+                    ดูรายละเอียด
+                  </button>
                 </div>
-
-                <button
-                  className="w-full md:w-auto mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                  onClick={() => handleClick(tour.documentId)}
-                >
-                  ดูรายละเอียด
-                </button>
               </div>
             </div>
           </Card>
