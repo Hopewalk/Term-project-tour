@@ -43,13 +43,14 @@ function Status() {
           Set Status
         </h1>
       </header>
-      <Card className="mx-auto max-w-7xl" title="Order 1">
-        {orders.map((order) => (
+      {orders.map((order) => (
+        <Card className="mx-auto max-w-7xl" title="Order">
           <div key={order.id} className="flex justify-between">
             <div>
               <p>{order.tour.tour_name}</p>
-              <p>{order.tour.price}</p>
+              <p>{order.total_price}</p>
               <p>{order.tour.destination}</p>
+              <p>วันที่จอง : {new Date(order.booking_date).toLocaleString()}</p>
             </div>
             <div>
               <Select
@@ -64,8 +65,8 @@ function Status() {
               </Select>
             </div>
           </div>
-        ))}
-      </Card>
+        </Card>
+      ))}
     </div>
   );
 }
