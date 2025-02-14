@@ -12,11 +12,15 @@ export default function TripOverview() {
     try {
       const response = await ax.get(`/tours/${documentId}?populate=*`);
       const detail = response.data.data;
+
       const product = {
+        documentId: detail.documentId,
         name: detail.tour_name,
         price: detail.price,
         description: detail.description,
         location: detail.destination,
+        start: detail.start_date,
+        end: detail.end_date,
         images: detail.image.map((img) => ({
           src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
         })),
@@ -94,7 +98,21 @@ export default function TripOverview() {
               {tour.name}
             </h1>
             {/* Location */}
-            <p className="mt-2 text-lg text-gray-600">{tour.location}</p>
+            <p className="mt-2 text-lg text-gray-600">
+              Location: {tour.location}
+            </p>
+
+            {/* Start and End Date */}
+            <div className="mt-4 text-lg text-gray-600">
+              <p>
+                <strong>วันเดินทาง:</strong>{" "}
+                {new Date(tour.start).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>วันสิ้นสุดการเดินทาง:</strong>{" "}
+                {new Date(tour.end).toLocaleDateString()}
+              </p>
+            </div>
           </div>
 
           {/* Options */}
@@ -117,7 +135,7 @@ export default function TripOverview() {
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
             {/* Description */}
             <div>
-              <h3 className="sr-only">Description</h3>
+              <h3 className="text-2xl font-bold">Description</h3>
               <div className="space-y-6">
                 <p className="text-base text-gray-900">{tour.description}</p>
               </div>
