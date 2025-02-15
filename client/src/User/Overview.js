@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
+import { useContext } from "react";
+import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { useParams } from "react-router";
 
 export default function TripOverview() {
+  const { state } = useContext(AuthContext);
   const { documentId } = useParams();
   const [tour, settour] = useState(null);
 
