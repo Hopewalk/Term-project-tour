@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import { TeamOutlined, EnvironmentOutlined, HomeOutlined, AppstoreOutlined } from "@ant-design/icons";
+import { Variants } from "antd/es/config-provider";
 
 const fetchCategories = async () => {
   return [
     //{ icon: TeamOutlined, label: "ทัวร์ท่องเที่ยว" },
-    { icon: EnvironmentOutlined, label: "One Day Trip", params: "One Day Trip"},
+    { icon: EnvironmentOutlined, label: "One Day Trip", params: "One Day Trip" },
     { icon: HomeOutlined, label: "แพ็กเกจพร้อมที่พัก", params: "Package with Accommodation" },
-    { icon: AppstoreOutlined, label: "ทั้งหมด", params: ""},
+    //{ icon: AppstoreOutlined, label: "ทั้งหมด", params: "" },
   ];
 };
 
-const Category = ({ setSelectedCategory }) => {
+const Category = ({ setSelectedCategory, selectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const Category = ({ setSelectedCategory }) => {
   }, []);
 
   const handleClick = (params) => {
-    setSelectedCategory(params);
+    setSelectedCategory(selectedCategory === params ? "" : params);
   };
 
   return (
@@ -34,6 +35,8 @@ const Category = ({ setSelectedCategory }) => {
           key={index}
           icon={<cat.icon />}
           onClick={() => handleClick(cat.params)}
+          color={selectedCategory === cat.params ? "primary" : "default"}
+          variant={selectedCategory === cat.params ? "outlined" : ""}
           className="flex flex-col items-center justify-center p-10 rounded-lg border border-input bg-background hover:bg-accent transition-colors"
         >
           {cat.label}

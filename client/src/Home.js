@@ -11,12 +11,12 @@ export default function Home() {
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [PriceBarRange, setPriceRange] = useState([0, maxPrice]);
-/*
-  console.log("sc", selectedCategory);
-  console.log("cf", selectedFilters || "no filters selected");
-  console.log("pbr", PriceBarRange);
-  console.log("mp", maxPrice);
-*/
+  /*
+    console.log("sc", selectedCategory);
+    console.log("cf", selectedFilters || "no filters selected");
+    console.log("pbr", PriceBarRange);
+    console.log("mp", maxPrice);
+  */
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -34,7 +34,9 @@ export default function Home() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-semibold mb-6">ทัวร์และกิจกรรมต่างๆ</h2>
-        <Category setSelectedCategory={setSelectedCategory} />
+        <Category
+          setSelectedCategory={setSelectedCategory}
+          selectedCategory={selectedCategory} />
         <div className="flex gap-8 mt-8">
           {maxPrice !== null && maxPrice !== undefined && (
             <FilterSidebar
