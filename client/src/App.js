@@ -17,6 +17,7 @@ import AddTrip from "./Admin/Addtrip.js";
 import TripOverview from "./User/Overview.js";
 import Pay from "./User/Payment.js";
 import Status from "./Admin/Status.js";
+import Edittrip from "./Admin/Editpage.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -56,6 +57,7 @@ function App() {
               <Route path="/Create" element={<AddTrip />} />
               <Route path="/Status" element={<Status />} />
               <Route path="/Trip/:documentId" element={<TripOverview />} />
+              <Route path="/Trips/edit" element={<Edittrip />} />
             </>
           ) : (
             <>

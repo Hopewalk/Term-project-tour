@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import ax from "../conf/ax";
 import { useSetState } from "react-use";
 import { AuthContext } from "../context/Auth.context";
+import loginpic from "../Images/loginpic.jpg";
 
 export default function Login() {
   const { state: ContextState, login } = useContext(AuthContext);
@@ -89,7 +90,7 @@ export default function Login() {
           </form>
         </div>
         <div className="login-right">
-          <img src="./Images/" alt="ทะเล" />
+          <img src={loginpic} alt="ทะเล" className="size-full" />
         </div>
       </div>
     </div>

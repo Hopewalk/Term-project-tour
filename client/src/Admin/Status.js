@@ -44,7 +44,7 @@ function Status() {
         </h1>
       </header>
       {orders.map((order) => (
-        <Card className="mx-auto max-w-7xl" title="Order">
+        <Card className="mx-auto max-w-7xl mt-2" title="Order">
           <div key={order.id} className="flex justify-between">
             <div>
               <p>{order.tour.tour_name}</p>
