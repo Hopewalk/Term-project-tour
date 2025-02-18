@@ -75,6 +75,12 @@
       ],
       "type": "media",
       "multiple": true
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "tour"
     }
   }
 }
