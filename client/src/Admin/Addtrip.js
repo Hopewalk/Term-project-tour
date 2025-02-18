@@ -10,6 +10,8 @@ function AddTrip() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
+  const [category_name, setCategory_name] = useState("");
+  const [category_description, setCategory_description] = useState("");
 
   const maketrip = async () => {
     try {
@@ -21,6 +23,10 @@ function AddTrip() {
         start_date: startDate,
         end_date: endDate,
         tour_status: status,
+        tour_category: {
+          category_name: category_name,
+          description: category_description,
+        },
       });
       console.log("โพสต์สำเร็จ:", res.data);
     } catch (err) {
@@ -36,7 +42,7 @@ function AddTrip() {
   return (
     <form onSubmit={handlecreatetrip}>
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <div className="bg-white p-8 rounded-lg shadow-lg" style={{ width: '1000px', height: '900px' }}>
+        <div className="bg-white p-8 rounded-lg shadow-lg" style={{ width: '1000px', height: '1200px' }}>
           <h1 className="text-2xl font-bold mb-4 text-center">สร้างทริปต์</h1>
 
           {/* Trip name */}
@@ -143,6 +149,30 @@ function AddTrip() {
               <option value="close">unavailable</option>
             </select>
           </div>  
+
+          {/* Category name */}
+          <div className="mb-4">
+            <label className="block text-left mb-2">ชื่อหมวดหมู่</label>
+            <input 
+              type="text" 
+              className="border border-gray-300 p-2 rounded-md w-full" 
+              placeholder="ใส่ชื่อหมวดหมู่" 
+              value={category_name}
+              onChange={(e) => setCategory_name(e.target.value)}
+            />
+          </div>
+
+          {/* Category description */}
+          <div className="mb-4">
+            <label className="block text-left mb-2">คำอธิบายหมวดหมู่</label>
+            <textarea 
+              className="border border-gray-300 p-2 rounded-md w-full" 
+              placeholder="ใส่คำอธิบายหมวดหมู่" 
+              style={{ height: '100px' }} 
+              value={category_description}
+              onChange={(e) => setCategory_description(e.target.value)}
+            />
+          </div>
           
           <div className="text-center">
             <button type="submit" className="bg-blue-500 text-white p-2 rounded-md">สร้างทริปต์</button>
