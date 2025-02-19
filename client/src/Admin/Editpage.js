@@ -36,12 +36,15 @@ export default function TourCard() {
     fetchTour();
   }, []);
 
-  const deleteTour = async () => {
+  const deleteTour = async (documentId, name) => {
+    const isConfirmed = window.confirm(`แน่ใจหรือไม่ว่าต้องการลบทัวร์:${name}`);
+    if (!isConfirmed) return;
     try {
-      await ax.delete(`tours/${tours.documentId}`);
-      console.log("succccceeesssss");
+      await ax.delete(`/tours/${documentId}`);
+      console.log("Deleted tour successfully");
+      setTours(tours.filter((tour) => tour.documentId !== documentId));
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting tour:", error);
     }
   };
   const openEditModal = (tour) => {
@@ -114,6 +117,12 @@ export default function TourCard() {
                     onClick={() => openEditModal(tour)}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    className="w-full md:w-auto mt-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                    onClick={() => deleteTour(tour.documentId, tour.name)}
+                  >
+                    Delete
                   </Button>
                 </div>
               </div>
