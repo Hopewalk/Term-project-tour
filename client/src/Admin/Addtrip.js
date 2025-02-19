@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Button } from "antd";
 import ax from "../conf/ax";
 
@@ -81,14 +80,13 @@ const ImageUploader = ({ pictures, handleImageUpload, handleDeleteImage }) => (
 );
 
 // SectionTitle
-const SectionTitle = ({ title }) => <div className="text-2xl font-bold mb-4" >{title}</div>;
+const SectionTitle = ({ title }) => <div className="text-2xl font-bold mb-4">{title}</div>;
 
 function AddTrip() {
   const [tripData, setTripData] = useState({
     tripName: "",
     description: "",
     seats: "",
-    productId: "",
     price: "",
     startDate: "",
     endDate: "",
@@ -98,23 +96,9 @@ function AddTrip() {
   });
   const [pictures, setPictures] = useState([]);
 
-  function generateRandomId() {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const length = 10;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTripData({ ...tripData, [name]: value });
-  };
-
-  const handleGenerateRandomId = () => {
-    setTripData({ ...tripData, productId: generateRandomId() });
   };
 
   const handleImageUpload = (e) => {
@@ -128,26 +112,23 @@ function AddTrip() {
 
   const maketrip = async () => {
     try {
-      const formData = new FormData();
-      formData.append("tour_name", tripData.tripName);
-      formData.append("description", tripData.description);
-      formData.append("price", tripData.price);
-      formData.append("product_id", tripData.productId);
-      formData.append("start_date", tripData.startDate);
-      formData.append("end_date", tripData.endDate);
-      formData.append("tour_status", tripData.status);
-      formData.append("destination", tripData.destination);
-      formData.append("seats", tripData.seats);
-      formData.append("typetour", tripData.typetour);
-      pictures.forEach((picture) => {
-        formData.append("pictures", picture);
-      });
-      const res = await ax.post("/tours", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // แปลงค่าตัวเลขและวันที่ให้ถูกต้อง
+      const formattedData = {
+        tour_name: tripData.tripName,
+        description: tripData.description,
+        price: Number(tripData.price), // แปลงเป็น number
+        max_participants: Number(tripData.seats), // แปลงเป็น number
+        start_date: new Date(tripData.startDate).toISOString(), // แปลงเป็น ISO 8601
+        end_date: new Date(tripData.endDate).toISOString(), // แปลงเป็น ISO 8601
+        tour_status: tripData.status,
+        destination: tripData.destination,
+        tour_type: tripData.typetour, // เปลี่ยน key ให้ถูกต้อง
+      };
+
+      const res = await ax.post("/tours", { data: formattedData });
       console.log("โพสต์สำเร็จ:", res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error:", err.response ? err.response.data : err.message);
     }
   };
 
@@ -157,7 +138,7 @@ function AddTrip() {
   };
 
   return (
-    <form onSubmit={handlecreatetrip} className="bg-white p-8 rounded-lg shadow-lg" style={{ width: '1000px', margin: '0 auto', minHeight: '1000px' }}>
+    <form className="bg-white p-8 rounded-lg shadow-lg" style={{ width: '1000px', margin: '0 auto', minHeight: '1000px' }}>
       <div className="text-2xl font-bold mb-4 text-center">Make Tour</div>
       <InputField label="ชื่อทริปต์" name="tripName" value={tripData.tripName} onChange={handleChange} placeholder="ใส่ชื่อทริปต์" />
       <TextareaField label="คำอธิบายทริปต์" name="description" value={tripData.description} onChange={handleChange} placeholder="ใส่คำอธิบายทริปต์" height="200px" />
@@ -166,31 +147,7 @@ function AddTrip() {
           <InputField label="จำนวนที่นั่ง" type="number" name="seats" value={tripData.seats} onChange={handleChange} placeholder="ใส่จำนวนที่นั่ง" />
         </div>
         <div className="w-1/2">
-          <label className="block text-left mb-2">รหัสสินค้า</label>
-          <div className="flex items-center">
-            <input
-              type="text"
-              name="productId"
-              className="border border-gray-300 p-2 rounded-md w-full"
-              placeholder="ใส่รหัสสินค้า"
-              value={tripData.productId}
-              onChange={handleChange}
-            />
-            <Button className="ml-1" onClick={handleGenerateRandomId} color="yellow">
-              สร้างรหัสสุ่ม
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="flex space-x-4">
-        <div className="w-1/2">
           <InputField label="ราคาทริปต์" type="number" name="price" value={tripData.price} onChange={handleChange} placeholder="ใส่ราคา" />
-        </div>
-        <div className="w-1/2">
-          <div className="mb-4">
-            <label className="block text-left mb-2">จำนวนผู้เข้าร่วม</label>
-            <input type="number" className="border border-gray-300 p-2 rounded-md w-full" placeholder="ใส่จำนวนผู้เข้าร่วม" step="10" />
-          </div>
         </div>
       </div>
       <div className="flex space-x-4">
@@ -203,10 +160,16 @@ function AddTrip() {
       </div>
       <div className="flex space-x-4">
         <div className="w-1/2">
-          <SelectField label="สถานะ" name="status" value={tripData.status} onChange={handleChange} options={[{ value: "available", label: "available" }, { value: "unavailable", label: "unavailable" }]} />
+          <SelectField label="สถานะ" name="status" value={tripData.status} onChange={handleChange} options={[
+            { value: "available", label: "available" },
+            { value: "unavailable", label: "unavailable" }
+          ]} />
         </div>
         <div className="w-1/2">
-          <SelectField label="ประเภททริป" name="typetour" value={tripData.typetour} onChange={handleChange} options={[{ value: "One Day Trip", label: "One Day Trip" }, { value: "Package with Accommodation", label: "Package with Accommodation" }]} />
+          <SelectField label="ประเภททริป" name="typetour" value={tripData.typetour} onChange={handleChange} options={[
+            { value: "One Day Trip", label: "One Day Trip" },
+            { value: "Package with Accommodation", label: "Package with Accommodation" }
+          ]} />
         </div>
       </div>
       <InputField label="จุดหมายปลายทาง" name="destination" value={tripData.destination} onChange={handleChange} placeholder="จุดหมายปลายทาง" />
