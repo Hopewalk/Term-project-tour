@@ -9,6 +9,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({});
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
+  const [selectedRatings, setSelectedRatings] = useState([]);
   const [maxPrice, setMaxPrice] = useState(null);
   const [PriceBarRange, setPriceRange] = useState([0, maxPrice]);
   /*
@@ -42,6 +43,7 @@ export default function Home() {
             <FilterSidebar
               setSelectedFilters={setSelectedFilters}
               setSelectedPriceRange={setSelectedPriceRange}
+              setSelectedRatings={setSelectedRatings}
               PriceRange={selectedPriceRange}
               maxPrice={maxPrice} />
           )}
@@ -49,6 +51,7 @@ export default function Home() {
             selectedCategory={selectedCategory}
             selectedPriceRange={selectedPriceRange}
             selectedFilters={selectedFilters}
+            selectedRatings={selectedRatings}
             setPriceRange={setPriceRange}
             setMaxPrice={setMaxPrice} />
         </div>

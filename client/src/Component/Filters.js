@@ -10,6 +10,7 @@ const sortOptions = [
 const FilterSidebar = ({ setSelectedFilters, maxPrice }) => {
   const [selectedSort, setSelectedSort] = useState("popular");
   const [selectedPriceRange, setSelectedPriceRange] = useState([0, maxPrice]);
+  const [selectedRatings, setSelectedRatings] = useState([])
 
   const handleSortChange = (e) => {
     const newSort = e.target.value;
@@ -18,12 +19,23 @@ const FilterSidebar = ({ setSelectedFilters, maxPrice }) => {
   };
 
   const handlePriceChange = (value) => {
-    console.log("value",value || "nulllll");
+    console.log("value", value || "nulllll");
     setSelectedPriceRange(value);
     setSelectedFilters((prev) => ({ ...prev, priceRange: value }));
   };
-  console.log("sss",selectedPriceRange);
-  
+  console.log("sss", selectedPriceRange);
+
+  const handleRatingChange = (checked, rating) => {
+    setSelectedRatings((prevRatings) => {
+      const newRatings = checked
+        ? [...prevRatings, rating]
+        : prevRatings.filter((r) => r !== rating);
+      setSelectedFilters((prev) => ({ ...prev, rating: newRatings }));
+      return newRatings
+    });
+  };
+    console.log("rating", selectedRatings);
+
   return (
     <div className="w-64 flex-shrink-0 p-4 border-r">
       <div className="space-y-6">
@@ -70,14 +82,8 @@ const FilterSidebar = ({ setSelectedFilters, maxPrice }) => {
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <Checkbox
-                  onChange={(e) => {
-                    setSelectedFilters((prev) => {
-                      const newRatings = e.target.checked
-                        ? [...(prev.ratings || []), rating]
-                        : (prev.ratings || []).filter((r) => r !== rating);
-                      return { ...prev, ratings: newRatings };
-                    });
-                  }}
+                  checked={selectedRatings.includes(rating)}
+                  onChange={(e) => handleRatingChange(e.target.checked, rating)}
                 />
                 <Rate disabled defaultValue={rating} count={5} className="text-yellow-400" />
               </label>
