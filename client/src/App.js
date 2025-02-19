@@ -18,6 +18,7 @@ import TripOverview from "./User/Overview.js";
 import Pay from "./User/Payment.js";
 import Status from "./Admin/Status.js";
 import Edittrip from "./Admin/Editpage.js";
+import Footer from "./Component/Footer.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/Trip&Rest" element={<Triprest />} />
           <Route path="/Trip/:documentId" element={<TripOverview />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     );
   }
@@ -72,6 +74,7 @@ function App() {
             </>
           )}
         </Routes>
+        <Footer />
       </BrowserRouter>
     );
   }

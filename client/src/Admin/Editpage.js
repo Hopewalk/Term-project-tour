@@ -36,6 +36,14 @@ export default function TourCard() {
     fetchTour();
   }, []);
 
+  const deleteTour = async () => {
+    try {
+      await ax.delete(`tours/${tours.documentId}`);
+      console.log("succccceeesssss");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const openEditModal = (tour) => {
     console.log("Editing tour:", tour);
     setSelectedTour(tour);
