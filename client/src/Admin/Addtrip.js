@@ -123,26 +123,35 @@ function AddTrip() {
 
   const maketrip = async () => {
     try {
-      const formattedData = {
-        tour_name: tripData.tripName,
-        description: tripData.description,
-        price: Number(tripData.price),
-        max_participants: Number(tripData.seats),
-        start_date: new Date(tripData.startDate).toISOString(),
-        end_date: new Date(tripData.endDate).toISOString(),
-        tour_status: tripData.status,
-        destination: tripData.destination,
-        tour_type: tripData.typetour,
-      };
+      const res = await ax.post("/tours",{
+        data: { tour_name: tripData.tripName,
+          description: tripData.description,
+          price: Number(tripData.price),
+          max_participants: Number(tripData.seats),
+          start_date: new Date(tripData.startDate).toISOString(),
+          end_date: new Date(tripData.endDate).toISOString(),
+          tour_status: tripData.status,
+          destination: tripData.destination,
+          tour_type: tripData.typetour, }
+      });
+      console.log("โพสต์สำเร็จ:", res.data);
+    } catch (err) {
+      console.error("Error:", err.response ? err.response.data : err.message);
+    }
+  };
 
+  const uploadImage = async () => {
+    try {
       const formData = new FormData();
-      formData.append("data", JSON.stringify(formattedData));
       pictures.forEach((file) => {
-        formData.append("files.image", file);
+        console.log("Uploading file:", file.name, file.type);
+        formData.append("files", file);
       });
 
-      const res = await ax.post("/tours", formData);
-      console.log("โพสต์สำเร็จ:", res.data);
+      const res = await ax.post("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      console.log("อัพโหลดสำเร็จ:", res.data)
     } catch (err) {
       console.error("Error:", err.response ? err.response.data : err.message);
     }
@@ -152,7 +161,7 @@ function AddTrip() {
     e.preventDefault();
     const newErrors = {};
 
-    // ตรวจสอบว่าข้อมูลที่จำเป็นทั้งหมดถูกกรอก
+    // ตรวจสอบว่าที่จำเป็นทั้งหมดถูกกรอก
     if (!tripData.tripName) newErrors.tripName = "กรุณากรอกชื่อทริปต์";
     if (!tripData.description) newErrors.description = "กรุณากรอกคำอธิบายทริปต์";
     if (!tripData.seats) newErrors.seats = "กรุณากรอกจำนวนที่นั่ง";
@@ -171,6 +180,7 @@ function AddTrip() {
 
     if (Object.keys(newErrors).length === 0) {
       maketrip();
+      uploadImage();
     }
   };
 
