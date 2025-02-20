@@ -31,7 +31,7 @@ export default function Review() {
 
   const handleSubmitReview = async () => {
     if (newRating === 0) {
-      alert("โปรดให้ดาวและใส่ความคิดเห็นก่อนที่จะทำการส่งรีวิว");
+      alert("โปรดให้ดาวก่อนกดส่ง");
       return;
     }
     setLoading(true);
