@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { StarIcon } from "@heroicons/react/20/solid";
-import { Radio, RadioGroup } from "@headlessui/react";
 import { useContext } from "react";
 import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { useParams } from "react-router";
+import Review from "./Component/Rate&Review";
 
 export default function TripOverview() {
   const { state } = useContext(AuthContext);
@@ -144,6 +143,7 @@ export default function TripOverview() {
               </div>
             </div>
           </div>
+          <Review />
         </div>
       </div>
     </div>
