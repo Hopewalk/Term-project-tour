@@ -60,7 +60,7 @@ function Add_Accommodation() {
 
     return (
         <div className="container mx-auto p-4">
-            <SectionTitle title="เพิ่มที่พัก" />
+            <SectionTitle title="เพิ่มที่พัก" className="text-2xl font-bold mb-4 flex justify-center mt-4"/>
                 <InputField
                     label="ชื่อที่พัก"
                     name="accommodationName"
@@ -120,13 +120,15 @@ function Add_Accommodation() {
                             onChange={handleChange}
                         />
                     </div>
-                </div>
+                </div >
+                <div className="flex justify-center mt-4">
                 <Button type="submit" 
                         onClick={handleSubmit}
-                        className="w-full mt-4"
+                        className="bg-blue-500 text-white p-2 rounded-md mt-4"
                 >
                     เพิ่มที่พัก
                 </Button>
+                </div>
         </div>
     );
 }

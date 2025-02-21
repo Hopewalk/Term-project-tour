@@ -87,6 +87,6 @@ const InputField = ({ label, type = "text", name, value, onChange, placeholder, 
   );
   
   // SectionTitle (ยังไม่ได้ใช้งาน)
-  const SectionTitle = ({ title }) => <div className="text-2xl font-bold mb-4">{title}</div>;
+  const SectionTitle = ({ title,className }) => <div className={className}>{title}</div>;
 
   export { InputField, TextareaField, SelectField, ImageUploader, SectionTitle };
