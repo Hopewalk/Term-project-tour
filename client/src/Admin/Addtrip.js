@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Button, Select } from "antd";
 import ax from "../conf/ax";
 import Add_Accommodation from "./Component/Add_Accommodation"; 
-import {InputField,TextareaField,SelectField,ImageUploader,SectionTitle,} from "./Component/Tagcomponent";
+import {
+  InputField,
+  TextareaField,
+  SelectField,
+  ImageUploader,
+  SectionTitle,
+} from "./Component/Tagcomponent";
 
 function AddTrip() {
   const [activeTab, setActiveTab] = useState("makeTour");
@@ -36,27 +42,7 @@ function AddTrip() {
     setPictures(pictures.filter((_, i) => i !== index));
   };
 
-  const maketrip = async () => {
-    try {
-      const res = await ax.post("/tours", {
-        data: {
-          tour_name: tripData.tripName,
-          description: tripData.description,
-          price: Number(tripData.price),
-          max_participants: Number(tripData.seats),
-          start_date: new Date(tripData.startDate).toISOString(),
-          end_date: new Date(tripData.endDate).toISOString(),
-          tour_status: tripData.status,
-          destination: tripData.destination,
-          tour_type: tripData.typetour,
-        },
-      });
-      console.log("โพสต์สำเร็จ:", res.data);
-    } catch (err) {
-      console.error("Error:", err.response ? err.response.data : err.message);
-    }
-  };
-
+  // ฟังก์ชันสำหรับอัปโหลดไฟล์และคืนค่า response (ซึ่งควรมี id ของไฟล์)
   const uploadImage = async () => {
     try {
       const formData = new FormData();
@@ -69,12 +55,39 @@ function AddTrip() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("อัพโหลดสำเร็จ:", res.data);
+      return res.data; // คาดว่า res.data เป็น array ของ object ที่มี property id
+    } catch (err) {
+      console.error("Error:", err.response ? err.response.data : err.message);
+      return null;
+    }
+  };
+
+  // ฟังก์ชันสำหรับสร้างทัวร์โดยรับ parameter เป็นข้อมูลไฟล์ที่อัปโหลดแล้ว
+  const maketrip = async (uploadedFiles) => {
+    try {
+      const res = await ax.post("/tours", {
+        data: {
+          tour_name: tripData.tripName,
+          description: tripData.description,
+          price: Number(tripData.price),
+          max_participants: Number(tripData.seats),
+          start_date: new Date(tripData.startDate).toISOString(),
+          end_date: new Date(tripData.endDate).toISOString(),
+          tour_status: tripData.status,
+          destination: tripData.destination,
+          tour_type: tripData.typetour,
+          // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
+          image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
+        },
+      });
+      console.log("โพสต์สำเร็จ:", res.data);
     } catch (err) {
       console.error("Error:", err.response ? err.response.data : err.message);
     }
   };
 
-  const handlecreatetrip = (e) => {
+  // handlecreatetrip ต้องเป็น async เพื่อรอผลลัพธ์จาก uploadImage ก่อนที่จะเรียก maketrip
+  const handlecreatetrip = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -100,8 +113,11 @@ function AddTrip() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      maketrip();
-      uploadImage();
+      let uploadedFiles = null;
+      if (pictures.length > 0) {
+        uploadedFiles = await uploadImage();
+      }
+      maketrip(uploadedFiles);
     }
   };
 
@@ -135,7 +151,6 @@ function AddTrip() {
             value={tripData.tripName}
             onChange={handleChange}
             placeholder="ใส่ชื่อทริปต์"
-            required
             error={errors.tripName}
           />
           <TextareaField
@@ -145,7 +160,6 @@ function AddTrip() {
             onChange={handleChange}
             placeholder="ใส่คำอธิบายทริปต์"
             height="200px"
-            required
             error={errors.description}
           />
           <div className="flex space-x-4">
@@ -157,7 +171,6 @@ function AddTrip() {
                 value={tripData.seats}
                 onChange={handleChange}
                 placeholder="ใส่จำนวนที่นั่ง"
-                required
                 error={errors.seats}
               />
             </div>
@@ -169,7 +182,6 @@ function AddTrip() {
                 value={tripData.price}
                 onChange={handleChange}
                 placeholder="ใส่ราคา"
-                required
                 error={errors.price}
               />
             </div>
@@ -183,7 +195,6 @@ function AddTrip() {
                 name="startDate"
                 value={tripData.startDate}
                 onChange={handleChange}
-                required
                 error={errors.startDate}
               />
             </div>
@@ -194,7 +205,6 @@ function AddTrip() {
                 name="endDate"
                 value={tripData.endDate}
                 onChange={handleChange}
-                required
                 error={errors.endDate}
               />
             </div>
@@ -237,7 +247,6 @@ function AddTrip() {
             value={tripData.destination}
             onChange={handleChange}
             placeholder="จุดหมายปลายทาง"
-            required
             error={errors.destination}
           />
           <ImageUploader
