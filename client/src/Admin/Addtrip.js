@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "antd";
 import ax from "../conf/ax";
+import Add_Accommodation from "./Component/Add_Accommodation"; // แก้ไข path ให้ถูกต้อง
 import {InputField,TextareaField,SelectField,ImageUploader,SectionTitle,} from "./Component/Tagcomponent";
 
 function AddTrip() {
@@ -102,21 +103,26 @@ function AddTrip() {
       <InputField label="ชื่อทริปต์" name="tripName" value={tripData.tripName} onChange={handleChange} placeholder="ใส่ชื่อทริปต์" required error={errors.tripName} />
       <TextareaField label="คำอธิบายทริปต์" name="description" value={tripData.description} onChange={handleChange} placeholder="ใส่คำอธิบายทริปต์" height="200px" required error={errors.description} />
       <div className="flex space-x-4">
+
         <div className="w-1/2">
           <InputField label="จำนวนที่นั่ง" type="number" name="seats" value={tripData.seats} onChange={handleChange} placeholder="ใส่จำนวนที่นั่ง" required error={errors.seats} />
         </div>
+
         <div className="w-1/2">
           <InputField label="ราคาทริปต์" type="number" name="price" value={tripData.price} onChange={handleChange} placeholder="ใส่ราคา" required error={errors.price} />
         </div>
       </div>
+
       <div className="flex space-x-4">
         <div className="w-1/2">
           <InputField label="วันที่และเวลาเริ่มต้น" type="datetime-local" name="startDate" value={tripData.startDate} onChange={handleChange} required error={errors.startDate} />
         </div>
+
         <div className="w-1/2">
           <InputField label="วันที่และเวลาสิ้นสุด" type="datetime-local" name="endDate" value={tripData.endDate} onChange={handleChange} required error={errors.endDate} />
         </div>
       </div>
+
       <div className="flex space-x-4">
         <div className="w-1/2">
           <SelectField label="สถานะ" name="status" value={tripData.status} onChange={handleChange} options={[
@@ -124,6 +130,7 @@ function AddTrip() {
             { value: "unavailable", label: "unavailable" }
           ]} />
         </div>
+
         <div className="w-1/2">
           <SelectField label="ประเภททริป" name="typetour" value={tripData.typetour} onChange={handleChange} options={[
             { value: "One Day Trip", label: "One Day Trip" },
@@ -131,6 +138,7 @@ function AddTrip() {
           ]} />
         </div>
       </div>
+
       <InputField label="จุดหมายปลายทาง" name="destination" value={tripData.destination} onChange={handleChange} placeholder="จุดหมายปลายทาง" required error={errors.destination} />
       <ImageUploader pictures={pictures} handleImageUpload={handleImageUpload} handleDeleteImage={handleDeleteImage} />
 
@@ -139,6 +147,9 @@ function AddTrip() {
           สร้างทริปต์
         </Button>
       </div>
+
+{/*ส่วนของการเพิ่มที่พัก มาจากการนำไฟล์ Add_Accommodation มาใช้งาน*/}
+      <Add_Accommodation/>
     </form>
   );
 }
