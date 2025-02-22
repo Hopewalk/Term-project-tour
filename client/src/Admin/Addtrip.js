@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Select } from "antd";
 import ax from "../conf/ax";
-import Add_Accommodation from "./Component/Add_Accommodation"; 
+import Add_Accommodation from "./Component/ADD_Accommodation";
 import {
   InputField,
   TextareaField,
@@ -77,7 +77,10 @@ function AddTrip() {
           destination: tripData.destination,
           tour_type: tripData.typetour,
           // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
-          image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
+          image:
+            uploadedFiles && uploadedFiles.length > 0
+              ? uploadedFiles[0].id
+              : null,
         },
       });
       console.log("โพสต์สำเร็จ:", res.data);
@@ -97,10 +100,8 @@ function AddTrip() {
       newErrors.description = "กรุณากรอกคำอธิบายทริปต์";
     if (!tripData.seats) newErrors.seats = "กรุณากรอกจำนวนที่นั่ง";
     if (!tripData.price) newErrors.price = "กรุณากรอกราคา";
-    if (!tripData.startDate)
-      newErrors.startDate = "กรุณากรอกวันที่เริ่มต้น";
-    if (!tripData.endDate)
-      newErrors.endDate = "กรุณากรอกวันที่สิ้นสุด";
+    if (!tripData.startDate) newErrors.startDate = "กรุณากรอกวันที่เริ่มต้น";
+    if (!tripData.endDate) newErrors.endDate = "กรุณากรอกวันที่สิ้นสุด";
     if (!tripData.destination)
       newErrors.destination = "กรุณากรอกจุดหมายปลายทาง";
 
@@ -134,17 +135,13 @@ function AddTrip() {
           style={{ width: 200 }}
         >
           <Select.Option value="makeTour">Make Tour</Select.Option>
-          <Select.Option value="addAccommodation">
-            เพิ่มที่พัก
-          </Select.Option>
+          <Select.Option value="addAccommodation">เพิ่มที่พัก</Select.Option>
         </Select>
       </div>
 
       {activeTab === "makeTour" ? (
         <form onSubmit={handlecreatetrip}>
-          <div className="text-2xl font-bold mb-4 text-center">
-            Make Tour
-          </div>
+          <div className="text-2xl font-bold mb-4 text-center">Make Tour</div>
           <InputField
             label="ชื่อทริปต์"
             name="tripName"
