@@ -1,97 +1,73 @@
-"use client";
-
-import { Layout, Typography, Space } from "antd";
-import { Link } from "react-router";
+import React from "react";
+import { Layout, Space } from "antd";
 import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Github,
-  Youtube,
-  Waves,
-} from "lucide-react";
+  FacebookOutlined,
+  TwitterOutlined,
+  InstagramOutlined,
+} from "@ant-design/icons";
 
 const { Footer } = Layout;
-const { Title, Text } = Typography;
 
-const footerColumns = {
-  Solutions: ["Marketing", "Analytics", "Automation", "Commerce", "Insights"],
-  Support: ["Submit ticket", "Documentation", "Guides"],
-  Company: ["About", "Blog", "Jobs", "Press"],
-  Legal: ["Terms of service", "Privacy policy", "License"],
-};
-
-const socialLinks = [
-  { icon: <Facebook />, label: "Facebook", href: "https://facebook.com" },
-  { icon: <Instagram />, label: "Instagram", href: "https://instagram.com" },
-  { icon: <Twitter />, label: "Twitter", href: "https://twitter.com" },
-  { icon: <Github />, label: "GitHub", href: "https://github.com" },
-  { icon: <Youtube />, label: "YouTube", href: "https://youtube.com" },
-];
-
-const FooterColumn = ({ title, links }) => (
-  <div>
-    <Title level={5} className="!text-white !mb-4">
-      {title}
-    </Title>
-    <ul className="space-y-3">
-      {links.map((item) => (
-        <li key={item}>
-          <Link
-            href="#"
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            {item}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
-export default function webFooter() {
+const webFooter = () => {
   return (
-    <Footer className="bg-[#0D1117] min-h-[400px] px-4 py-16 md:px-6">
-      <div className="container mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-          {/* Brand Column */}
-          <div className="space-y-6">
-            <Link href="/" className="inline-flex items-center space-x-2">
-              <Waves className="text-[#818CF8] w-8 h-8" />
-              <span className="sr-only">Your Company</span>
-            </Link>
-            <Text className="block text-gray-400 max-w-xs">
-              Making the world a better place through constructing elegant
-              hierarchies.
-            </Text>
-            <Space className="flex gap-4">
-              {socialLinks.map(({ icon, label, href }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  <span className="w-6 h-6">{icon}</span>
-                  <span className="sr-only">{label}</span>
-                </Link>
-              ))}
+    <Footer className="bg-gray-800 text-white">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="/Home" className="hover:text-gray-300">
+                  Home
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+            <p>123 Travel Street</p>
+            <p>หาดใหญ่ สงขลา</p>
+            <p>Phone: 999999999</p>
+            <p>Email: tour@booking.com</p>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+            <Space size="large">
+              <a
+                href="https://www.facebook.com"
+                className="text-white hover:text-blue-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FacebookOutlined style={{ fontSize: "24px" }} />
+              </a>
+              <a
+                href="https://www.twitter.com"
+                className="text-white hover:text-blue-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TwitterOutlined style={{ fontSize: "24px" }} />
+              </a>
+              <a
+                href="https://www.instagram.com"
+                className="text-white hover:text-pink-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <InstagramOutlined style={{ fontSize: "24px" }} />
+              </a>
             </Space>
           </div>
-
-          {/* Footer Columns */}
-          {Object.entries(footerColumns).map(([title, links]) => (
-            <FooterColumn key={title} title={title} links={links} />
-          ))}
         </div>
-
-        {/* Copyright */}
-        <div className="mt-16 pt-8 border-t border-gray-800">
-          <Text className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Your Company, Inc. All rights reserved.
-          </Text>
+        <div className="mt-8 pt-4 border-t border-gray-700 text-center">
+          <p>
+            &copy; {new Date().getFullYear()} Tour Booking. All rights reserved.
+          </p>
         </div>
       </div>
     </Footer>
   );
-}
+};
+
+export default webFooter;

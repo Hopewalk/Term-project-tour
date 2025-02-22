@@ -36,7 +36,7 @@ export default function MenuUser() {
   ];
   const menuItems = [
     { name: "โปรไฟล์", href: "/Profile" },
-    { name: "สถานะการจอง", href: "#" },
+    { name: "สถานะการจอง", href: "/History" },
   ];
 
   return (
