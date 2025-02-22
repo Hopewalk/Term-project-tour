@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/Auth.context";
 import ax from "../../conf/ax";
 import { useParams } from "react-router";
-import { Rate, Card, Button, Input } from "antd";
+import { Rate, Card, Button, Input, message } from "antd";
 
 export default function Review() {
   const { state } = useContext(AuthContext);
@@ -44,7 +44,6 @@ export default function Review() {
           tour: tours?.documentId || "Unknown Tour",
         },
       };
-      console.log(newReview);
 
       await ax.post("/reviews", newReview);
       setReviews([
@@ -55,10 +54,22 @@ export default function Review() {
       setNewComment("");
     } catch (error) {
       console.error("Failed to submit review:", error);
-      console.error(
-        "Failed to submit review:",
-        error.response?.data || error.message
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewDocumentId) => {
+    setLoading(true);
+    try {
+      await ax.delete(`/reviews/${reviewDocumentId}`);
+      setReviews(
+        reviews.filter((review) => review.documentId !== reviewDocumentId)
       );
+      message.success("Review deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      message.error("Failed to delete review");
     } finally {
       setLoading(false);
     }
@@ -74,7 +85,7 @@ export default function Review() {
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
         <div className="space-y-6">
           {reviews.map((review, index) => (
-            <Card key={index} className="p-4">
+            <Card key={index} className="p-4 relative">
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold">
@@ -87,6 +98,16 @@ export default function Review() {
                 <p className="text-sm text-muted-foreground">
                   {review.comment}
                 </p>
+                {state.user?.id === review.users_permissions_user?.id && (
+                  <Button
+                    type="link"
+                    onClick={() => handleDeleteReview(review.documentId)}
+                    loading={loading}
+                    className="absolute bottom-2 right-2"
+                  >
+                    ลบ
+                  </Button>
+                )}
               </div>
             </Card>
           ))}
