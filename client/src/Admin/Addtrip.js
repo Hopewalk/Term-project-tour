@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Button, Select } from "antd";
 import ax from "../conf/ax";
 import Add_Accommodation from "./Component/Add_Accommodation"; 
@@ -14,7 +14,7 @@ function AddTrip() {
   const [activeTab, setActiveTab] = useState("makeTour");
   const [pictures, setPictures] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [accommodations, setAccommodations] = useState([]);
   const [tripData, setTripData] = useState({
     tripName: "",
     description: "",
@@ -22,9 +22,10 @@ function AddTrip() {
     price: "",
     startDate: "",
     endDate: "",
-    status: "available",
+    status: "unavailable",
     destination: "",
     typetour: "One Day Trip",
+    accommodation: "",
   });
 
   const handleChange = (e) => {
@@ -93,12 +94,27 @@ function AddTrip() {
           tour_type: tripData.typetour,
           // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
           image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
+          accommodations:[{
+            documentId: tripData.accommodation,
+          }]
         },
       });
-      alert("สร้างที่พักสำเร็จเรียบร้อย");
+      alert("สร้างที่ทริปสำเร็จเรียบร้อย");
       console.log("โพสต์สำเร็จ:", res.data);
     } catch (err) {
       console.error("Error:", err.response ? err.response.data : err.message);
+    }
+  };
+
+  const fetchAccommodations = async () => {
+    try {
+      const res = await ax.get("/accommodations"); // ลบ res.data ออก
+      console.log("Accommodations fetched:", res.data);
+      if (res.data && res.data.data) {
+        setAccommodations(res.data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching accommodations:", err);
     }
   };
 
@@ -136,6 +152,10 @@ function AddTrip() {
       maketrip(uploadedFiles);
     }
   };
+
+  useEffect(() => {
+    fetchAccommodations();
+  }, []);
 
   return (
     <div
@@ -256,15 +276,31 @@ function AddTrip() {
               />
             </div>
           </div>
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <InputField
+                label="จุดหมายปลายทาง"
+                name="destination"
+                value={tripData.destination}
+                onChange={handleChange}
+                placeholder="จุดหมายปลายทาง"
+                error={errors.destination}
+              />
+            </div>
+            <div className="w-1/2">
+            <SelectField
+              label="ที่พัก"
+              value={tripData.accommodation}
+              options={accommodations.map((accommodation) => ({
+                value: accommodation.documentId, 
+                label: accommodation.name, 
+              }))}
+              name="accommodation"
+              onChange={handleChange}
+            />
+            </div>
+          </div>
 
-          <InputField
-            label="จุดหมายปลายทาง"
-            name="destination"
-            value={tripData.destination}
-            onChange={handleChange}
-            placeholder="จุดหมายปลายทาง"
-            error={errors.destination}
-          />
           <ImageUploader
             pictures={pictures}
             handleImageUpload={handleImageUpload}
