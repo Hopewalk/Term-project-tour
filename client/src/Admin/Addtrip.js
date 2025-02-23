@@ -12,6 +12,8 @@ import {
 
 function AddTrip() {
   const [activeTab, setActiveTab] = useState("makeTour");
+  const [pictures, setPictures] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const [tripData, setTripData] = useState({
     tripName: "",
@@ -24,8 +26,6 @@ function AddTrip() {
     destination: "",
     typetour: "One Day Trip",
   });
-  const [pictures, setPictures] = useState([]);
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +40,21 @@ function AddTrip() {
 
   const handleDeleteImage = (index) => {
     setPictures(pictures.filter((_, i) => i !== index));
+  };
+
+  const handelreset = () => {
+    setTripData({
+      tripName: "",
+      description: "",
+      seats: "",
+      price: "",
+      startDate: "",
+      endDate: "",
+      status: "unavailable",
+      destination: "",
+      typetour: "One Day Trip",
+    });
+    setPictures([]);
   };
 
   // ฟังก์ชันสำหรับอัปโหลดไฟล์และคืนค่า response (ซึ่งควรมี id ของไฟล์)
@@ -80,6 +95,7 @@ function AddTrip() {
           image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
         },
       });
+      alert("สร้างที่พักสำเร็จเรียบร้อย");
       console.log("โพสต์สำเร็จ:", res.data);
     } catch (err) {
       console.error("Error:", err.response ? err.response.data : err.message);
@@ -254,14 +270,23 @@ function AddTrip() {
             handleImageUpload={handleImageUpload}
             handleDeleteImage={handleDeleteImage}
           />
-
-          <div className="text-center mt-8">
-            <Button
-              htmlType="submit"
-              className="bg-blue-500 text-white p-2 rounded-md"
-            >
-              สร้างทริปต์
-            </Button>
+          <div className="flex justify-end space-x-4 mt-4">
+            <div className="text-right mt-8">
+              <Button
+                onClick={handelreset}
+                className="bg-yellow-500 text-white p-2 rounded-md"
+              >
+                รีเซ็ตข้อมูล
+              </Button>
+            </div>
+            <div className="text-right mt-8">
+              <Button
+                htmlType="submit"
+                className="bg-blue-500 text-white p-2 rounded-md"
+              >
+                สร้างทริปต์
+              </Button>
+            </div>
           </div>
         </form>
       ) : (
