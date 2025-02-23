@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Select } from "antd";
 import ax from "../conf/ax";
 import Add_Accommodation from "./Component/Add_Accommodation"; 
@@ -25,7 +25,7 @@ function AddTrip() {
     status: "unavailable",
     destination: "",
     typetour: "One Day Trip",
-    accommodation: "",
+    accommodation: "", // ค่านี้จะเก็บ id ของ accommodation ที่เลือก
   });
 
   const handleChange = (e) => {
@@ -54,6 +54,7 @@ function AddTrip() {
       status: "unavailable",
       destination: "",
       typetour: "One Day Trip",
+      accommodation: "",
     });
     setPictures([]);
   };
@@ -94,9 +95,10 @@ function AddTrip() {
           tour_type: tripData.typetour,
           // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
           image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
-          accommodations:[{
-            documentId: tripData.accommodation,
-          }]
+          // ปรับโครงสร้าง accommodations ให้เชื่อมกับ accommodation โดยใช้ id ปล.คิดว่าน่าจะไม่มีปัญหาใช้ id แทน documentId
+          accommodations: {
+            connect: tripData.accommodation ? [{ id: tripData.accommodation }] : []
+          }
         },
       });
       alert("สร้างที่ทริปสำเร็จเรียบร้อย");
@@ -288,16 +290,17 @@ function AddTrip() {
               />
             </div>
             <div className="w-1/2">
-            <SelectField
-              label="ที่พัก"
-              value={tripData.accommodation}
-              options={accommodations.map((accommodation) => ({
-                value: accommodation.documentId, 
-                label: accommodation.name, 
-              }))}
-              name="accommodation"
-              onChange={handleChange}
-            />
+              {/* เปลี่ยน value จาก documentId เป็น id เพื่อให้เชื่อมต่อกับ accommodation ได้ถูกต้อง */}
+              <SelectField
+                label="ที่พัก"
+                value={tripData.accommodation}
+                options={accommodations.map((accommodation) => ({
+                  value: accommodation.id,
+                  label: accommodation.name,
+                }))}
+                name="accommodation"
+                onChange={handleChange}
+              />
             </div>
           </div>
 
