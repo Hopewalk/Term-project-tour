@@ -43,7 +43,7 @@ function AddTrip() {
     setPictures(pictures.filter((_, i) => i !== index));
   };
 
-  const handelreset = () => {
+  const handlereset = () => {
     setTripData({
       tripName: "",
       description: "",
@@ -312,7 +312,7 @@ function AddTrip() {
           <div className="flex justify-end space-x-4 mt-4">
             <div className="text-right mt-8">
               <Button
-                onClick={handelreset}
+                onClick={handlereset}
                 className="bg-yellow-500 text-white p-2 rounded-md"
               >
                 รีเซ็ตข้อมูล
