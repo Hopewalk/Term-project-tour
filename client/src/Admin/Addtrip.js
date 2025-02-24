@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Select } from "antd";
+import { Tabs, Button, Select } from "antd";
 import ax from "../conf/ax";
 import Add_Accommodation from "./Component/Add_Accommodation"; 
 import {
@@ -7,7 +7,6 @@ import {
   TextareaField,
   SelectField,
   ImageUploader,
-  SectionTitle,
 } from "./Component/Tagcomponent";
 
 function AddTrip() {
@@ -95,7 +94,7 @@ function AddTrip() {
           tour_type: tripData.typetour,
           // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
           image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
-          // ปรับโครงสร้าง accommodations ให้เชื่อมกับ accommodation โดยใช้ id ปล.คิดว่าน่าจะไม่มีปัญหาใช้ id แทน documentId
+          // ปรับโครงสร้าง accommodations ให้เชื่อมกับ accommodation โดยใช้ id
           accommodations: {
             connect: tripData.accommodation ? [{ id: tripData.accommodation }] : []
           }
@@ -110,7 +109,7 @@ function AddTrip() {
 
   const fetchAccommodations = async () => {
     try {
-      const res = await ax.get("/accommodations"); // ลบ res.data ออก
+      const res = await ax.get("/accommodations");
       console.log("Accommodations fetched:", res.data);
       if (res.data && res.data.data) {
         setAccommodations(res.data.data);
@@ -164,174 +163,162 @@ function AddTrip() {
       className="bg-white p-8 rounded-lg shadow-lg"
       style={{ width: "1000px", margin: "0 auto", minHeight: "1000px" }}
     >
-      {/* Dropdown สำหรับสลับระหว่าง Make Tour และ เพิ่มที่พัก */}
-      <div className="text-center mb-4">
-        <Select
-          value={activeTab}
-          onChange={(value) => setActiveTab(value)}
-          style={{ width: 200 }}
-        >
-          <Select.Option value="makeTour">Make Tour</Select.Option>
-          <Select.Option value="addAccommodation">
-            เพิ่มที่พัก
-          </Select.Option>
-        </Select>
-      </div>
-
-      {activeTab === "makeTour" ? (
-        <form onSubmit={handlecreatetrip}>
-          <div className="text-2xl font-bold mb-4 text-center">
-            Make Tour
-          </div>
-          <InputField
-            label="ชื่อทริปต์"
-            name="tripName"
-            value={tripData.tripName}
-            onChange={handleChange}
-            placeholder="ใส่ชื่อทริปต์"
-            error={errors.tripName}
-          />
-          <TextareaField
-            label="คำอธิบายทริปต์"
-            name="description"
-            value={tripData.description}
-            onChange={handleChange}
-            placeholder="ใส่คำอธิบายทริปต์"
-            height="200px"
-            error={errors.description}
-          />
-          <div className="flex space-x-4">
-            <div className="w-1/2">
-              <InputField
-                label="จำนวนที่นั่ง"
-                type="number"
-                name="seats"
-                value={tripData.seats}
-                onChange={handleChange}
-                placeholder="ใส่จำนวนที่นั่ง"
-                error={errors.seats}
-              />
+      {/* Tabs สำหรับสลับระหว่าง Make Tour และ เพิ่มที่พัก */}
+      <Tabs activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
+        <Tabs.TabPane tab="Make Tour" key="makeTour">
+          <form onSubmit={handlecreatetrip}>
+            <div className="text-2xl font-bold mb-4 text-center">
+              Make Tour
             </div>
-            <div className="w-1/2">
-              <InputField
-                label="ราคาทริปต์"
-                type="number"
-                name="price"
-                value={tripData.price}
-                onChange={handleChange}
-                placeholder="ใส่ราคา"
-                error={errors.price}
-              />
-            </div>
-          </div>
-
-          <div className="flex space-x-4">
-            <div className="w-1/2">
-              <InputField
-                label="วันที่และเวลาเริ่มต้น"
-                type="datetime-local"
-                name="startDate"
-                value={tripData.startDate}
-                onChange={handleChange}
-                error={errors.startDate}
-              />
-            </div>
-            <div className="w-1/2">
-              <InputField
-                label="วันที่และเวลาสิ้นสุด"
-                type="datetime-local"
-                name="endDate"
-                value={tripData.endDate}
-                onChange={handleChange}
-                error={errors.endDate}
-              />
-            </div>
-          </div>
-
-          <div className="flex space-x-4">
-            <div className="w-1/2">
-              <SelectField
-                label="สถานะ"
-                name="status"
-                value={tripData.status}
-                onChange={handleChange}
-                options={[
-                  { value: "available", label: "available" },
-                  { value: "unavailable", label: "unavailable" },
-                ]}
-              />
+            <InputField
+              label="ชื่อทริปต์"
+              name="tripName"
+              value={tripData.tripName}
+              onChange={handleChange}
+              placeholder="ใส่ชื่อทริปต์"
+              error={errors.tripName}
+            />
+            <TextareaField
+              label="คำอธิบายทริปต์"
+              name="description"
+              value={tripData.description}
+              onChange={handleChange}
+              placeholder="ใส่คำอธิบายทริปต์"
+              height="200px"
+              error={errors.description}
+            />
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <InputField
+                  label="จำนวนที่นั่ง"
+                  type="number"
+                  name="seats"
+                  value={tripData.seats}
+                  onChange={handleChange}
+                  placeholder="ใส่จำนวนที่นั่ง"
+                  error={errors.seats}
+                />
+              </div>
+              <div className="w-1/2">
+                <InputField
+                  label="ราคาทริปต์"
+                  type="number"
+                  name="price"
+                  value={tripData.price}
+                  onChange={handleChange}
+                  placeholder="ใส่ราคา"
+                  error={errors.price}
+                />
+              </div>
             </div>
 
-            <div className="w-1/2">
-              <SelectField
-                label="ประเภททริป"
-                name="typetour"
-                value={tripData.typetour}
-                onChange={handleChange}
-                options={[
-                  { value: "One Day Trip", label: "One Day Trip" },
-                  {
-                    value: "Package with Accommodation",
-                    label: "Package with Accommodation",
-                  },
-                ]}
-              />
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <InputField
+                  label="วันที่และเวลาเริ่มต้น"
+                  type="datetime-local"
+                  name="startDate"
+                  value={tripData.startDate}
+                  onChange={handleChange}
+                  error={errors.startDate}
+                />
+              </div>
+              <div className="w-1/2">
+                <InputField
+                  label="วันที่และเวลาสิ้นสุด"
+                  type="datetime-local"
+                  name="endDate"
+                  value={tripData.endDate}
+                  onChange={handleChange}
+                  error={errors.endDate}
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex space-x-4">
-            <div className="w-1/2">
-              <InputField
-                label="จุดหมายปลายทาง"
-                name="destination"
-                value={tripData.destination}
-                onChange={handleChange}
-                placeholder="จุดหมายปลายทาง"
-                error={errors.destination}
-              />
-            </div>
-            <div className="w-1/2">
-              {/* เปลี่ยน value จาก documentId เป็น id เพื่อให้เชื่อมต่อกับ accommodation ได้ถูกต้อง */}
-              <SelectField
-                label="ที่พัก"
-                value={tripData.accommodation}
-                options={accommodations.map((accommodation) => ({
-                  value: accommodation.id,
-                  label: accommodation.name,
-                }))}
-                name="accommodation"
-                onChange={handleChange}
-              />
-            </div>
-          </div>
 
-          <ImageUploader
-            pictures={pictures}
-            handleImageUpload={handleImageUpload}
-            handleDeleteImage={handleDeleteImage}
-          />
-          <div className="flex justify-end space-x-4 mt-4">
-            <div className="text-right mt-8">
-              <Button
-                onClick={handlereset}
-                className="bg-yellow-500 text-white p-2 rounded-md"
-              >
-                รีเซ็ตข้อมูล
-              </Button>
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <SelectField
+                  label="สถานะ"
+                  name="status"
+                  value={tripData.status}
+                  onChange={handleChange}
+                  options={[
+                    { value: "available", label: "available" },
+                    { value: "unavailable", label: "unavailable" },
+                  ]}
+                />
+              </div>
+
+              <div className="w-1/2">
+                <SelectField
+                  label="ประเภททริป"
+                  name="typetour"
+                  value={tripData.typetour}
+                  onChange={handleChange}
+                  options={[
+                    { value: "One Day Trip", label: "One Day Trip" },
+                    {
+                      value: "Package with Accommodation",
+                      label: "Package with Accommodation",
+                    },
+                  ]}
+                />
+              </div>
             </div>
-            <div className="text-right mt-8">
-              <Button
-                htmlType="submit"
-                className="bg-blue-500 text-white p-2 rounded-md"
-              >
-                สร้างทริปต์
-              </Button>
+            <div className="flex space-x-4">
+              <div className="w-1/2">
+                <InputField
+                  label="จุดหมายปลายทาง"
+                  name="destination"
+                  value={tripData.destination}
+                  onChange={handleChange}
+                  placeholder="จุดหมายปลายทาง"
+                  error={errors.destination}
+                />
+              </div>
+              <div className="w-1/2">
+                <SelectField
+                  label="ที่พัก"
+                  value={tripData.accommodation}
+                  options={accommodations.map((accommodation) => ({
+                    value: accommodation.id,
+                    label: accommodation.name,
+                  }))}
+                  name="accommodation"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          </div>
-        </form>
-      ) : (
-        // แสดงส่วนของการเพิ่มที่พัก เมื่อเลือก tab "เพิ่มที่พัก"
-        <Add_Accommodation />
-      )}
+
+            <ImageUploader
+              pictures={pictures}
+              handleImageUpload={handleImageUpload}
+              handleDeleteImage={handleDeleteImage}
+            />
+            <div className="flex justify-end space-x-4 mt-4">
+              <div className="text-right mt-8">
+                <Button
+                  onClick={handlereset}
+                  className="bg-yellow-500 text-white p-2 rounded-md"
+                >
+                  รีเซ็ตข้อมูล
+                </Button>
+              </div>
+              <div className="text-right mt-8">
+                <Button
+                  htmlType="submit"
+                  className="bg-blue-500 text-white p-2 rounded-md"
+                >
+                  สร้างทริปต์
+                </Button>
+              </div>
+            </div>
+          </form>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="เพิ่มที่พัก" key="addAccommodation">
+          <Add_Accommodation />
+        </Tabs.TabPane>
+      </Tabs>
     </div>
   );
 }

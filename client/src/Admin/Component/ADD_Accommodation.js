@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "antd";
 import ax from "../../conf/ax";
-import { InputField, TextareaField, SelectField, ImageUploader, SectionTitle } from "./Tagcomponent";
+import { InputField, TextareaField, SelectField, ImageUploader, } from "./Tagcomponent";
 
 function Add_Accommodation() {
     const [AccommodationData, setAccommodationData] = useState({
@@ -59,8 +59,8 @@ function Add_Accommodation() {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <SectionTitle title="เพิ่มที่พัก" className="text-2xl font-bold mb-4 flex justify-center mt-4"/>
+        <div >
+            <div className="text-2xl font-bold mb-4 text-center">เพิ่มที่พัก</div>
                 <InputField
                     label="ชื่อที่พัก"
                     name="accommodationName"
