@@ -19,63 +19,83 @@ import Pay from "./User/Payment.js";
 import Status from "./Admin/Status.js";
 import Edittrip from "./Admin/Editpage.js";
 import Footer from "./Component/Footer.js";
+import Historylist from "./User/History.js";
+import Trip_statistic from "./Admin/Trips_statistic.js";
 
 function App() {
   const { state } = useContext(AuthContext);
 
   if (!state.isLoggedIn) {
     return (
-      <BrowserRouter>
-        <MenuUnden />
-        <Routes>
-          <Route path="/" element={<Navigate to="/Home" />} />
-          <Route path="/Home" element={<Home />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Onedaytrip" element={<Oneday />} />
-          <Route path="/Trip&Rest" element={<Triprest />} />
-          <Route path="/Trip/:documentId" element={<TripOverview />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      <div className="app-container">
+        <BrowserRouter>
+          <header>
+            <MenuUnden />
+          </header>
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Navigate to="/Home" />} />
+              <Route path="/Home" element={<Home />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/Onedaytrip" element={<Oneday />} />
+              <Route path="/Trip&Rest" element={<Triprest />} />
+              <Route path="/Trip/:documentId" element={<TripOverview />} />
+            </Routes>
+          </main>
+          <footer>
+            <Footer />
+          </footer>
+        </BrowserRouter>
+      </div>
     );
   }
 
   if (state.isLoggedIn) {
     const role = state.user.role;
     return (
-      <BrowserRouter>
-        <div>{role === "Admin" ? <MenuAdmin /> : <MenuUser />}</div>
-        <Routes>
-          {role === "Admin" ? (
-            <>
-              <Route path="/Login" element={<Navigate to={"/"} />} />
-              <Route path="/" element={<Navigate to="/Home" />} />
-              <Route path="/Home" element={<Home />} />
-              <Route path="/Onedaytrip" element={<Oneday />} />
-              <Route path="/Trip&Rest" element={<Triprest />} />
-              <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/Profile" element={<ProfileAm />} />
-              <Route path="/Create" element={<AddTrip />} />
-              <Route path="/Status" element={<Status />} />
-              <Route path="/Trip/:documentId" element={<TripOverview />} />
-              <Route path="/Trips/edit" element={<Edittrip />} />
-            </>
-          ) : (
-            <>
-              <Route path="/Login" element={<Navigate to={"/"} />} />
-              <Route path="/" element={<Navigate to="/Home" />} />
-              <Route path="/Home" element={<Home />} />
-              <Route path="/Onedaytrip" element={<Oneday />} />
-              <Route path="/Trip&Rest" element={<Triprest />} />
-              <Route path="/Profile" element={<EditProfile />} />
-              <Route path="/Trip/:documentId" element={<TripOverview />} />
-              <Route path="/Payment" element={<Pay />} />
-            </>
-          )}
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+      <div className="app-container">
+        <BrowserRouter>
+          <header>
+            <div>{role === "Admin" ? <MenuAdmin /> : <MenuUser />}</div>
+          </header>
+          <main>
+            <Routes>
+              {role === "Admin" ? (
+                <>
+                  <Route path="/Login" element={<Navigate to={"/"} />} />
+                  <Route path="/" element={<Navigate to="/Home" />} />
+                  <Route path="/Home" element={<Home />} />
+                  <Route path="/Onedaytrip" element={<Oneday />} />
+                  <Route path="/Trip&Rest" element={<Triprest />} />
+                  <Route path="/Dashboard" element={<Dashboard />} />
+                  <Route path="/Profile" element={<ProfileAm />} />
+                  <Route path="/Create" element={<AddTrip />} />
+                  <Route path="/Status" element={<Status />} />
+                  <Route path="/Trip/:documentId" element={<TripOverview />} />
+                  <Route path="/Trips/edit" element={<Edittrip />} />
+                  <Route path="/Trips/statistic" element={<Trip_statistic />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/Login" element={<Navigate to={"/"} />} />
+                  <Route path="/" element={<Navigate to="/Home" />} />
+                  <Route path="/Home" element={<Home />} />
+                  <Route path="/Onedaytrip" element={<Oneday />} />
+                  <Route path="/Trip&Rest" element={<Triprest />} />
+                  <Route path="/Profile" element={<EditProfile />} />
+                  <Route path="/Trip/:documentId" element={<TripOverview />} />
+                  <Route path="/Payment" element={<Pay />} />
+                  <Route path="/History" element={<Historylist />} />
+                </>
+              )}
+            </Routes>
+          </main>
+          <footer>
+            <Footer />
+          </footer>
+        </BrowserRouter>
+      </div>
     );
   }
 }
