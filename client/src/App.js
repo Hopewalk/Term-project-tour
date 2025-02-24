@@ -20,6 +20,7 @@ import Status from "./Admin/Status.js";
 import Edittrip from "./Admin/Editpage.js";
 import Footer from "./Component/Footer.js";
 import Historylist from "./User/History.js";
+import Trip_statistic from "./Admin/Trips_statistic.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -73,6 +74,7 @@ function App() {
                   <Route path="/Status" element={<Status />} />
                   <Route path="/Trip/:documentId" element={<TripOverview />} />
                   <Route path="/Trips/edit" element={<Edittrip />} />
+                  <Route path="/Trips/statistic" element={<Trip_statistic />} />
                 </>
               ) : (
                 <>
