@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import Review from "./Component/Rate&Review";
 
 export default function TripOverview() {
   const { state } = useContext(AuthContext);
   const { documentId } = useParams();
   const [tour, settour] = useState(null);
+  const navigate = useNavigate();
 
   const fetchDetail = async () => {
     try {
@@ -40,6 +41,14 @@ export default function TripOverview() {
   useEffect(() => {
     fetchDetail();
   }, [documentId]);
+
+  const handleBooking = () => {
+    if (!state.isAuthenticated) {
+      navigate("/Login");
+    } else {
+      console.log("Proceed to book");
+    }
+  };
 
   if (!tour) return <div>ไม่สามารถดูได้</div>;
 
@@ -128,6 +137,7 @@ export default function TripOverview() {
               <button
                 type="button"
                 className="w-full bg-blue-600 text-white rounded-lg py-3 text-lg font-semibold hover:bg-blue-500"
+                onClick={handleBooking}
               >
                 จอง
               </button>
