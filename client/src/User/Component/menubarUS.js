@@ -36,11 +36,11 @@ export default function MenuUser() {
   ];
   const menuItems = [
     { name: "โปรไฟล์", href: "/Profile" },
-    { name: "สถานะการจอง", href: "#" },
+    { name: "สถานะการจอง", href: "/History" },
   ];
 
   return (
-    <Disclosure as="nav" className="bg-[#66D6BB]">
+    <Disclosure as="nav" className="bg-[#0e5484]">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
