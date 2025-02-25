@@ -527,6 +527,38 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
+  collectionName: 'time_ranges';
+  info: {
+    description: '';
+    displayName: 'reshow-tours';
+    pluralName: 'time-ranges';
+    singularName: 'time-range';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Hide_date: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::time-range.time-range'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    repeat_every_year: Schema.Attribute.Boolean;
+    Show_date: Schema.Attribute.DateTime;
+    tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTourCategoryTourCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'tour_categories';
@@ -594,6 +626,10 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     start_date: Schema.Attribute.DateTime;
+    time_ranges: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::time-range.time-range'
+    >;
     tour_categories: Schema.Attribute.Relation<
       'manyToMany',
       'api::tour-category.tour-category'
@@ -1125,6 +1161,7 @@ declare module '@strapi/strapi' {
       'api::booking.booking': ApiBookingBooking;
       'api::payment.payment': ApiPaymentPayment;
       'api::review.review': ApiReviewReview;
+      'api::time-range.time-range': ApiTimeRangeTimeRange;
       'api::tour-category.tour-category': ApiTourCategoryTourCategory;
       'api::tour.tour': ApiTourTour;
       'plugin::content-releases.release': PluginContentReleasesRelease;

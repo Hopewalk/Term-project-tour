@@ -81,6 +81,12 @@
       "relation": "oneToMany",
       "target": "api::review.review",
       "mappedBy": "tour"
+    },
+    "time_ranges": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::time-range.time-range",
+      "mappedBy": "tour"
     }
   }
 }
