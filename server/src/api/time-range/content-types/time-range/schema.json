@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "time_ranges",
+  "info": {
+    "singularName": "time-range",
+    "pluralName": "time-ranges",
+    "displayName": "reshow-tours",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Show_date": {
+      "type": "datetime"
+    },
+    "Hide_date": {
+      "type": "datetime"
+    },
+    "tour": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::tour.tour",
+      "inversedBy": "time_ranges"
+    },
+    "repeat_every_year": {
+      "type": "boolean"
+    }
+  }
+}

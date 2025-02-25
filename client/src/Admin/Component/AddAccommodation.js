@@ -37,7 +37,7 @@ function AddAccommodation() {
                 contact_info: AccommodationData.context 
             }});
             console.log("Response:", res.data);
-            
+            alert("Create AddAccommodation success")
             return res.data;
         } catch (err) {
             console.error("Error details:", {

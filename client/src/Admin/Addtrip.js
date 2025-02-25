@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Tabs } from 'antd';
 import AddAccommodation from "./Component/AddAccommodation"; 
 import AddTour from "./Component/AddTour"; 
+import AddTimeRange from "./Component/AddTimeRange"; 
 
 function AddTrip(){
-  const [activeTab, setActiveTab] = useState("Create Tour"); // แก้ไขการใช้ useState
+  const [activeTab, setActiveTab] = useState("Create Tour"); 
 
   return (
     <div
@@ -14,6 +15,9 @@ function AddTrip(){
       <Tabs activeKey={activeTab} onChange={setActiveTab}>
         <Tabs.TabPane tab="Create Tour" key="Create Tour">
           <AddTour />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Create Tour Reshow Date" key="Create Tour Reshow Date">
+          <AddTimeRange />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Create Accommodation" key="Create Accommodation">
           <AddAccommodation />
