@@ -13,16 +13,16 @@ function AddTour() {
     const [errors, setErrors] = useState({});
     const [accommodations, setAccommodations] = useState([]);
     const [tripData, setTripData] = useState({
-    tripName: "",
-    description: "",
-    seats: "",
-    price: "",
-    startDate: "",
-    endDate: "",
-    status: "unavailable",
-    destination: "",
-    typetour: "One Day Trip",
-    accommodation: "", // ค่านี้จะเก็บ id ของ accommodation ที่เลือก
+            tripName: "",
+            description: "",
+            seats: "",
+            price: "",
+            startDate: "",
+            endDate: "",
+            status: "unavailable",
+            destination: "",
+            typetour: "",
+            accommodation: "", // ค่านี้จะเก็บ id ของ accommodation ที่เลือก
     });
 
     const handleChange = (e) => {
@@ -98,6 +98,7 @@ function AddTour() {
         });
 
         console.log("โพสต์สำเร็จ:", res.data);
+        alert("Create tour success")
         return res.data;
         } catch (err) {
         console.error("Error:", err.response ? err.response.data : err.message);
@@ -153,6 +154,7 @@ function AddTour() {
 
     useEffect(() => {
         fetchAccommodations();
+        tripData.typetour = "One Day Trip";
     }, []);
 
     return (
@@ -243,17 +245,12 @@ function AddTour() {
                 <div className="w-1/2">
                     <SelectField
                     label="tour type"
-                    name="tour type"
+                    name="typetour"
                     value={tripData.typetour}
                     onChange={handleChange}
                     options={[
-                        {   value: "One Day Trip", 
-                            label: "One Day Trip" ,
-                        },
-                        {
-                            value: "Package with Accommodation",
-                            label: "Package with Accommodation",
-                        },
+                        {   value: "One Day Trip",label: "One Day Trip"},
+                        {   value: "Package with Accommodation",label: "Package with Accommodation"},
                     ]}
                     />
                 </div>
