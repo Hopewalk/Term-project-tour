@@ -4,7 +4,8 @@
   "info": {
     "singularName": "payment",
     "pluralName": "payments",
-    "displayName": "Payment"
+    "displayName": "Payment",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -33,10 +34,17 @@
         "failed"
       ]
     },
-    "booking": {
+    "bookings": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::booking.booking"
+      "relation": "oneToMany",
+      "target": "api::booking.booking",
+      "mappedBy": "payment"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "payments"
     }
   }
 }
