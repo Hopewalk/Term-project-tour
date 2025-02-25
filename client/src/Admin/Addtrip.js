@@ -99,25 +99,9 @@ function AddTrip() {
         },
       });
 
-      // แสดง notification เมื่อสำเร็จ
-      notification.success({
-        message: 'สำเร็จ',
-        description: 'สร้างทริปสำเร็จ!',
-        placement: 'topRight',
-        duration: 3,
-      });
-
       console.log("โพสต์สำเร็จ:", res.data);
       return res.data;
     } catch (err) {
-      // แสดง notification เมื่อเกิดข้อผิดพลาด
-      notification.error({
-        message: 'เกิดข้อผิดพลาด',
-        description: err.response?.data?.error?.message || 'ไม่สามารถสร้างทริปได้',
-        placement: 'topRight',
-        duration: 3,
-      });
-
       console.error("Error:", err.response ? err.response.data : err.message);
       throw err;
     }
