@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "antd";
 import ax from "../conf/ax";
-import EditTour from "./Component/Edit-trip";
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
@@ -44,6 +43,11 @@ export default function Trip_statistic() {
   const closeEditModal = () => {
     setIsModalOpen(false);
     setSelectedTour(null);
+  };
+
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/Trip/${tour.documentId}`);
   };
 
   const oneDayTrips = tours.filter((tour) => tour.type === "One Day Trip");
