@@ -145,8 +145,12 @@ function Add_Accommodation() {
                             value={AccommodationData.rating}
                             onChange={handleChange}
                             error={errors.rating}
+                            min={1}
+                            max={5}
+                            step={0.1}                       
                         />
                     </div>
+
                     <div className="w-1/2">
                         <InputField
                             label="Context info"
