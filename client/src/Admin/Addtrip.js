@@ -16,7 +16,7 @@ function AddTrip(){
         <Tabs.TabPane tab="Create Tour" key="Create Tour">
           <AddTour />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Create Time" key="Create Time">
+        <Tabs.TabPane tab="Create Tour Reshow Date" key="Create Tour Reshow Date">
           <AddTimeRange />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Create Accommodation" key="Create Accommodation">
