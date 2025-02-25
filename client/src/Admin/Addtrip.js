@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Button, Select, notification } from 'antd';
 import ax from "../conf/ax";
-import Add_Accommodation from "./Component/ADD_Accommodation"; 
+import AddAccommodation from "./Component/AddAccommodation"; 
 import {
   InputField,
   TextareaField,
@@ -319,7 +319,7 @@ function AddTrip() {
           </form>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Create Accommodation" key="Create Accommodation">
-          <Add_Accommodation />
+          <AddAccommodation />
         </Tabs.TabPane>
       </Tabs>
     </div>

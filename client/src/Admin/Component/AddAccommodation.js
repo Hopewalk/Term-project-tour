@@ -3,7 +3,7 @@ import { Button } from "antd";
 import ax from "../../conf/ax";
 import { InputField, TextareaField, SelectField, ImageUploader, } from "./Tagcomponent";
 
-function Add_Accommodation() {
+function AddAccommodation() {
     const [errors, setErrors] = useState({});
     const [AccommodationData, setAccommodationData] = useState({
         accommodationName: "",
@@ -185,4 +185,4 @@ function Add_Accommodation() {
     );
 }
 
-export default Add_Accommodation;
+export default AddAccommodation;
