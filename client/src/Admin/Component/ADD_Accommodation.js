@@ -14,6 +14,17 @@ function Add_Accommodation() {
         context: "",
     });
 
+    const handlereset = () => {
+        setAccommodationData({
+            accommodationName: "",
+            description: "",
+            location: "",
+            price: "",
+            rating: "",
+            context: "",
+            });
+        };
+
     const makeAccommodation = async () => {
         try {
             const res = await ax.post("/accommodations", {
@@ -80,9 +91,9 @@ function Add_Accommodation() {
     
     return (
         <div >
-            <div className="text-2xl font-bold mb-4 text-center">เพิ่มที่พัก</div>
+            <div className="text-2xl font-bold mb-4 text-center">Create Accommodation</div>
                 <InputField
-                    label="ชื่อที่พัก"
+                    label="Accommodation Name"
                     name="accommodationName"
                     type="text"
                     placeholder="กรอกชื่อที่พัก"
@@ -91,7 +102,7 @@ function Add_Accommodation() {
                     error={errors.accommodationName}
                     />
                 <TextareaField
-                    label="รายละเอียด"
+                    label="Description"
                     name="description"
                     type="text"
                     placeholder="กรอกคำอธิบาย"
@@ -102,7 +113,7 @@ function Add_Accommodation() {
                 <div className="flex space-x-4">
                     <div className="w-1/2">
                         <InputField
-                            label="ที่อยู่"
+                            label="Location"
                             name="location"
                             type="text"
                             placeholder="กรอกที่อยู่"
@@ -114,7 +125,7 @@ function Add_Accommodation() {
                     </div>
                     <div className="w-1/2">
                         <InputField
-                            label="ราคา"
+                            label="Price"
                             name="price"
                             type="number"
                             placeholder="กรอกราคา"
@@ -138,7 +149,7 @@ function Add_Accommodation() {
                     </div>
                     <div className="w-1/2">
                         <InputField
-                            label="context info"
+                            label="Context info"
                             name="context"
                             type="text"
                             placeholder="กรอกข้อมูลติดต่อ"
@@ -148,13 +159,23 @@ function Add_Accommodation() {
                         />
                     </div>
                 </div >
-                <div className="flex justify-center mt-4">
-                <Button type="submit" 
-                        onClick={handleSubmit}
-                        className="bg-blue-500 text-white p-2 rounded-md mt-4"
-                >
-                    เพิ่มที่พัก
-                </Button>
+                <div className="flex justify-end space-x-4 mt-4">
+                <div className="text-right mt-8">
+                    <Button
+                    onClick={handlereset}
+                    className="bg-yellow-500 text-white p-2 rounded-md"
+                    >
+                    Reset fill
+                    </Button>
+                </div>
+                <div className="text-right mt-8">
+                    <Button
+                    onClick={handleSubmit}
+                    className="bg-blue-500 text-white p-2 rounded-md"
+                    >
+                    submit
+                    </Button>
+                </div>
                 </div>
         </div>
     );

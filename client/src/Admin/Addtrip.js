@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Button, Select, notification } from 'antd';
 import ax from "../conf/ax";
-import Add_Accommodation from "./Component/Add_Accommodation"; 
+import Add_Accommodation from "./Component/ADD_Accommodation"; 
 import {
   InputField,
   TextareaField,
@@ -10,7 +10,7 @@ import {
 } from "./Component/Tagcomponent";
 
 function AddTrip() {
-  const [activeTab, setActiveTab] = useState("makeTour");
+  const [activeTab, setActiveTab] = useState("Create Tour");
   const [pictures, setPictures] = useState([]);
   const [errors, setErrors] = useState({});
   const [accommodations, setAccommodations] = useState([]);
@@ -159,6 +159,8 @@ function AddTrip() {
       newErrors.endDate = "วันที่เริ่มต้นต้องน้อยกว่าวันที่สิ้นสุด!";
     }
 
+    // ตรวจสอบการกรอกข้อมูลฝั่ง ที่พัก
+
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
@@ -172,6 +174,7 @@ function AddTrip() {
 
   useEffect(() => {
     fetchAccommodations();
+    setActiveTab("Create Tour");
   }, []);
 
   return (
@@ -181,21 +184,21 @@ function AddTrip() {
     >
       {/* Tabs สำหรับสลับระหว่าง Make Tour และ เพิ่มที่พัก */}
       <Tabs activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
-        <Tabs.TabPane tab="Make Tour" key="makeTour">
+        <Tabs.TabPane tab="Creat Tour" key="Create Tour">
           <form onSubmit={handlecreatetrip}>
             <div className="text-2xl font-bold mb-4 text-center">
-              Make Tour
+            Creat Tour
             </div>
             <InputField
-              label="ชื่อทริปต์"
-              name="tripName"
+              label="Tour Name"
+              name="Tour Name"
               value={tripData.tripName}
               onChange={handleChange}
               placeholder="ใส่ชื่อทริปต์"
               error={errors.tripName}
             />
             <TextareaField
-              label="คำอธิบายทริปต์"
+              label="Description"
               name="description"
               value={tripData.description}
               onChange={handleChange}
@@ -206,7 +209,7 @@ function AddTrip() {
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <InputField
-                  label="จำนวนที่นั่ง"
+                  label="Seats"
                   type="number"
                   name="seats"
                   value={tripData.seats}
@@ -217,7 +220,7 @@ function AddTrip() {
               </div>
               <div className="w-1/2">
                 <InputField
-                  label="ราคาทริปต์"
+                  label="Price"
                   type="number"
                   name="price"
                   value={tripData.price}
@@ -231,7 +234,7 @@ function AddTrip() {
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <InputField
-                  label="วันที่และเวลาเริ่มต้น"
+                  label="Start Date"
                   type="datetime-local"
                   name="startDate"
                   value={tripData.startDate}
@@ -241,7 +244,7 @@ function AddTrip() {
               </div>
               <div className="w-1/2">
                 <InputField
-                  label="วันที่และเวลาสิ้นสุด"
+                  label="End Date"
                   type="datetime-local"
                   name="endDate"
                   value={tripData.endDate}
@@ -254,7 +257,7 @@ function AddTrip() {
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <SelectField
-                  label="สถานะ"
+                  label="Status"
                   name="status"
                   value={tripData.status}
                   onChange={handleChange}
@@ -267,8 +270,8 @@ function AddTrip() {
 
               <div className="w-1/2">
                 <SelectField
-                  label="ประเภททริป"
-                  name="typetour"
+                  label="tour type"
+                  name="tour type"
                   value={tripData.typetour}
                   onChange={handleChange}
                   options={[
@@ -284,7 +287,7 @@ function AddTrip() {
             <div className="flex space-x-4">
               <div className="w-1/2">
                 <InputField
-                  label="จุดหมายปลายทาง"
+                  label="Destination"
                   name="destination"
                   value={tripData.destination}
                   onChange={handleChange}
@@ -294,7 +297,7 @@ function AddTrip() {
               </div>
               <div className="w-1/2">
                 <SelectField
-                  label="ที่พัก"
+                  label="Accommodation"
                   value={tripData.accommodation}
                   options={accommodations.map((accommodation) => ({
                     value: accommodation.id,
@@ -317,7 +320,7 @@ function AddTrip() {
                   onClick={handlereset}
                   className="bg-yellow-500 text-white p-2 rounded-md"
                 >
-                  รีเซ็ตข้อมูล
+                  Reset fill
                 </Button>
               </div>
               <div className="text-right mt-8">
@@ -325,13 +328,13 @@ function AddTrip() {
                   htmlType="submit"
                   className="bg-blue-500 text-white p-2 rounded-md"
                 >
-                  สร้างทริปต์
+                  submit
                 </Button>
               </div>
             </div>
           </form>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="เพิ่มที่พัก" key="addAccommodation">
+        <Tabs.TabPane tab="Create Accommodation" key="Create Accommodation">
           <Add_Accommodation />
         </Tabs.TabPane>
       </Tabs>
