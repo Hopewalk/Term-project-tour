@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Button, Select } from "antd";
+import { Tabs, Button, Select, notification } from 'antd';
 import ax from "../conf/ax";
 import Add_Accommodation from "./Component/Add_Accommodation"; 
 import {
@@ -92,18 +92,34 @@ function AddTrip() {
           tour_status: tripData.status,
           destination: tripData.destination,
           tour_type: tripData.typetour,
-          // ใช้ key "image" ส่ง id ของไฟล์ที่อัปโหลด (เฉพาะไฟล์แรก)
           image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
-          // ปรับโครงสร้าง accommodations ให้เชื่อมกับ accommodation โดยใช้ id
           accommodations: {
             connect: tripData.accommodation ? [{ id: tripData.accommodation }] : []
           }
         },
       });
-      alert("สร้างที่ทริปสำเร็จเรียบร้อย");
+
+      // แสดง notification เมื่อสำเร็จ
+      notification.success({
+        message: 'สำเร็จ',
+        description: 'สร้างทริปสำเร็จ!',
+        placement: 'topRight',
+        duration: 3,
+      });
+
       console.log("โพสต์สำเร็จ:", res.data);
+      return res.data;
     } catch (err) {
+      // แสดง notification เมื่อเกิดข้อผิดพลาด
+      notification.error({
+        message: 'เกิดข้อผิดพลาด',
+        description: err.response?.data?.error?.message || 'ไม่สามารถสร้างทริปได้',
+        placement: 'topRight',
+        duration: 3,
+      });
+
       console.error("Error:", err.response ? err.response.data : err.message);
+      throw err;
     }
   };
 

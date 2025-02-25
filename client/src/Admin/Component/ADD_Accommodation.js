@@ -4,6 +4,7 @@ import ax from "../../conf/ax";
 import { InputField, TextareaField, SelectField, ImageUploader, } from "./Tagcomponent";
 
 function Add_Accommodation() {
+    const [errors, setErrors] = useState({});
     const [AccommodationData, setAccommodationData] = useState({
         accommodationName: "",
         description: "",
@@ -39,15 +40,34 @@ function Add_Accommodation() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setAccommodationData(prev => ({
+        setAccommodationData((prev) => ({
             ...prev,
             [name]: value
         }));
+    
+        // ลบข้อความ error เมื่อกรอกข้อมูลใหม่
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: value ? "" : prevErrors[name],
+        }));
     };
-
+    
     const handleSubmit = async (e) => {
-        //ตรวจสอบว่าส่งข้อมูลสำเร็จหรือไม่
         e.preventDefault();
+    
+        const newErrors = {};
+        if (!AccommodationData.accommodationName) newErrors.accommodationName = "กรุณากรอกชื่อที่พัก";
+        if (!AccommodationData.description) newErrors.description = "กรุณากรอกรายละเอียด";
+        if (!AccommodationData.location) newErrors.location = "กรุณากรอกที่อยู่";
+        if (!AccommodationData.price) newErrors.price = "กรุณากรอกราคา";
+        if (!AccommodationData.rating) newErrors.rating = "กรุณาให้คะแนนที่พัก";
+        if (!AccommodationData.context) newErrors.context = "กรุณากรอกข้อมูลติดต่อ";
+    
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+    
         try {
             const result = await makeAccommodation();
             console.log("Success:", result);
@@ -57,7 +77,7 @@ function Add_Accommodation() {
                 (error.response?.data?.error?.message || error.message));
         }
     };
-
+    
     return (
         <div >
             <div className="text-2xl font-bold mb-4 text-center">เพิ่มที่พัก</div>
@@ -68,7 +88,8 @@ function Add_Accommodation() {
                     placeholder="กรอกชื่อที่พัก"
                     value={AccommodationData.accommodationName}
                     onChange={handleChange}
-                />
+                    error={errors.accommodationName}
+                    />
                 <TextareaField
                     label="รายละเอียด"
                     name="description"
@@ -76,6 +97,7 @@ function Add_Accommodation() {
                     placeholder="กรอกคำอธิบาย"
                     value={AccommodationData.description}
                     onChange={handleChange}
+                    error={errors.description}
                 />
                 <div className="flex space-x-4">
                     <div className="w-1/2">
@@ -86,6 +108,8 @@ function Add_Accommodation() {
                             placeholder="กรอกที่อยู่"
                             value={AccommodationData.location}
                             onChange={handleChange}
+                            error={errors.location}
+
                         />
                     </div>
                     <div className="w-1/2">
@@ -96,6 +120,7 @@ function Add_Accommodation() {
                             placeholder="กรอกราคา"
                             value={AccommodationData.price}
                             onChange={handleChange}
+                            error={errors.price}
                         />
                     </div>
                 </div>
@@ -108,6 +133,7 @@ function Add_Accommodation() {
                             placeholder="ให้คะแนนความนิยม"
                             value={AccommodationData.rating}
                             onChange={handleChange}
+                            error={errors.rating}
                         />
                     </div>
                     <div className="w-1/2">
@@ -118,6 +144,7 @@ function Add_Accommodation() {
                             placeholder="กรอกข้อมูลติดต่อ"
                             value={AccommodationData.context}
                             onChange={handleChange}
+                            error={errors.context}
                         />
                     </div>
                 </div >
