@@ -5,11 +5,27 @@ import ax from '../../conf/ax';
 
 const fetchTour = async () => {
     try {
-        const response = await ax.get('/tours?populate=reviews.users_permissions_user&populate=accommodations&populate=bookings&populate=image&populate=tour_categories&populate=bookings');
-        console.log('response', response.data.data);
+        const apiUrl = '/tours';
+        const params = {
+            'populate[0]': 'reviews.users_permissions_user',
+            'populate[1]': 'accommodations',
+            'populate[2]': 'bookings',
+            'populate[3]': 'image',
+            'populate[4]': 'tour_categories',
+            'pagination[start]': 0,   // Start from the first item
+            'pagination[limit]': 100  // Fetch up to 100 results
+        };
+
+        console.log("Fetching data from API:", ax.defaults.baseURL + apiUrl, "with params:", params);
+
+        const response = await ax.get(apiUrl, { params });
+
+        console.log('API Response:', response);
+
+        console.log('Fetched Data:', response.data.data);
 
         const tourData = response.data.data.map((item) => {
-            //reviews
+            // reviews
             const reviews = item.reviews?.map((review) => ({
                 id: review.id,
                 rating: review.rating || 0,
@@ -19,7 +35,7 @@ const fetchTour = async () => {
             const totalRatings = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
             const averageRating = reviews.length > 0 ? totalRatings / reviews.length : 0;
 
-            //bookings
+            // bookings
             const bookings = item.bookings?.map(booking => ({
                 id: booking.id,
                 date: booking.booking_date,
@@ -28,22 +44,25 @@ const fetchTour = async () => {
                 payment_status: booking.payment_status
             })) || [];
 
-            //categories
-            const categories = item.tour_categories?.map(categories => ({
-                id: categories.id,
-                name: categories.category_name,
-                description: categories.description || "No description"
+            // categories
+            const categories = item.tour_categories?.map(category => ({
+                id: category.id,
+                name: category.category_name,
+                description: category.description || "No description"
             })) || [];
             const categoryName = categories.map(category => category.name);
+
+            // images
+            const images = item.image?.map(img => `${ax.defaults.baseURL.replace("/api", "")}${img.url}`) || [];
 
             return {
                 id: item.id,
                 documentId: item.documentId,
                 name: item.tour_name,
-                description: item.description,
+                description: item.description || "no description",
                 reviews,
                 price: item.price,
-                image: `${ax.defaults.baseURL.replace("/api", "")}${item.image[0].url}`,
+                images,
                 max_participants: item.max_participants,
                 categories_name: categoryName,
                 averageRating: parseFloat(averageRating.toFixed(1)),
@@ -51,10 +70,10 @@ const fetchTour = async () => {
             };
         });
 
-        console.log("tourData", tourData);
+        console.log("Processed tour data:", tourData);
         return tourData;
     } catch (error) {
-        console.error(error)
+        console.error("Error fetching data:", error);
     }
 };
 
@@ -87,7 +106,7 @@ const applyFilters = (tours, selectedFilters) => {
     return ftours
 };
 
-const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice, selectedRatings }) => {
+const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice, selectedRatings, setTours }) => {
     const [tour, setTour] = useState([]);
     //console.log("prange", priceRange);
     useEffect(() => {
