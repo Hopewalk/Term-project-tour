@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import FilterSidebar from "./Component/Filters";
 import Category from "./Component/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
@@ -8,16 +8,16 @@ import TourGrid from "./Component/homepage/TourGrid";
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({});
-  const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [maxPrice, setMaxPrice] = useState(null);
-  const [PriceBarRange, setPriceRange] = useState([0, maxPrice]);
-  /*
-    console.log("sc", selectedCategory);
-    console.log("cf", selectedFilters || "no filters selected");
-    console.log("pbr", PriceBarRange);
-    console.log("mp", maxPrice);
-  */
+  const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
+
+  useEffect(() => {
+    if (maxPrice !== null) {
+      setPriceRange([0, maxPrice]);
+    }
+  }, [maxPrice]);
+
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -34,28 +34,48 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <h2 className="text-2xl font-semibold mb-6">ทัวร์และกิจกรรมต่างๆ</h2>
-        <Category
-          setSelectedCategory={setSelectedCategory}
-          selectedCategory={selectedCategory} />
-        <div className="flex gap-8 mt-8">
-          {maxPrice !== null && maxPrice !== undefined && (
-            <FilterSidebar
-              setSelectedFilters={setSelectedFilters}
-              setSelectedPriceRange={setSelectedPriceRange}
-              setSelectedRatings={setSelectedRatings}
-              PriceRange={selectedPriceRange}
-              maxPrice={maxPrice} />
-          )}
-          <TourGrid
-            selectedCategory={selectedCategory}
-            selectedPriceRange={selectedPriceRange}
-            selectedFilters={selectedFilters}
-            selectedRatings={selectedRatings}
-            setPriceRange={setPriceRange}
-            setMaxPrice={setMaxPrice} />
+        <div className="max-w-7xl pl-8">
+          {/* Title */}
+          <h2 className="text-2xl font-semibold mb-6">ทัวร์และกิจกรรมต่างๆ</h2>
+        </div>
+
+        {/* Flexbox for centering Grid, Filters, and Category */}
+        <div className="flex flex-col gap-8 mt-8">
+          {/* Category Selection */}
+          <div className="w-full mb-8">
+            <Category
+              setSelectedCategory={setSelectedCategory}
+              selectedCategory={selectedCategory}
+            />
+          </div>
+
+          {/* Filters and Tour Grid (Stacked) */}
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left: Filters */}
+            <div className="w-full lg:w-1/5">
+              {maxPrice !== null && (
+                <FilterSidebar
+                  setSelectedFilters={setSelectedFilters}
+                  setSelectedPriceRange={setPriceRange}
+                  setSelectedRatings={setSelectedRatings}
+                  selectedPriceRange={selectedPriceRange}
+                  maxPrice={maxPrice}
+                />
+              )}
+            </div>
+
+            {/* Right: Tour Grid */}
+            <div className="w-full lg:w-4/5">
+              <TourGrid
+                selectedCategory={selectedCategory}
+                selectedFilters={selectedFilters}
+                setPriceRange={setPriceRange}
+                setMaxPrice={setMaxPrice}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </main>
   );
-};
+}

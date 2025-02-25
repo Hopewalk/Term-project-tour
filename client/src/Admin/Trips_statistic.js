@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "antd";
 import ax from "../conf/ax";
+import { useNavigate } from "react-router";
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
@@ -34,20 +35,9 @@ export default function Trip_statistic() {
     fetchTour();
   }, []);
 
-  const openEditModal = (tour) => {
-    console.log("Editing tour:", tour);
-    setSelectedTour(tour);
-    setIsModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setIsModalOpen(false);
-    setSelectedTour(null);
-  };
-
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/Trip/${tour.documentId}`);
+    navigate(`/Trips/statistic/${tours.documentId}`);
   };
 
   const oneDayTrips = tours.filter((tour) => tour.type === "One Day Trip");
@@ -87,10 +77,7 @@ export default function Trip_statistic() {
               <p className="text-gray-600">สถานะ</p>
               <p className="font-medium">{tour.status}</p>
             </div>
-            <Button
-              className="w-full md:w-auto mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              onClick={() => openEditModal(tour)}
-            >
+            <Button className="w-full md:w-auto mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
               ดูรายละเอียดการจอง
             </Button>
           </div>
@@ -126,14 +113,6 @@ export default function Trip_statistic() {
             )}
           </div>
         </div>
-      )}
-      {selectedTour && (
-        <EditTour
-          tour={selectedTour}
-          visible={isModalOpen}
-          onClose={closeEditModal}
-          onUpdate={fetchTour}
-        />
       )}
     </div>
   );
