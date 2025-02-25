@@ -53,6 +53,9 @@ function AddTimeRange() {
 
     return (
         <div className="flex flex-col space-y-4">
+            <div className="text-2xl font-bold mb-4 text-center">
+                Create Tour Reshow Date 
+            </div>
             <div className="flex space-x-4">
                 <div className="w-1/2">
                     <InputField
