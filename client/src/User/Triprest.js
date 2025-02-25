@@ -20,11 +20,12 @@ export default function TourCard() {
         description: item.description,
         start: item.start_date,
         end: item.end_date,
-        image: item.image?.length > 0
-          ? item.image.map((img) => ({
-            src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-          }))
-          : [{ src: "http://localhost:1337/uploads/example.png" }],
+        image:
+          item.image?.length > 0
+            ? item.image.map((img) => ({
+                src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+              }))
+            : [{ src: "http://localhost:1337/uploads/example.png" }],
         max_participants: item.max_participants,
         price: item.price || "N/A",
       }));
@@ -55,13 +56,11 @@ export default function TourCard() {
             <div className="flex flex-col md:flex-row gap-20">
               {/* Tour Image */}
               {tour.image.length > 0 ? (
-                tour.image.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img.src}
-                    className="size-full w-60 h-40 object-cover sm:rounded-lg"
-                  />
-                ))
+                <img
+                  src={tour.image[tour.image.length - 1].src}
+                  className="size-full w-60 h-40 object-cover sm:rounded-lg"
+                  alt="Tour Image"
+                />
               ) : (
                 <div>No images available</div>
               )}

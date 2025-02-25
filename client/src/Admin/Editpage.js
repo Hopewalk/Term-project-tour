@@ -70,13 +70,11 @@ export default function TourCard() {
           >
             <div className="flex flex-col md:flex-row gap-20">
               {tour.image.length > 0 ? (
-                tour.image.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img.src}
-                    className="size-full w-60 h-40 object-cover sm:rounded-lg"
-                  />
-                ))
+                <img
+                  src={tour.image[tour.image.length - 1].src}
+                  className="size-full w-60 h-40 object-cover sm:rounded-lg"
+                  alt="Tour Image"
+                />
               ) : (
                 <div>No images available</div>
               )}
