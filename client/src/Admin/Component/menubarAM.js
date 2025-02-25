@@ -20,7 +20,6 @@ export default function MenuAdmin() {
     { name: "หน้าหลัก", href: "/Home" },
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
-    { name: "Dashboard", href: "/Dashboard" },
     { name: "Add Trip", href: "/Create" },
     { name: "Edit Trips", href: "/Trips/Edit" },
     { name: "Set Status", href: "/Status" },
