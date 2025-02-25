@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Dropdown, Menu, Table } from "antd";
+import { Tabs, Card, Button, Dropdown, Menu, Table } from "antd";
 import ax from "../conf/ax";
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
+  const [activeTab, setActiveTab] = useState("One Day Trip"); 
 
   const fetchTour = async () => {
     try {
@@ -106,33 +107,43 @@ export default function Trip_statistic() {
   };
 
   return (
-    <div className="w-full max-w-8xl mx-auto mt-6">
-      {tours.length === 0 ? (
-        <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
-      ) : (
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <h3 className="text-center text-lg font-semibold mb-4">
-              One Day Trip
-            </h3>
-            {oneDayTrips.length === 0 ? (
-              <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-            ) : (
-              oneDayTrips.map((tour) => renderTourCard(tour))
-            )}
-          </div>
-          <div className="flex-1">
-            <h3 className="text-center text-lg font-semibold mb-4">
-              Package with Accommodation
-            </h3>
-            {packageTrips.length === 0 ? (
-              <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-            ) : (
-              packageTrips.map((tour) => renderTourCard(tour))
-            )}
-          </div>
-        </div>
-      )}
+    <div
+      className="bg-white p-8 rounded-lg shadow-lg"
+      style={{ width: "1000px", margin: "0 auto", minHeight: "1000px" }}
+    >
+      <div className="w-full max-w-8xl mx-auto mt-6">
+        {tours.length === 0 ? (
+          <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
+        ) : (
+          <Tabs activeKey={activeTab} onChange={setActiveTab}>
+            <Tabs.TabPane tab="One Day Trip" key="One Day Trip">
+              <div>
+                <h3 className="text-center text-lg font-semibold mb-4">
+                  One Day Trip
+                </h3>
+                {oneDayTrips.length === 0 ? (
+                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
+                ) : (
+                  oneDayTrips.map((tour) => renderTourCard(tour))
+                )}
+              </div>
+            </Tabs.TabPane>
+            
+            <Tabs.TabPane tab="Package Tours" key="Package Tours">
+              <div>
+                <h3 className="text-center text-lg font-semibold mb-4">
+                  Package with Accommodation
+                </h3>
+                {packageTrips.length === 0 ? (
+                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
+                ) : (
+                  packageTrips.map((tour) => renderTourCard(tour))
+                )}
+              </div>
+            </Tabs.TabPane>
+          </Tabs>
+        )}
+      </div>
     </div>
-  );
+);
 }
