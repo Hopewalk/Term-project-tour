@@ -24,6 +24,7 @@ export default function MenuAdmin() {
     { name: "Add Trip", href: "/Create" },
     { name: "Edit Trips", href: "/Trips/Edit" },
     { name: "Set Status", href: "/Status" },
+    { name: "Tour Statistic", href: "/Trips/statistic" },
   ];
 
   const MenuLink = ({ item, className }) => (
