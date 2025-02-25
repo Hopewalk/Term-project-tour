@@ -11,7 +11,6 @@ import MenuAdmin from "./Admin/Component/menubarAM.js";
 import MenuUser from "./User/Component/menubarUS.js";
 import ProfileAm from "./Admin/Profile.js";
 import EditProfile from "./User/Profile.js";
-import Dashboard from "./Admin/Dashboard.js";
 import Register from "./Auth/Register.js";
 import AddTrip from "./Admin/Addtrip.js";
 import TripOverview from "./User/Overview.js";
@@ -68,7 +67,6 @@ function App() {
                   <Route path="/Home" element={<Home />} />
                   <Route path="/Onedaytrip" element={<Oneday />} />
                   <Route path="/Trip&Rest" element={<Triprest />} />
-                  <Route path="/Dashboard" element={<Dashboard />} />
                   <Route path="/Profile" element={<ProfileAm />} />
                   <Route path="/Create" element={<AddTrip />} />
                   <Route path="/Status" element={<Status />} />
