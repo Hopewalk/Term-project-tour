@@ -19,9 +19,12 @@ export default function TourCard() {
         description: item.description,
         start: item.start_date,
         end: item.end_date,
-        image: item.image.map((img) => ({
-          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-        })),
+        image:
+          item.image?.length > 0
+            ? item.image.map((img) => ({
+              src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+            }))
+            : [{ src: "http://localhost:1337/uploads/example.png" }],
         max_participants: item.max_participants,
         price: item.price || "N/A",
       }));

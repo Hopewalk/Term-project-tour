@@ -9,7 +9,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logotour from "../Images/logotour.png";
 
 const navigation = [
-  { name: "หน้าหลัก", href: "/Home" },
+  { name: "Home", href: "/Home" },
   { name: "One day trip", href: "/Onedaytrip" },
   { name: "Trip & Rest", href: "/Trip&Rest" },
 ];

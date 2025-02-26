@@ -17,7 +17,7 @@ export default function MenuAdmin() {
   const { isLoggedIn } = ContextState;
 
   const navigation = [
-    { name: "หน้าหลัก", href: "/Home" },
+    { name: "Home", href: "/Home" },
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
     { name: "Create", href: "/Create" },
