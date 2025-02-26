@@ -24,11 +24,12 @@ export default function TripOverview() {
         location: detail.destination,
         start: detail.start_date,
         end: detail.end_date,
-        images: detail.image?.length > 0
-          ? detail.image.map((img) => ({
-            src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-          }))
-          : [{ src: "http://localhost:1337/uploads/example.png" }],
+        images:
+          detail.image?.length > 0
+            ? detail.image.map((img) => ({
+                src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+              }))
+            : [{ src: "http://localhost:1337/uploads/example.png" }],
         breadcrumbs: [
           { id: 1, name: "Home", href: "/Home" },
           { id: 2, name: "One day trips", href: "/Onedaytrip" },
@@ -45,10 +46,10 @@ export default function TripOverview() {
   }, [documentId]);
 
   const handleBooking = () => {
-    if (!state.isAuthenticated) {
+    if (!state.isLoggedIn) {
       navigate("/Login");
     } else {
-      console.log("Proceed to book");
+      navigate(`/Booking/${documentId}`);
     }
   };
 

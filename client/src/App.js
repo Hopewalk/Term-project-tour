@@ -9,7 +9,6 @@ import Triprest from "./User/Triprest.js";
 import MenuUnden from "./Component/menu.js";
 import MenuAdmin from "./Admin/Component/menubarAM.js";
 import MenuUser from "./User/Component/menubarUS.js";
-import ProfileAm from "./Admin/Profile.js";
 import EditProfile from "./User/Profile.js";
 import Register from "./Auth/Register.js";
 import AddTrip from "./Admin/Addtrip.js";
@@ -20,6 +19,7 @@ import Edittrip from "./Admin/Editpage.js";
 import Footer from "./Component/Footer.js";
 import Historylist from "./User/History.js";
 import Trip_statistic from "./Admin/Trips_statistic.js";
+import BookingForm from "./User/Booking.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -50,11 +50,11 @@ function App() {
 
             {state.isLoggedIn && role === "Admin" && (
               <>
-                <Route path="/Profile" element={<ProfileAm />} />
                 <Route path="/Create" element={<AddTrip />} />
                 <Route path="/Status" element={<Status />} />
                 <Route path="/Trips/edit" element={<Edittrip />} />
                 <Route path="/Trips/statistic" element={<Trip_statistic />} />
+                <Route path="/Booking/:documentId" element={<BookingForm />} />
               </>
             )}
 
@@ -63,6 +63,7 @@ function App() {
                 <Route path="/Profile" element={<EditProfile />} />
                 <Route path="/Payment" element={<Pay />} />
                 <Route path="/History" element={<Historylist />} />
+                <Route path="/Booking/:documentId" element={<BookingForm />} />
               </>
             )}
           </Routes>

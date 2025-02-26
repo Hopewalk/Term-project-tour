@@ -37,7 +37,7 @@ export default function MenuAdmin() {
     </a>
   );
 
-  const menuItems = [{ name: "Profile", href: "/Profile" }];
+  const menuItems = [];
 
   return (
     <Disclosure as="nav" className="bg-[#0e5484]">

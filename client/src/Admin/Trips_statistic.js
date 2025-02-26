@@ -1,13 +1,17 @@
+import { Select } from "antd";
 import React, { useEffect, useState } from "react";
 import { Tabs, Card, Button, Modal, Table } from "antd";
 import ax from "../conf/ax";
-import { FieldTimeOutlined , AppstoreOutlined   } from '@ant-design/icons';
+import { FieldTimeOutlined, AppstoreOutlined } from "@ant-design/icons";
+
+const { Option } = Select;
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
   const [activeTab, setActiveTab] = useState("One Day Trip");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalData, setModalData] = useState([]);
+  const [sortBy, setSortBy] = useState("bookings");
 
   const columns = [
     {
@@ -39,6 +43,7 @@ export default function Trip_statistic() {
         type: item.tour_type,
         status: item.tour_status,
         description: item.description,
+        start: item.start_date,
         max_participants: item.max_participants,
         booking: item.bookings,
       }));
@@ -53,9 +58,26 @@ export default function Trip_statistic() {
     fetchTour();
   }, []);
 
-  const oneDayTrips = tours.filter((tour) => tour.type === "One Day Trip");
-  const packageTrips = tours.filter(
-    (tour) => tour.type === "Package with Accommodation"
+  const sortTours = (tours, sortBy) => {
+    switch (sortBy) {
+      case "bookings":
+        return tours.sort((a, b) => b.booking.length - a.booking.length);
+      case "name":
+        return tours.sort((a, b) => a.name.localeCompare(b.name));
+      case "start":
+        return tours.sort((a, b) => new Date(a.start) - new Date(b.start));
+      default:
+        return tours;
+    }
+  };
+
+  const oneDayTrips = sortTours(
+    tours.filter((tour) => tour.type === "One Day Trip"),
+    sortBy
+  );
+  const packageTrips = sortTours(
+    tours.filter((tour) => tour.type === "Package with Accommodation"),
+    sortBy
   );
 
   const showModal = (emailData) => {
@@ -68,8 +90,6 @@ export default function Trip_statistic() {
   };
 
   const renderTourCard = (tour) => {
-    // Columns for the email table
-    // Prepare the data for the table (email list)
     const emailData = tour.booking.map((b) => ({
       key: b.id,
       first_name: b.users_permissions_user?.first_name || "N/A",
@@ -90,8 +110,10 @@ export default function Trip_statistic() {
             <p className="text-gray-600 mb-2">{tour.description}</p>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
               <div>
-                <p className="text-gray-600">จำนวนการจอง</p>
-                <p className="font-medium">{tour.booking.length}</p>
+                <p className="text-gray-600">จำนวนการจอง / จำนวนคนสูงสุด</p>
+                <p className="font-medium">
+                  {tour.booking.length} / {tour.max_participants}
+                </p>
               </div>
               <div>
                 <p className="text-gray-600">สถานะ</p>
@@ -115,18 +137,32 @@ export default function Trip_statistic() {
       className="bg-white p-8 rounded-lg shadow-lg"
       style={{ width: "1000px", margin: "0 auto", minHeight: "1000px" }}
     >
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold">Trip Statistics</h3>
+        <Select
+          value={sortBy}
+          onChange={(value) => setSortBy(value)}
+          style={{ width: 250 }}
+        >
+          <Option value="bookings">เรียงตามจำนวนการจอง</Option>
+          <Option value="name">เรียงตามชื่อทัวร์</Option>
+          <Option value="start">เรียงตามวันเริ่มทัวร์</Option>
+        </Select>
+      </div>
+
       <div className="w-full max-w-8xl mx-auto mt-6">
         {tours.length === 0 ? (
           <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
         ) : (
           <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <Tabs.TabPane 
+            <Tabs.TabPane
               tab={
                 <span>
-                  <FieldTimeOutlined   /> One Day Trip
+                  <FieldTimeOutlined /> One Day Trip
                 </span>
-              } 
-              key="One Day Trip">
+              }
+              key="One Day Trip"
+            >
               <div>
                 <h3 className="text-center text-lg font-semibold mb-4">
                   One Day Trip
