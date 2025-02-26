@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Button } from "antd";
 import ax from "../../conf/ax";
+import { useNotification, NotificationContainer } from './notification';
+
 import { InputField, TextareaField, SelectField, ImageUploader, } from "./Tagcomponent";
 
 function AddAccommodation() {
     const [errors, setErrors] = useState({});
+    const { notifications, removeNotification, showSuccess, showError, showWarning } = useNotification();
     const [AccommodationData, setAccommodationData] = useState({
         accommodationName: "",
         description: "",
@@ -37,7 +40,7 @@ function AddAccommodation() {
                 contact_info: AccommodationData.context 
             }});
             console.log("Response:", res.data);
-            alert("Create AddAccommodation success")
+            showSuccess("Create AccommodationData success")
             return res.data;
         } catch (err) {
             console.error("Error details:", {
@@ -45,6 +48,7 @@ function AddAccommodation() {
                 response: err.response?.data,
                 status: err.response?.status
             });
+            showError('เกิดข้อผิดพลาด: ' + err.message)
             throw err;
         }
     };
@@ -84,8 +88,6 @@ function AddAccommodation() {
             console.log("Success:", result);
         } catch (error) {
             console.error("Submit error:", error);
-            alert("เกิดข้อผิดพลาดในการเพิ่มที่พัก: " + 
-                (error.response?.data?.error?.message || error.message));
         }
     };
     
@@ -180,6 +182,12 @@ function AddAccommodation() {
                     submit
                     </Button>
                 </div>
+                </div>
+                <div>
+                    <NotificationContainer 
+                    notifications={notifications}
+                    removeNotification={removeNotification}
+                    />
                 </div>
         </div>
     );
