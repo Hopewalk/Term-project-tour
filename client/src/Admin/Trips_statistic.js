@@ -1,10 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Card, Button, Dropdown, Menu, Table } from "antd";
+import { Tabs, Card, Button, Modal, Table } from "antd";
 import ax from "../conf/ax";
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
-  const [activeTab, setActiveTab] = useState("One Day Trip"); 
+  const [activeTab, setActiveTab] = useState("One Day Trip");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalData, setModalData] = useState([]);
+
+  const columns = [
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+  ];
 
   const fetchTour = async () => {
     try {
@@ -37,26 +57,17 @@ export default function Trip_statistic() {
     (tour) => tour.type === "Package with Accommodation"
   );
 
+  const showModal = (emailData) => {
+    setModalData(emailData);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const renderTourCard = (tour) => {
     // Columns for the email table
-    const columns = [
-      {
-        title: "First Name",
-        dataIndex: "first_name",
-        key: "first_name",
-      },
-      {
-        title: "Last Name",
-        dataIndex: "last_name",
-        key: "last_name",
-      },
-      {
-        title: "Email",
-        dataIndex: "email",
-        key: "email",
-      },
-    ];
-
     // Prepare the data for the table (email list)
     const emailData = tour.booking.map((b) => ({
       key: b.id,
@@ -64,15 +75,6 @@ export default function Trip_statistic() {
       last_name: b.users_permissions_user?.last_name || "N/A",
       email: b.users_permissions_user?.email || "N/A",
     }));
-
-    // Menu with the dropdown to show the customer emails
-    const menu = (
-      <Menu>
-        <Menu.Item>
-          <Table columns={columns} dataSource={emailData} pagination={false} />
-        </Menu.Item>
-      </Menu>
-    );
 
     return (
       <Card
@@ -94,11 +96,12 @@ export default function Trip_statistic() {
                 <p className="text-gray-600">สถานะ</p>
                 <p className="font-medium">{tour.status}</p>
               </div>
-              <Dropdown overlay={menu} trigger={["click"]}>
-                <Button className="w-full md:w-auto mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                  ดูรายชื่อลูกค้า
-                </Button>
-              </Dropdown>
+              <Button
+                className="w-full md:w-auto mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                onClick={() => showModal(emailData)}
+              >
+                ดูรายชื่อลูกค้า
+              </Button>
             </div>
           </div>
         </div>
@@ -128,7 +131,6 @@ export default function Trip_statistic() {
                 )}
               </div>
             </Tabs.TabPane>
-            
             <Tabs.TabPane tab="Package Tours" key="Package Tours">
               <div>
                 <h3 className="text-center text-lg font-semibold mb-4">
@@ -143,7 +145,21 @@ export default function Trip_statistic() {
             </Tabs.TabPane>
           </Tabs>
         )}
+
+        {/* Modal for displaying customer email list */}
+        <Modal
+          title="รายชื่อลูกค้า"
+          visible={isModalVisible}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <Table
+            columns={columns}
+            dataSource={modalData}
+            pagination={{ pageSize: 20 }}
+          />
+        </Modal>
       </div>
     </div>
-);
+  );
 }
