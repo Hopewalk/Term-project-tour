@@ -436,6 +436,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       'api::booking.booking'
     > &
       Schema.Attribute.Private;
+    participant: Schema.Attribute.Integer;
     payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
     payment_status: Schema.Attribute.Enumeration<['paid', 'unpaid']> &
       Schema.Attribute.DefaultTo<'unpaid'>;
