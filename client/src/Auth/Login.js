@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ax from "../conf/ax";
 import { useSetState } from "react-use";
 import { AuthContext } from "../context/Auth.context";
@@ -11,6 +12,8 @@ export default function Login() {
   const { setUserRole } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const onSubmit = (e) => {
     e.preventDefault();
     const { username, password } = formState;
@@ -19,7 +22,10 @@ export default function Login() {
 
   useEffect(() => {
     if (isLoggedIn) {
+      navigate("/Home");
+      console.log("islogin", isLoggedIn);
       const fetchRole = async () => {
+        //เอา role ออกมาเช็ค
         try {
           const result = await ax.get("users/me?populate=role");
           const role = result.data.role.type;
@@ -31,7 +37,7 @@ export default function Login() {
 
       fetchRole();
     }
-  }, [isLoggedIn, setUserRole]);
+  }, [isLoggedIn, setUserRole, navigate]);
 
   return (
     <div className="login-wrapper">
@@ -39,7 +45,6 @@ export default function Login() {
         <div className="login-left">
           <form className="login-form" onSubmit={onSubmit}>
             <h2>เข้าสู่ระบบ</h2>
-            {loginError && <p className="error-message">{loginError}</p>}
             <div className="form-group">
               <label htmlFor="username">username</label>
               <input
@@ -80,9 +85,7 @@ export default function Login() {
             )}
 
             {loginError && (
-              <div className="alert error">
-                Login Error: {loginError.message}
-              </div>
+              <div className="alert error">ไม่สามารถเข้าสู่ระบบได้</div>
             )}
             <p className="signup-link">
               Don't have an account? <a href="/Register">Sign up</a>
