@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, Card, Button, Dropdown, Menu, Table } from "antd";
 import ax from "../conf/ax";
+import { FieldTimeOutlined , AppstoreOutlined   } from '@ant-design/icons';
 
 export default function Trip_statistic() {
   const [tours, setTours] = useState([]);
@@ -116,7 +117,13 @@ export default function Trip_statistic() {
           <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
         ) : (
           <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <Tabs.TabPane tab="One Day Trip" key="One Day Trip">
+            <Tabs.TabPane 
+              tab={
+                <span>
+                  <FieldTimeOutlined   /> One Day Trip
+                </span>
+              } 
+              key="One Day Trip">
               <div>
                 <h3 className="text-center text-lg font-semibold mb-4">
                   One Day Trip
@@ -128,8 +135,13 @@ export default function Trip_statistic() {
                 )}
               </div>
             </Tabs.TabPane>
-            
-            <Tabs.TabPane tab="Package Tours" key="Package Tours">
+            <Tabs.TabPane 
+              tab={
+                <span>
+                  <AppstoreOutlined   /> Package with Accommodation
+                </span>
+              } 
+              key="Package with Accommodation">
               <div>
                 <h3 className="text-center text-lg font-semibold mb-4">
                   Package with Accommodation
