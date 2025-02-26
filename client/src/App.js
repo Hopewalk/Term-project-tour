@@ -24,77 +24,55 @@ import Trip_statistic from "./Admin/Trips_statistic.js";
 function App() {
   const { state } = useContext(AuthContext);
 
-  if (!state.isLoggedIn) {
-    return (
-      <div className="app-container">
-        <BrowserRouter>
-          <header>
-            <MenuUnden />
-          </header>
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Navigate to="/Home" />} />
-              <Route path="/Home" element={<Home />} />
-              <Route path="/Login" element={<Login />} />
-              <Route path="/Register" element={<Register />} />
-              <Route path="/Onedaytrip" element={<Oneday />} />
-              <Route path="/Trip&Rest" element={<Triprest />} />
-              <Route path="/Trip/:documentId" element={<TripOverview />} />
-            </Routes>
-          </main>
-          <footer>
-            <Footer />
-          </footer>
-        </BrowserRouter>
-      </div>
-    );
-  }
+  const role = state.user?.role;
 
-  if (state.isLoggedIn) {
-    const role = state.user.role;
-    return (
-      <div className="app-container">
-        <BrowserRouter>
-          <header>
-            <div>{role === "Admin" ? <MenuAdmin /> : <MenuUser />}</div>
-          </header>
-          <main>
-            <Routes>
-              {role === "Admin" ? (
-                <>
-                  <Route path="/Login" element={<Navigate to={"/"} />} />
-                  <Route path="/" element={<Navigate to="/Home" />} />
-                  <Route path="/Home" element={<Home />} />
-                  <Route path="/Onedaytrip" element={<Oneday />} />
-                  <Route path="/Trip&Rest" element={<Triprest />} />
-                  <Route path="/Profile" element={<ProfileAm />} />
-                  <Route path="/Create" element={<AddTrip />} />
-                  <Route path="/Status" element={<Status />} />
-                  <Route path="/Trip/:documentId" element={<TripOverview />} />
-                  <Route path="/Trips/edit" element={<Edittrip />} />
-                  <Route path="/Trips/statistic" element={<Trip_statistic />} />
-                </>
-              ) : (
-                <>
-                  <Route path="/Login" element={<Navigate to={"/"} />} />
-                  <Route path="/" element={<Navigate to="/Home" />} />
-                  <Route path="/Home" element={<Home />} />
-                  <Route path="/Onedaytrip" element={<Oneday />} />
-                  <Route path="/Trip&Rest" element={<Triprest />} />
-                  <Route path="/Profile" element={<EditProfile />} />
-                  <Route path="/Trip/:documentId" element={<TripOverview />} />
-                  <Route path="/Payment" element={<Pay />} />
-                  <Route path="/History" element={<Historylist />} />
-                </>
-              )}
-            </Routes>
-          </main>
-          <footer>
-            <Footer />
-          </footer>
-        </BrowserRouter>
-      </div>
-    );
-  }
+  return (
+    <div className="app-container">
+      <BrowserRouter>
+        <header>
+          {!state.isLoggedIn ? (
+            <MenuUnden />
+          ) : role === "Admin" ? (
+            <MenuAdmin />
+          ) : (
+            <MenuUser />
+          )}
+        </header>
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Navigate to="/Home" />} />
+            <Route path="/Home" element={<Home />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Onedaytrip" element={<Oneday />} />
+            <Route path="/Trip&Rest" element={<Triprest />} />
+            <Route path="/Trip/:documentId" element={<TripOverview />} />
+
+            {state.isLoggedIn && role === "Admin" && (
+              <>
+                <Route path="/Profile" element={<ProfileAm />} />
+                <Route path="/Create" element={<AddTrip />} />
+                <Route path="/Status" element={<Status />} />
+                <Route path="/Trips/edit" element={<Edittrip />} />
+                <Route path="/Trips/statistic" element={<Trip_statistic />} />
+              </>
+            )}
+
+            {state.isLoggedIn && role !== "Admin" && (
+              <>
+                <Route path="/Profile" element={<EditProfile />} />
+                <Route path="/Payment" element={<Pay />} />
+                <Route path="/History" element={<Historylist />} />
+              </>
+            )}
+          </Routes>
+        </main>
+        <footer>
+          <Footer />
+        </footer>
+      </BrowserRouter>
+    </div>
+  );
 }
+
 export default App;
