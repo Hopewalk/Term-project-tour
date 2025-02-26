@@ -77,6 +77,7 @@ const getPriceRange = (tours) => {
 // Apply filters
 const applyFilters = (tours, selectedFilters) => {
     if (!selectedFilters) return tours;
+    console.log("fil", selectedFilters);
 
     return tours
         .filter(tour =>
@@ -91,6 +92,11 @@ const applyFilters = (tours, selectedFilters) => {
         .sort((a, b) => {
             if (selectedFilters.sort === "price-low") return a.price - b.price;
             if (selectedFilters.sort === "price-high") return b.price - a.price;
+            if (selectedFilters.sort === "popular") {
+                const countA = a.bookings?.filter(booking => booking.booking_status === "confirmed" && booking.payment_status === "paid").length || 0;
+                const countB = b.bookings?.filter(booking => booking.booking_status === "confirmed" && booking.payment_status === "paid").length || 0;
+                return countB - countA;
+            }
             return 0;
         });
 };
@@ -111,6 +117,9 @@ const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPric
         selectedCategory ? tours.filter(tour => tour.categories_name.includes(selectedCategory)) : tours,
         selectedFilters
     );
+
+    //log
+    console.log('data:', tours)
 
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>

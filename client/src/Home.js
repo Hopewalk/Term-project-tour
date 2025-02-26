@@ -7,7 +7,7 @@ import TourGrid from "./Component/homepage/TourGrid";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedFilters, setSelectedFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState({ sort: "popular" });
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [maxPrice, setMaxPrice] = useState(null);
   const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
