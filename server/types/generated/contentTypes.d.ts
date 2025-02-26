@@ -429,14 +429,18 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    line_id: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::booking.booking'
     > &
       Schema.Attribute.Private;
+    participant: Schema.Attribute.Integer;
+    payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
     payment_status: Schema.Attribute.Enumeration<['paid', 'unpaid']> &
       Schema.Attribute.DefaultTo<'unpaid'>;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     total_price: Schema.Attribute.Decimal;
     tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
@@ -453,6 +457,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
 export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   collectionName: 'payments';
   info: {
+    description: '';
     displayName: 'Payment';
     pluralName: 'payments';
     singularName: 'payment';
@@ -462,7 +467,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   };
   attributes: {
     amount: Schema.Attribute.Decimal;
-    booking: Schema.Attribute.Relation<'oneToOne', 'api::booking.booking'>;
+    bookings: Schema.Attribute.Relation<'oneToMany', 'api::booking.booking'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -481,6 +486,10 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -524,6 +533,38 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
+  collectionName: 'time_ranges';
+  info: {
+    description: '';
+    displayName: 'reshow-tours';
+    pluralName: 'time-ranges';
+    singularName: 'time-range';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Hide_date: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::time-range.time-range'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    repeat_every_year: Schema.Attribute.Boolean;
+    Show_date: Schema.Attribute.DateTime;
+    tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -594,6 +635,10 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     start_date: Schema.Attribute.DateTime;
+    time_ranges: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::time-range.time-range'
+    >;
     tour_categories: Schema.Attribute.Relation<
       'manyToMany',
       'api::tour-category.tour-category'
@@ -1065,7 +1110,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1080,6 +1124,8 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    first_name: Schema.Attribute.String & Schema.Attribute.Required;
+    last_name: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1091,6 +1137,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1125,6 +1172,7 @@ declare module '@strapi/strapi' {
       'api::booking.booking': ApiBookingBooking;
       'api::payment.payment': ApiPaymentPayment;
       'api::review.review': ApiReviewReview;
+      'api::time-range.time-range': ApiTimeRangeTimeRange;
       'api::tour-category.tour-category': ApiTourCategoryTourCategory;
       'api::tour.tour': ApiTourTour;
       'plugin::content-releases.release': PluginContentReleasesRelease;

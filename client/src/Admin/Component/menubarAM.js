@@ -17,12 +17,11 @@ export default function MenuAdmin() {
   const { isLoggedIn } = ContextState;
 
   const navigation = [
-    { name: "หน้าหลัก", href: "/Home" },
+    { name: "Home", href: "/Home" },
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
-    { name: "Dashboard", href: "/Dashboard" },
-    { name: "Add Trip", href: "/Create" },
-    { name: "Edit Trips", href: "/Trips/Edit" },
+    { name: "Create", href: "/Create" },
+    { name: "Edit Tours", href: "/Trips/Edit" },
     { name: "Set Status", href: "/Status" },
     { name: "Tour Statistic", href: "/Trips/statistic" },
   ];
@@ -38,7 +37,7 @@ export default function MenuAdmin() {
     </a>
   );
 
-  const menuItems = [{ name: "Profile", href: "/Profile" }];
+  const menuItems = [];
 
   return (
     <Disclosure as="nav" className="bg-[#0e5484]">

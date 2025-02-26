@@ -1,51 +1,105 @@
-import { Card, Rate } from 'antd';
+import { Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
+
 const { Meta } = Card;
 
 const TourCard = ({ tour }) => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/Trip/${tour.documentId}`);
-  };
+
+  const handleClick = () => navigate(`/Trip/${tour.documentId}`);
+
   return (
     <Card
       hoverable
-      style={{ width: 240, height: 300 }}
-      cover={<img alt="image" src={tour.image} />}
+      style={styles.card}
+      cover={<img alt={tour.name} src={tour.image} style={styles.image} />}
       onClick={handleClick}
     >
       <Meta
-        title={tour.name}
+        title={<div style={styles.title}>{tour.name}</div>}
         description={
-          <div>
-            {/* Review Section */}
+          <div style={styles.content}>
             {tour.reviews.length > 0 && (
-              <div>
-                <span style={{
-                  color: '#faad14',
-                  fontSize: 16,
-                  width: 16,
-                }}>
-                  ★
-                </span>
-                <span style={{ fontSize: 14, fontWeight: 'bold', marginLeft: 2 }}>
-                  {tour.averageRating.toFixed(1)}
-                </span>
-                <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
-                  ({tour.reviews.length} reviews)
-                </div>
+              <div style={styles.reviews}>
+                <span style={styles.star}>★</span>
+                <span style={styles.rating}>{tour.averageRating.toFixed(1)}</span>
+                <span style={styles.reviewCount}>({tour.reviews.length} reviews)</span>
               </div>
-            )
-            }
-            {/* Tour Description */}
-            <div style={{ marginTop: 8 }}>{tour.description}</div>
+            )}
+            <div style={styles.description}>{tour.description}</div>
+            <div style={styles.footer}>
+              <div style={styles.price}>฿{tour.price.toLocaleString()}</div>
+            </div>
           </div>
         }
       />
-
-
-    </Card >
+    </Card>
   );
+};
+
+const styles = {
+  card: {
+    width: 280,
+    height: 350,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  image: {
+    height: 150,
+    objectFit: 'cover',
+  },
+  title: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
+  reviews: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  star: {
+    color: '#faad14',
+    fontSize: 16,
+  },
+  rating: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 4,
+  },
+  reviewCount: {
+    fontSize: 12,
+    color: '#888',
+    marginLeft: 6,
+  },
+  description: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#555',
+    height: 48,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+  },
+  footer: {
+    marginTop: 'auto',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 8,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    marginTop: 16,
+  },
 };
 
 export default TourCard;

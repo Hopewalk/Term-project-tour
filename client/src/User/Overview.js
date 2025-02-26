@@ -46,7 +46,7 @@ export default function TripOverview() {
     if (!state.isAuthenticated) {
       navigate("/Login");
     } else {
-      console.log("Proceed to book");
+      navigate("/Login");
     }
   };
 

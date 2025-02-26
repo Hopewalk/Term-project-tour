@@ -46,6 +46,22 @@
       "relation": "manyToOne",
       "target": "api::tour.tour",
       "inversedBy": "bookings"
+    },
+    "payment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::payment.payment",
+      "inversedBy": "bookings"
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "line_id": {
+      "type": "string"
+    },
+    "participant": {
+      "type": "integer"
     }
   }
 }
