@@ -21,7 +21,7 @@ export default function MenuAdmin() {
     { name: "One day trip", href: "/Onedaytrip" },
     { name: "Trip & Rest", href: "/Trip&Rest" },
     { name: "Create", href: "/Create" },
-    { name: "Edit Trips", href: "/Trips/Edit" },
+    { name: "Edit Tours", href: "/Trips/Edit" },
     { name: "Set Status", href: "/Status" },
     { name: "Tour Statistic", href: "/Trips/statistic" },
   ];
