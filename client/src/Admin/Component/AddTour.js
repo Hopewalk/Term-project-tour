@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Select } from 'antd';
 import ax from "../../conf/ax";
+import { useNotification, NotificationContainer } from './notification';
 import {
     InputField,
     TextareaField,
@@ -12,6 +13,7 @@ function AddTour() {
     const [pictures, setPictures] = useState([]);
     const [errors, setErrors] = useState({});
     const [accommodations, setAccommodations] = useState([]);
+    const { notifications, removeNotification, showSuccess, showError, showWarning } = useNotification();
     const [tripData, setTripData] = useState({
             tripName: "",
             description: "",
@@ -98,9 +100,10 @@ function AddTour() {
         });
 
         console.log("โพสต์สำเร็จ:", res.data);
-        alert("Create tour success")
+        showSuccess('Create Tour Success');
         return res.data;
         } catch (err) {
+        showError('เกิดข้อผิดพลาด: ' + err.message);
         console.error("Error:", err.response ? err.response.data : err.message);
         throw err;
         }
@@ -165,10 +168,11 @@ function AddTour() {
                 </div>
                 <InputField
                 label="Tour Name"
-                name="Tour Name"
+                type="text"
+                name="tripName"
                 value={tripData.tripName}
                 onChange={handleChange}
-                placeholder="ใส่ชื่อทริปต์"
+                placeholder="กรอกชื่อทัวร์"
                 error={errors.tripName}
                 />
                 <TextareaField
@@ -176,7 +180,7 @@ function AddTour() {
                 name="description"
                 value={tripData.description}
                 onChange={handleChange}
-                placeholder="ใส่คำอธิบายทริปต์"
+                placeholder="กรอกอธิบายทัวร์"
                 height="200px"
                 error={errors.description}
                 />
@@ -188,7 +192,7 @@ function AddTour() {
                     name="seats"
                     value={tripData.seats}
                     onChange={handleChange}
-                    placeholder="ใส่จำนวนที่นั่ง"
+                    placeholder="กรอกจำนวนที่นั่ง"
                     error={errors.seats}
                     />
                 </div>
@@ -199,7 +203,7 @@ function AddTour() {
                     name="price"
                     value={tripData.price}
                     onChange={handleChange}
-                    placeholder="ใส่ราคา"
+                    placeholder="กรอกราคา"
                     error={errors.price}
                     />
                 </div>
@@ -302,6 +306,12 @@ function AddTour() {
                     submit
                     </Button>
                 </div>
+                </div>
+                <div>
+                    <NotificationContainer 
+                    notifications={notifications}
+                    removeNotification={removeNotification}
+                    />
                 </div>
             </form>
         </div>
