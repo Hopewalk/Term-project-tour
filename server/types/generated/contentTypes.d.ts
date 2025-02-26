@@ -429,6 +429,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    line_id: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -438,6 +439,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
     payment_status: Schema.Attribute.Enumeration<['paid', 'unpaid']> &
       Schema.Attribute.DefaultTo<'unpaid'>;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     total_price: Schema.Attribute.Decimal;
     tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
