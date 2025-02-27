@@ -62,6 +62,12 @@
     },
     "participant": {
       "type": "integer"
+    },
+    "reshow_tour": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::time-range.time-range",
+      "inversedBy": "bookings"
     }
   }
 }

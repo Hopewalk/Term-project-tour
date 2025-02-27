@@ -12,10 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Show_date": {
+    "start_date": {
       "type": "datetime"
     },
-    "Hide_date": {
+    "end_date": {
       "type": "datetime"
     },
     "tour": {
@@ -24,8 +24,15 @@
       "target": "api::tour.tour",
       "inversedBy": "time_ranges"
     },
-    "repeat_every_year": {
-      "type": "boolean"
+    "max_participants": {
+      "type": "integer",
+      "required": false
+    },
+    "bookings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::booking.booking",
+      "mappedBy": "reshow_tour"
     }
   }
 }
