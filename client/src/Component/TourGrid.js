@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import TourCard from "./TourCard";
-import ax from '../../conf/ax';
+import PaginationComponent from './PaginationComponent';
+import ax from '../conf/ax';
+import { data } from 'react-router';
 
 // Fetch tours from API
 const fetchTour = async () => {
@@ -13,7 +15,7 @@ const fetchTour = async () => {
             'populate[3]': 'image',
             'populate[4]': 'tour_categories',
             'pagination[start]': 0,
-            'pagination[limit]': 100
+            'pagination[limit]': 100000
         };
 
         console.log("Fetching data from API:", ax.defaults.baseURL + apiUrl, "with params:", params);
@@ -106,6 +108,8 @@ const applyFilters = (tours, selectedFilters) => {
 
 const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice }) => {
     const [tours, setTours] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(16);
 
     useEffect(() => {
         fetchTour().then((tourData) => {
@@ -121,16 +125,46 @@ const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPric
         selectedFilters
     );
 
+    const startIndex = (currentPage - 1) * pageSize;
+    const displayTours = filteredTours.slice(startIndex, startIndex + pageSize);
+    const itemRender = (_, type, originalElement) => {
+        if (type === 'prev') {
+            return <a>Previous</a>;
+        }
+        if (type === 'next') {
+            return <a>Next</a>;
+        }
+        return originalElement;
+    };
     //log
-    console.log('data:', tours)
+    console.log('data:', startIndex, tours);
+    console.log('dptours', displayTours);
 
     return (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-            {filteredTours.length > 0 ? (
-                filteredTours.map((tour) => <TourCard key={tour.id} tour={tour} />)
-            ) : (
-                <p className="text-center col-span-4">No tours available.</p>
-            )}
+        <div>
+            {/*Display tours */}
+            < div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4' >
+                {
+                    displayTours.length > 0 ? (
+                        displayTours.map((tour) => <TourCard key={tour.id} tour={tour} />)
+                    ) : (
+                        <p className="text-center col-span-4">No tours available.</p>
+                    )
+                }
+            </div >
+
+            {/*Pagination*/}
+            <div className='flex justify-center mt-6'>
+                <PaginationComponent
+                    currentPage={currentPage}
+                    pageSize={pageSize}
+                    total={filteredTours.length}
+                    onChange={(page, newPageSize) => {
+                        setCurrentPage(page);
+                        setPageSize(newPageSize);
+                    }}
+                />
+            </div>
         </div>
     );
 };

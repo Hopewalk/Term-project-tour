@@ -3,7 +3,7 @@ import FilterSidebar from "./Component/Filters";
 import Category from "./Component/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
 import SearchBar from "./Component/Search";
-import TourGrid from "./Component/homepage/TourGrid";
+import TourGrid from "./Component/TourGrid";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
