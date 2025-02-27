@@ -17,12 +17,15 @@ export default function TourCard() {
         name: item.tour_name,
         status: item.tour_status,
         description: item.description,
+        start: item.start_date,
+        end: item.end_date,
         image:
           item.image?.length > 0
             ? item.image.map((img) => ({
                 src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
               }))
             : [{ src: "http://localhost:1337/uploads/example.png" }],
+        max_participants: item.max_participants,
         price: item.price || "N/A",
       }));
       console.log("Fetch tours:", tourData);
@@ -86,7 +89,20 @@ export default function TourCard() {
                 <p className="text-gray-600 mb-2">{tour.description}</p>
 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
-                  <div className="flex flex-row gap-20"></div>
+                  <div className="flex flex-row gap-20">
+                    <div>
+                      <p className="text-gray-600">เริ่มเดินทาง</p>
+                      <p className="font-medium">
+                        {new Date(tour.start).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">สิ้นสุดการเดินทาง</p>
+                      <p className="font-medium">
+                        {new Date(tour.end).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
                   <div className="mt-2 sm:mt-0">
                     <p className="text-sm text-gray-600">ราคาเริ่มต้น</p>
                     <p className="text-2xl font-bold text-blue-600">

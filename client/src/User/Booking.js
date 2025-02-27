@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { Form, Input, Button, message, Table } from "antd";
+import Pay from "./Component/Payment";
 
 export default function BookingForm() {
   const { state } = useContext(AuthContext);
@@ -15,6 +16,7 @@ export default function BookingForm() {
   const [selectedParticipants, setSelectedParticipants] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
 
   const fetchDetail = async () => {
@@ -84,24 +86,16 @@ export default function BookingForm() {
       (sum, value) => sum + value,
       0
     );
-
     if (!formData.phone.trim()) {
       setErrorPhone("กรุณากรอกเบอร์โทรศัพท์");
       return;
-    } else {
-      setErrorPhone("");
     }
-
-    if (
-      !tour ||
-      Object.keys(selectedParticipants).length === 0 ||
-      totalParticipants === 0
-    ) {
+    if (!tour || Object.keys(selectedParticipants).length === 0) {
       setErrorMessage("โปรดเพิ่มจำนวนคนก่อนทำการจอง");
       return;
-    } else {
-      setErrorMessage("");
     }
+    setErrorMessage("");
+    setIsModalVisible(true);
 
     const selectedTimeIds = tour.time_ranges
       .filter((range) => selectedParticipants[range.start] > 0)
@@ -124,7 +118,7 @@ export default function BookingForm() {
           ),
           booking_date: new Date().toISOString(),
           payment_status: "unpaid",
-          reshow_tour: selectedTimeIds,
+          time_range: selectedTimeIds,
           participant: totalParticipants,
         },
       };
@@ -313,6 +307,11 @@ export default function BookingForm() {
               </Button>
             </div>
           </div>
+          <Pay
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            totalPrice={totalPrice}
+          />
         </div>
       </div>
     </div>

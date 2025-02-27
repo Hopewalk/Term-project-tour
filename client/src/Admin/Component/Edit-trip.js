@@ -12,6 +12,8 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
       setFormData({
         ...formData,
         price: Number(formData.price),
+        start: new Date(formData.start).toISOString().split("T")[0],
+        end: new Date(formData.end).toISOString().split("T")[0],
       });
     }
   }, [tour]);
@@ -30,6 +32,8 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
     const dataToSend = {
       tour_name: formData.name,
       description: formData.description,
+      start_date: formData.start,
+      end_date: formData.end,
       price: formData.price,
       max_participants: formData.max_participants,
       tour_status: formData.status,
@@ -67,6 +71,27 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
         placeholder="Description"
       />
 
+      <div className="flex gap-2">
+        <div>
+          <label className="block text-gray-700">Start Date</label>
+          <Input
+            type="date"
+            name="start"
+            value={formData.start}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">End Date</label>
+          <Input
+            type="date"
+            name="end"
+            value={formData.end}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
       <label className="block text-gray-700 mt-2">Price</label>
       <Input
         type="number"
@@ -75,6 +100,15 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
         onChange={handleChange}
         className="mt-2"
         placeholder="Price"
+      />
+      <label className="block text-gray-700 mt-2">Max person</label>
+      <Input
+        type="number"
+        name="max_participants"
+        value={formData.max_participants}
+        onChange={handleChange}
+        className="mt-2"
+        placeholder="Max"
       />
       <label className="block text-gray-700 mt-2">Status</label>
       <Select
