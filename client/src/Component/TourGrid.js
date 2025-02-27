@@ -106,7 +106,7 @@ const applyFilters = (tours, selectedFilters) => {
         });
 };
 
-const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice }) => {
+const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice, searchTerm }) => {
     const [tours, setTours] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(16);
@@ -123,6 +123,8 @@ const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPric
     const filteredTours = applyFilters(
         selectedCategory ? tours.filter(tour => tour.categories_name.includes(selectedCategory)) : tours,
         selectedFilters
+    ).filter(tour =>
+        !searchTerm || tour.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const startIndex = (currentPage - 1) * pageSize;

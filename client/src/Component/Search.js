@@ -1,24 +1,22 @@
-import React, { useState } from "react";
-import { Input, Select, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Input, Select, Button, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const { Search } = Input;
 const { Option } = Select;
 
-export default function SearchBar() {
+export default function SearchBar({ onSearch }) {
   const [searchValue, setSearchValue] = useState("");
-  const [region, setRegion] = useState("all");
 
-  const onSearch = (value) => {
-    console.log("Search term:", value, "Region:", region);
+  const handleSearch = (value) => {
+    onSearch(value);
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex gap-4 mb-8">
         <Select
-          defaultValue={region}
-          onChange={(value) => setRegion(value)}
+          defaultValue="all"
           style={{ width: 200 }}
         >
           <Option value="all">ทุกภูมิภาค</Option>
@@ -34,7 +32,7 @@ export default function SearchBar() {
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
-            onSearch={onSearch}
+            onSearch={handleSearch}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
@@ -42,7 +40,7 @@ export default function SearchBar() {
 
         <Button
           type="primary"
-          onClick={() => onSearch(searchValue)}
+          onClick={() => handleSearch(searchValue)}
           style={{
             backgroundColor: "white",
             borderColor: "black",
