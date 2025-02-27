@@ -24,7 +24,7 @@ const TourCard = ({ tour }) => {
         title={<div style={styles.title}>{tour.name}</div>}
         description={
           <div style={styles.content}>
-            {tour.reviews.length > 0 & confirmedBookings > 0 && (
+            {tour.reviews?.length > 0 && confirmedBookings > 0 && (
               <div style={styles.reviews}>
                 <span style={styles.star}>★</span>
                 <span style={styles.rating}>{tour.averageRating.toFixed(1)}</span>

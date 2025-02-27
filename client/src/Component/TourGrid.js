@@ -127,15 +127,7 @@ const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPric
 
     const startIndex = (currentPage - 1) * pageSize;
     const displayTours = filteredTours.slice(startIndex, startIndex + pageSize);
-    const itemRender = (_, type, originalElement) => {
-        if (type === 'prev') {
-            return <a>Previous</a>;
-        }
-        if (type === 'next') {
-            return <a>Next</a>;
-        }
-        return originalElement;
-    };
+
     //log
     console.log('data:', startIndex, tours);
     console.log('dptours', displayTours);
