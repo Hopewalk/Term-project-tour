@@ -3,7 +3,7 @@ import FilterSidebar from "./Component/Filters";
 import Category from "./Component/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
 import SearchBar from "./Component/Search";
-import TourGrid from "./Component/homepage/TourGrid";
+import TourGrid from "./Component/TourGrid";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -11,12 +11,17 @@ export default function Home() {
   const [selectedRatings, setSelectedRatings] = useState([]);
   const [maxPrice, setMaxPrice] = useState(null);
   const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (maxPrice !== null) {
       setPriceRange([0, maxPrice]);
     }
   }, [maxPrice]);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
 
   return (
     <main className="min-h-screen bg-background">
@@ -28,7 +33,7 @@ export default function Home() {
         }}
       >
         <div className="absolute inset-0 flex items-center">
-          <SearchBar />
+          <SearchBar onSearch={handleSearch} />
         </div>
       </div>
 
@@ -71,6 +76,7 @@ export default function Home() {
                 selectedFilters={selectedFilters}
                 setPriceRange={setPriceRange}
                 setMaxPrice={setMaxPrice}
+                searchTerm={searchTerm}
               />
             </div>
           </div>
