@@ -4,6 +4,7 @@ import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { useParams, useNavigate } from "react-router";
 import Review from "./Component/Rate&Review";
+import { Table } from "antd";
 
 export default function TripOverview() {
   const { state } = useContext(AuthContext);
@@ -13,8 +14,35 @@ export default function TripOverview() {
 
   const fetchDetail = async () => {
     try {
-      const response = await ax.get(`/tours/${documentId}?populate=*`);
+      const response = await ax.get(
+        `/tours/${documentId}?populate=time_ranges.bookings&populate=image&populate=reviews&populate=accommodations&populate=tour_categories`
+      );
       const detail = response.data.data;
+      console.log(detail);
+
+      const timeRanges =
+        detail.time_ranges?.map((range) => {
+          const confirmedBookings = range.bookings?.filter(
+            (booking) => booking.booking_status === "confirmed"
+          );
+          const totalConfirmedBooked = confirmedBookings
+            ? confirmedBookings.reduce(
+                (sum, booking) => sum + booking.participant,
+                0
+              )
+            : 0;
+          const startDate = range.start_date
+            ? new Date(range.start_date)
+            : null;
+          const endDate = range.end_date ? new Date(range.end_date) : null;
+
+          return {
+            start: startDate ? startDate.toLocaleDateString("th-TH") : "N/A",
+            end: endDate ? endDate.toLocaleDateString("th-TH") : "N/A",
+            max_participants: range.max_participants,
+            total_booked: totalConfirmedBooked,
+          };
+        }) || [];
 
       const product = {
         documentId: detail.documentId,
@@ -22,16 +50,28 @@ export default function TripOverview() {
         price: detail.price,
         description: detail.description,
         location: detail.destination,
-        start: detail.start_date,
-        end: detail.end_date,
-        images: detail.image.map((img) => ({
-          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-        })),
+        time_ranges: timeRanges,
+        images: detail.image?.length
+          ? detail.image.map((img) => ({
+              src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+            }))
+          : [{ src: "http://localhost:1337/uploads/example.png" }],
         breadcrumbs: [
           { id: 1, name: "Home", href: "/Home" },
-          { id: 2, name: "One day trips", href: "/Onedaytrip" },
+          {
+            id: 2,
+            name: detail.tour_categories?.[0]?.category_name || "Unknown",
+            href:
+              detail.tour_categories?.[0]?.category_name === "One Day Trip"
+                ? "/Onedaytrip"
+                : detail.tour_categories?.[0]?.category_name ===
+                  "Package with Accommodation"
+                ? "/Trip&rest"
+                : "/OtherCategory",
+          },
         ],
       };
+
       settour(product);
     } catch (error) {
       console.error(error);
@@ -51,6 +91,29 @@ export default function TripOverview() {
   };
 
   if (!tour) return <div>ไม่สามารถดูได้</div>;
+
+  const columns = [
+    {
+      title: "วันเริ่มเดินทาง",
+      dataIndex: "start",
+      key: "start",
+    },
+    {
+      title: "วันสิ้นสุด",
+      dataIndex: "end",
+      key: "end",
+    },
+    {
+      title: "จำนวนที่รองรับ",
+      dataIndex: "max_participants",
+      key: "max_participants",
+    },
+    {
+      title: "จำนวนคนจอง",
+      dataIndex: "total_booked",
+      key: "total_booked",
+    },
+  ];
 
   return (
     <div className="bg-white">
@@ -108,27 +171,23 @@ export default function TripOverview() {
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
               {tour.name}
             </h1>
-            {/* Location */}
             <p className="mt-2 text-lg text-gray-600">
               Location: {tour.location}
             </p>
 
-            {/* Start and End Date */}
-            <div className="mt-4 text-lg text-gray-600">
-              <p>
-                <strong>วันเดินทาง:</strong>{" "}
-                {new Date(tour.start).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>วันสิ้นสุดการเดินทาง:</strong>{" "}
-                {new Date(tour.end).toLocaleDateString()}
-              </p>
+            {/* ตารางแสดงช่วงเวลาเดินทาง */}
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold">ช่วงเวลาเดินทาง</h3>
+              <Table
+                columns={columns}
+                dataSource={tour.time_ranges}
+                pagination={false}
+              />
             </div>
           </div>
 
           {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
               {tour.price} ฿
             </p>

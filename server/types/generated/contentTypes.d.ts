@@ -442,6 +442,10 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'unpaid'>;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    reshow_tour: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::time-range.time-range'
+    >;
     total_price: Schema.Attribute.Decimal;
     tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -548,19 +552,20 @@ export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    bookings: Schema.Attribute.Relation<'oneToMany', 'api::booking.booking'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Hide_date: Schema.Attribute.DateTime;
+    end_date: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::time-range.time-range'
     > &
       Schema.Attribute.Private;
+    max_participants: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
-    repeat_every_year: Schema.Attribute.Boolean;
-    Show_date: Schema.Attribute.DateTime;
+    start_date: Schema.Attribute.DateTime;
     tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
