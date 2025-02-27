@@ -429,6 +429,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    image: Schema.Attribute.Media<'images'>;
     line_id: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -442,7 +443,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'unpaid'>;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    reshow_tour: Schema.Attribute.Relation<
+    time_range: Schema.Attribute.Relation<
       'manyToOne',
       'api::time-range.time-range'
     >;
@@ -544,7 +545,7 @@ export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
   collectionName: 'time_ranges';
   info: {
     description: '';
-    displayName: 'reshow-tours';
+    displayName: 'time_range';
     pluralName: 'time-ranges';
     singularName: 'time-range';
   };
