@@ -8,6 +8,11 @@ const TourCard = ({ tour }) => {
 
   const handleClick = () => navigate(`/Trip/${tour.documentId}`);
 
+  // Count the number of confirmed and paid bookings
+  const confirmedBookings = tour.bookings.filter(
+    (booking) => booking.booking_status === "confirmed" && booking.payment_status === "paid"
+  ).length;
+
   return (
     <Card
       hoverable
@@ -19,14 +24,23 @@ const TourCard = ({ tour }) => {
         title={<div style={styles.title}>{tour.name}</div>}
         description={
           <div style={styles.content}>
-            {tour.reviews.length > 0 && (
+            {tour.reviews.length > 0 & confirmedBookings > 0 && (
               <div style={styles.reviews}>
                 <span style={styles.star}>★</span>
                 <span style={styles.rating}>{tour.averageRating.toFixed(1)}</span>
                 <span style={styles.reviewCount}>({tour.reviews.length} reviews)</span>
               </div>
             )}
+
             <div style={styles.description}>{tour.description}</div>
+
+            {/* Display confirmed bookings count */}
+            {confirmedBookings > 0 && (
+              <div>
+                <span style={styles.booking}>({confirmedBookings} bookings)</span>
+              </div>
+            )}
+
             <div style={styles.footer}>
               <div style={styles.price}>฿{tour.price.toLocaleString()}</div>
             </div>
@@ -75,6 +89,11 @@ const styles = {
     fontSize: 12,
     color: '#888',
     marginLeft: 6,
+  },
+  booking: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 'auto'
   },
   description: {
     marginTop: 8,
