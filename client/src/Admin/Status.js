@@ -50,6 +50,10 @@ function Status() {
               <p>{order.tour.tour_name}</p>
               <p>{order.total_price}</p>
               <p>{order.tour.destination}</p>
+              <p>
+                ชื่อคนจอง : {order.users_permissions_user.first_name}{" "}
+                {order.users_permissions_user.last_name}
+              </p>
               <p>วันที่จอง : {new Date(order.booking_date).toLocaleString()}</p>
             </div>
             <div>
