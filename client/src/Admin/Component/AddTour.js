@@ -82,7 +82,7 @@ function AddTour() {
     const maketrip = async (uploadedFiles) => {
         try {
         const res = await ax.post("/tours", {
-            data: {
+        data: {
             tour_name: tripData.tripName,
             description: tripData.description,
             price: Number(tripData.price),
@@ -92,11 +92,9 @@ function AddTour() {
             tour_status: tripData.status,
             destination: tripData.destination,
             tour_type: tripData.typetour,
-            image: uploadedFiles && uploadedFiles.length > 0 ? uploadedFiles[0].id : null,
-            accommodations: {
-                connect: tripData.accommodation ? [{ id: tripData.accommodation }] : []
-            }
-            },
+            image: uploadedFiles ? uploadedFiles.map(file => file.id) : [], // Edit จากการส่ง id ภาพแรกเป็นส่ง array ของ id แต่ละภาพ 
+            accommodations: tripData.accommodation ? [tripData.accommodation] : []
+        },
         });
 
         console.log("โพสต์สำเร็จ:", res.data);
@@ -154,11 +152,16 @@ function AddTour() {
 
         setErrors(newErrors);
 
+        //ตรวจสอบการก อัปโหลดภาพ
         if (Object.keys(newErrors).length === 0) {
-        let uploadedFiles = null;
-        if (pictures.length > 0) {
-            uploadedFiles = await uploadImage();
-        }
+            let uploadedFiles = null;
+            if (pictures.length > 0) {
+                uploadedFiles = await uploadImage();
+                if (!uploadedFiles) {
+                    showError('การอัปโหลดภาพล้มเหลว');
+                    return;
+                }
+            }
         maketrip(uploadedFiles);
         }
     };
