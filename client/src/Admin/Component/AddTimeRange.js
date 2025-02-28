@@ -123,6 +123,7 @@ function AddTimeRange() {
                 label="Number of Participants"
                 type="number"
                 name="participants"
+                placeholder="กรุณากรอกจำนวนสูงสุดของนักท่องเที่ยว"
                 value={participants}
                 onChange={handleChange}
                 error={error.participants}
