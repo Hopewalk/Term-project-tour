@@ -14,6 +14,7 @@ const fetchTour = async () => {
             'populate[2]': 'bookings',
             'populate[3]': 'image',
             'populate[4]': 'tour_categories',
+            'populate[5]': 'regions',
             'pagination[start]': 0,
             'pagination[limit]': 100000
         };
@@ -45,10 +46,16 @@ const fetchTour = async () => {
                 })) || [];
 
                 const categories = item.tour_categories?.map(category => category.category_name) || [];
+
                 const images = item.image?.length > 0
                     ? item.image.map(img => `${ax.defaults.baseURL.replace("/api", "")}${img.url}`)
                     : ["http://localhost:1337/uploads/example.png"];
 
+                const regions = item.regions?.map(region => ({
+                    id: region.id,
+                    name: region.region,
+                    province: region.province
+                }))
 
                 return {
                     id: item.id,
@@ -62,7 +69,8 @@ const fetchTour = async () => {
                     max_participants: item.max_participants,
                     categories_name: categories,
                     averageRating,
-                    bookings
+                    bookings,
+                    regions
                 };
             });
 
@@ -80,7 +88,7 @@ const getPriceRange = (tours) => {
 };
 
 // Apply filters
-const applyFilters = (tours, selectedFilters) => {
+const applyFilters = (tours, selectedFilters, selectedRegion) => {
     if (!selectedFilters) return tours;
     console.log("fil", selectedFilters);
 
@@ -94,6 +102,10 @@ const applyFilters = (tours, selectedFilters) => {
             selectedFilters.rating.length === 0 ||
             selectedFilters.rating.includes(Math.floor(tour.averageRating))
         )
+        .filter(tour =>
+            selectedRegion === "all" ||
+            tour.regions.some(region => region.name === selectedRegion)
+        )
         .sort((a, b) => {
             if (selectedFilters.sort === "price-low") return a.price - b.price;
             if (selectedFilters.sort === "price-high") return b.price - a.price;
@@ -106,7 +118,7 @@ const applyFilters = (tours, selectedFilters) => {
         });
 };
 
-const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice, searchTerm }) => {
+const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPrice, searchTerm, selectedRegion }) => {
     const [tours, setTours] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(16);
@@ -122,7 +134,8 @@ const TourGrid = ({ selectedCategory, selectedFilters, setPriceRange, setMaxPric
 
     const filteredTours = applyFilters(
         selectedCategory ? tours.filter(tour => tour.categories_name.includes(selectedCategory)) : tours,
-        selectedFilters
+        selectedFilters,
+        selectedRegion
     ).filter(tour =>
         !searchTerm || tour.name.toLowerCase().includes(searchTerm.toLowerCase())
     );

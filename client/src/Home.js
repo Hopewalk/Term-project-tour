@@ -12,6 +12,7 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState(null);
   const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("all");
 
   useEffect(() => {
     if (maxPrice !== null) {
@@ -19,9 +20,12 @@ export default function Home() {
     }
   }, [maxPrice]);
 
-  const handleSearch = (term) => {
+  const handleSearch = (term, region) => {
     setSearchTerm(term);
+    setSelectedRegion(region);
   };
+
+  console.log("selectedRegion :", selectedRegion);
 
   return (
     <main className="min-h-screen bg-background">
@@ -77,6 +81,7 @@ export default function Home() {
                 setPriceRange={setPriceRange}
                 setMaxPrice={setMaxPrice}
                 searchTerm={searchTerm}
+                selectedRegion={selectedRegion}
               />
             </div>
           </div>
