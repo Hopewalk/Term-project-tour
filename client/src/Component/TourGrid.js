@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import TourCard from "./TourCard";
+import TourCard from "./TourCard/TourCard";
 import PaginationComponent from './PaginationComponent';
 import ax from '../conf/ax';
 import { data } from 'react-router';

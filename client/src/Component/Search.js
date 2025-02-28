@@ -96,7 +96,10 @@ export default function SearchBar({ onSearch }) {
                 bordered
                 dataSource={filteredTourNames}
                 renderItem={item => (
-                  <List.Item onClick={() => setSearchValue(item)}>
+                  <List.Item onClick={() => {
+                    setSearchValue(item);
+                    setFilteredTourNames([]);
+                  }}>
                     {item}
                   </List.Item>
                 )}
