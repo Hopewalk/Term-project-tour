@@ -68,21 +68,23 @@ const InputField = ({
   );
   
   // SelectField
-  const SelectField = ({ label, name, value, onChange, options }) => (
+  const SelectField = ({ label, name, value, onChange, options, error }) => (
     <div className="mb-4">
       <label className="block text-left mb-2">{label}</label>
       <select
         name={name}
-        className="border border-gray-300 p-2 rounded-md w-full"
+        className={`border ${error ? 'border-red-500' : 'border-gray-300'} p-2 rounded-md w-full`}
         value={value}
         onChange={onChange}
       >
+        <option value="">ไม่เลือก</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
+      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
     </div>
   );
   
