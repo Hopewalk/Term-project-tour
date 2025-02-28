@@ -498,6 +498,41 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
+  collectionName: 'regions';
+  info: {
+    displayName: 'Region';
+    pluralName: 'regions';
+    singularName: 'region';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::region.region'
+    > &
+      Schema.Attribute.Private;
+    province: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    region: Schema.Attribute.Enumeration<
+      ['northern', 'northeastern', 'central', 'southern']
+    > &
+      Schema.Attribute.Required;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiReviewReview extends Struct.CollectionTypeSchema {
   collectionName: 'reviews';
   info: {
@@ -639,6 +674,7 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     max_participants: Schema.Attribute.Integer;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
+    regions: Schema.Attribute.Relation<'manyToMany', 'api::region.region'>;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     start_date: Schema.Attribute.DateTime;
     time_ranges: Schema.Attribute.Relation<
@@ -1177,6 +1213,7 @@ declare module '@strapi/strapi' {
       'api::accommodation.accommodation': ApiAccommodationAccommodation;
       'api::booking.booking': ApiBookingBooking;
       'api::payment.payment': ApiPaymentPayment;
+      'api::region.region': ApiRegionRegion;
       'api::review.review': ApiReviewReview;
       'api::time-range.time-range': ApiTimeRangeTimeRange;
       'api::tour-category.tour-category': ApiTourCategoryTourCategory;

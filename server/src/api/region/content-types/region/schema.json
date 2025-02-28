@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "regions",
+  "info": {
+    "singularName": "region",
+    "pluralName": "regions",
+    "displayName": "Region"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "region": {
+      "type": "enumeration",
+      "enum": [
+        "northern",
+        "northeastern",
+        "central",
+        "southern"
+      ],
+      "required": true
+    },
+    "province": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "tours": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tour.tour",
+      "inversedBy": "regions"
+    }
+  }
+}
