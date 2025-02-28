@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "antd";
 import { InputField, SelectField } from "./Tagcomponent";
+import { useNotification, NotificationContainer } from './notification';
 import ax from "../../conf/ax";
 
 function AddTimeRange() {
@@ -10,6 +11,7 @@ function AddTimeRange() {
     const [selectedTour, setSelectedTour] = useState("");
     const [tours, setTours] = useState([]);
     const [error, setError] = useState({});
+    const { notifications, removeNotification, showSuccess, showError, showWarning } = useNotification();
 
     useEffect(() => {
         fetchTours();
@@ -40,7 +42,9 @@ function AddTimeRange() {
         try {
             const response = await ax.post("/time-ranges", reshowData);
             console.log("Create Tour Time Range Success:", response.data);
+            showSuccess("Creat Time Range Success")
         } catch (error) {
+            showError("Error To Creat Time Range")
             console.error("Error creating time range:", error);
         }
     };
@@ -63,7 +67,6 @@ function AddTimeRange() {
         if (new Date(startDate) >= new Date(endDate)) {
             newError.dateOrder = "วันที่เริ่มต้นต้องมาก่อนวันที่สิ้นสุด";
         }
-    
         if (Object.keys(newError).length > 0) {
             setError(newError);
             return;
@@ -148,9 +151,13 @@ function AddTimeRange() {
                 </div>
             </div>
 
-            {error.dateOrder && (
-                <span className="text-red-500 text-sm">{error.dateOrder}</span>
-            )}
+
+            <div>
+                <NotificationContainer 
+                notifications={notifications}
+                removeNotification={removeNotification}
+                />
+            </div>
 
             <div className="flex justify-end space-x-4 mt-4">
                 <Button

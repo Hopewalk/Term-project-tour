@@ -21,7 +21,7 @@ function AddTour() {
             price: "",
             startDate: "",
             endDate: "",
-            status: "unavailable",
+            status: "",
             destination: "",
             typetour: "",
             accommodation: "", // ค่านี้จะเก็บ id ของ accommodation ที่เลือก
@@ -50,9 +50,9 @@ function AddTour() {
         price: "",
         startDate: "",
         endDate: "",
-        status: "unavailable",
+        status: "",
         destination: "",
-        typetour: "One Day Trip",
+        typetour: "",
         accommodation: "",
         });
         setPictures([]);
@@ -126,10 +126,8 @@ function AddTour() {
         e.preventDefault();
         const newErrors = {};
 
-        // ตรวจสอบว่าที่จำเป็นทั้งหมดถูกกรอก
         if (!tripData.tripName) newErrors.tripName = "กรุณากรอกชื่อทริปต์";
-        if (!tripData.description)
-        newErrors.description = "กรุณากรอกคำอธิบายทริปต์";
+        if (!tripData.description) newErrors.description = "กรุณากรอกคำอธิบายทริปต์";
         if (!tripData.seats) newErrors.seats = "กรุณากรอกจำนวนที่นั่ง";
         if (!tripData.price) newErrors.price = "กรุณากรอกราคา";
         if (!tripData.startDate)
@@ -138,12 +136,22 @@ function AddTour() {
         newErrors.endDate = "กรุณากรอกวันที่สิ้นสุด";
         if (!tripData.destination)
         newErrors.destination = "กรุณากรอกจุดหมายปลายทาง";
+        if (!tripData.accommodation)
+        newErrors.accommodation = "กรุณาเลือกที่พัก"
+        if (!tripData.status) newErrors.status = "กรุณาเลือกสถานะ";
+        if (!tripData.typetour) newErrors.typetour = "กรุณาเลือกประเภททัวร์";
 
         // ตรวจสอบว่าถึงวันที่เริ่มต้นมากกว่าหรือเท่ากับวันที่สิ้นสุด
         if (new Date(tripData.startDate) >= new Date(tripData.endDate)) {
         newErrors.startDate = "วันที่เริ่มต้นต้องน้อยกว่าวันที่สิ้นสุด!";
         newErrors.endDate = "วันที่เริ่มต้นต้องน้อยกว่าวันที่สิ้นสุด!";
         }
+
+        // เพิ่มเงื่อนไขพิเศษสำหรับ Package with Accommodation
+        if (tripData.typetour === "Package with Accommodation" && !tripData.accommodation) {
+            newErrors.accommodation = "กรุณาเลือกที่พักสำหรับแพ็คเกจทัวร์";
+        }
+
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
@@ -157,7 +165,6 @@ function AddTour() {
 
     useEffect(() => {
         fetchAccommodations();
-        tripData.typetour = "One Day Trip";
     }, []);
 
     return (
@@ -243,6 +250,7 @@ function AddTour() {
                         { value: "available", label: "available" },
                         { value: "unavailable", label: "unavailable" },
                     ]}
+                    error={errors.status}
                     />
                 </div>
 
@@ -256,6 +264,7 @@ function AddTour() {
                         {   value: "One Day Trip",label: "One Day Trip"},
                         {   value: "Package with Accommodation",label: "Package with Accommodation"},
                     ]}
+                    error={errors.typetour}
                     />
                 </div>
                 </div>
@@ -280,6 +289,7 @@ function AddTour() {
                     }))}
                     name="accommodation"
                     onChange={handleChange}
+                    error={errors.accommodation}
                     />
                 </div>
                 </div>
