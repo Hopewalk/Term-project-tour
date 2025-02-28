@@ -544,7 +544,7 @@ export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
   collectionName: 'time_ranges';
   info: {
     description: '';
-    displayName: 'reshow-tours';
+    displayName: 'time-range';
     pluralName: 'time-ranges';
     singularName: 'time-range';
   };
