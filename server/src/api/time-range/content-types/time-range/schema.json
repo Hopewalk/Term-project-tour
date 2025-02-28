@@ -4,7 +4,7 @@
   "info": {
     "singularName": "time-range",
     "pluralName": "time-ranges",
-    "displayName": "time-range",
+    "displayName": "time_range",
     "description": ""
   },
   "options": {
@@ -32,7 +32,7 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::booking.booking",
-      "mappedBy": "reshow_tour"
+      "mappedBy": "time_range"
     }
   }
 }

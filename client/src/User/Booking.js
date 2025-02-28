@@ -2,7 +2,10 @@ import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
-import { Form, Input, Button, message, Table } from "antd";
+import { Form, Input, Button, message, Table, Modal, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import qr from "qrcode";
+import generatePayload from "promptpay-qr";
 
 export default function BookingForm() {
   const { state } = useContext(AuthContext);
@@ -15,6 +18,9 @@ export default function BookingForm() {
   const [selectedParticipants, setSelectedParticipants] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [qrCode, setQrCode] = useState("");
+  const [slip, setSlip] = useState(null);
   const navigate = useNavigate();
 
   const fetchDetail = async () => {
@@ -79,42 +85,60 @@ export default function BookingForm() {
     navigate(`/trip/${documentId}`);
   };
 
-  const handleBooking = async () => {
+  const handleModal = () => {
     const totalParticipants = Object.values(selectedParticipants).reduce(
       (sum, value) => sum + value,
       0
     );
-
-    if (!formData.phone.trim()) {
-      setErrorPhone("กรุณากรอกเบอร์โทรศัพท์");
-      return;
-    } else {
-      setErrorPhone("");
-    }
-
-    if (
-      !tour ||
-      Object.keys(selectedParticipants).length === 0 ||
-      totalParticipants === 0
-    ) {
-      setErrorMessage("โปรดเพิ่มจำนวนคนก่อนทำการจอง");
-      return;
-    } else {
-      setErrorMessage("");
-    }
 
     const selectedTimeIds = tour.time_ranges
       .filter((range) => selectedParticipants[range.start] > 0)
       .map((range) => range.timeId);
 
     if (selectedTimeIds.length > 1) {
-      setErrorMessage("สามารถเลือกได้เพียง 1 ช่วงเวลาเท่านั้น");
+      setErrorMessage(
+        "การจอง 1 ครั้ง สามารถเลือกได้เพียงช่วงเวลาเดียวเท่านั้น"
+      );
       return;
     }
+    if (!formData.phone.trim()) {
+      setErrorPhone("กรุณากรอกเบอร์โทรศัพท์");
+      return;
+    } else if (
+      !tour ||
+      Object.keys(selectedParticipants).length === 0 ||
+      totalParticipants === 0
+    ) {
+      setErrorMessage("โปรดเพิ่มจำนวนคนก่อนทำการจอง");
+      return;
+    }
+    setIsModalVisible(true);
+  };
+  const handleBooking = async () => {
+    const totalParticipants = Object.values(selectedParticipants).reduce(
+      (sum, value) => sum + value,
+      0
+    );
+
+    const selectedTimeIds = tour.time_ranges
+      .filter((range) => selectedParticipants[range.start] > 0)
+      .map((range) => range.timeId);
+
+    if (!slip) {
+      setErrorMessage("กรุณาอัปโหลดสลิปก่อนทำการจอง");
+      return;
+    }
+
     try {
+      const formDataUpload = new FormData();
+      formDataUpload.append("files", slip);
+      const uploadRes = await ax.post("/upload", formDataUpload);
+      const imageUrl = uploadRes.data[0].id;
+
       const bookingData = {
         data: {
-          ...formData,
+          phone: formData.phone,
+          line_id: formData.line_id,
           users_permissions_user: state.user.documentId,
           booking_status: "pending",
           tour: tour.documentId,
@@ -123,15 +147,16 @@ export default function BookingForm() {
             0
           ),
           booking_date: new Date().toISOString(),
-          payment_status: "unpaid",
-          reshow_tour: selectedTimeIds,
+          payment_status: "paid",
+          time_range: selectedTimeIds,
           participant: totalParticipants,
+          image: imageUrl,
         },
       };
 
-      console.log("Sending Booking Data:", bookingData);
       await ax.post("/bookings", bookingData);
       message.success("Booking successful!");
+      setIsModalVisible(false);
     } catch (error) {
       message.error("ไม่สามารถชำระเงินได้");
     }
@@ -143,6 +168,20 @@ export default function BookingForm() {
         0
       )
     : 0;
+
+  const generateQrCode = () => {
+    const phoneNumber = "0842177462";
+    const totalPrice = Object.values(selectedParticipants).reduce(
+      (sum, count) => sum + count * tour.price,
+      0
+    );
+    if (totalPrice > 0) {
+      const payload = generatePayload(phoneNumber, { amount: totalPrice });
+      qr.toDataURL(payload, (err, url) => {
+        if (!err) setQrCode(url);
+      });
+    }
+  };
 
   if (!tour) return <div>Loading...</div>;
   const columns = [
@@ -291,19 +330,24 @@ export default function BookingForm() {
           </div>
 
           {/* Right */}
-          <div className="col-span-1 bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Payment</h2>
-            <p className="text-lg font-semibold">Total Price: {totalPrice} ฿</p>
+          <div className="col-span-1 bg-white p-6 rounded-lg shadow-md my-auto">
+            <h2 className="text-2xl font-bold">การชำระเงิน</h2>
+            <h2 className="text-1xl font-small">QR CODE</h2>
+            <p className="text-lg font-semibold mb-4">
+              ราคารวม : {totalPrice} ฿
+            </p>
             <div className="space-y-4">
               <Button
-                type="primary"
-                className="w-full bg-green-600 text-white rounded-lg py-3 text-lg font-semibold hover:bg-green-500 mt-6"
-                onClick={handleBooking}
+                type="default"
+                className="w-full bg-green-600 text-white rounded-lg py-3 text-lg font-semibold hover:bg-red-500"
+                onClick={() => {
+                  generateQrCode();
+                  handleModal();
+                }}
               >
                 ชำระเงิน
               </Button>
 
-              {/* Cancel Button */}
               <Button
                 type="default"
                 className="w-full bg-red-600 text-white rounded-lg py-3 text-lg font-semibold hover:bg-red-500"
@@ -313,6 +357,54 @@ export default function BookingForm() {
               </Button>
             </div>
           </div>
+          <Modal
+            visible={isModalVisible}
+            onCancel={() => setIsModalVisible(false)}
+            footer={[
+              <Button type="primary" onClick={handleBooking} disabled={!slip}>
+                ส่งหลักฐานการชำระเงิน
+              </Button>,
+              <Button key="close" onClick={() => setIsModalVisible(false)}>
+                ปิด
+              </Button>,
+            ]}
+          >
+            <div className="text-center">
+              <h2 className="text-lg font-semibold">Scan QR เพื่อชำระเงิน</h2>
+              <p className="text-gray-600 mb-2">จำนวนเงิน: {totalPrice} ฿</p>
+              {qrCode && (
+                <img src={qrCode} alt="QR Code" className="mx-auto mt-6" />
+              )}
+              <div className="mt-4">
+                <Upload
+                  maxCount={1}
+                  beforeUpload={(file) => {
+                    setSlip(file);
+                    return false;
+                  }}
+                  showUploadList={{
+                    showPreviewIcon: false,
+                    showRemoveIcon: true,
+                  }}
+                  onRemove={() => setSlip(null)}
+                >
+                  {!slip && (
+                    <Button icon={<UploadOutlined />}>อัปโหลดสลิป</Button>
+                  )}
+                </Upload>
+                {slip && (
+                  <div className="mt-4">
+                    <p className="text-gray-600">สลิปที่อัปโหลด:</p>
+                    <img
+                      src={URL.createObjectURL(slip)}
+                      alt="อัปโหลดสลิป"
+                      className="w-full max-w-xs mx-auto mt-2 rounded-lg border"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

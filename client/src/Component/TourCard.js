@@ -38,7 +38,9 @@ const TourCard = ({ tour }) => {
                 </span>
               </div>
             )}
-            <div style={styles.description}>{tour.description}</div>
+            <div style={styles.description}>
+              {tour.description}
+            </div>
             <div style={styles.footer}>
               <div style={styles.price}>฿{tour.price.toLocaleString()}</div>
             </div>
@@ -92,7 +94,7 @@ const styles = {
     marginTop: 8,
     fontSize: 14,
     color: '#555',
-    height: 48,
+    height: 46,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',

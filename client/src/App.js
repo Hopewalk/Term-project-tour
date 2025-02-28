@@ -13,7 +13,6 @@ import EditProfile from "./User/Profile.js";
 import Register from "./Auth/Register.js";
 import AddTrip from "./Admin/Addtrip.js";
 import TripOverview from "./User/Overview.js";
-import Pay from "./User/Payment.js";
 import Status from "./Admin/Status.js";
 import Edittrip from "./Admin/Editpage.js";
 import Footer from "./Component/Footer.js";
@@ -61,7 +60,6 @@ function App() {
             {state.isLoggedIn && role !== "Admin" && (
               <>
                 <Route path="/Profile" element={<EditProfile />} />
-                <Route path="/Payment" element={<Pay />} />
                 <Route path="/History" element={<Historylist />} />
                 <Route path="/Booking/:documentId" element={<BookingForm />} />
               </>
