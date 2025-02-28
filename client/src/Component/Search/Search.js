@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, Select, Button, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import ax from '../conf/ax';
+import ax from '../../conf/ax';
 
 const { Search } = Input;
 const { Option } = Select;
