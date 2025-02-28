@@ -45,7 +45,7 @@ export default function SearchBar({ onSearch }) {
     const value = e.target.value;
     setSearchValue(value);
     if (value) {
-      const filtered = tourNames.filter(tour => 
+      const filtered = tourNames.filter(tour =>
         tour.name.toLowerCase().includes(value.toLowerCase()) &&
         (selectedRegion === "all" || tour.regions.includes(selectedRegion))
       ).map(tour => tour.name);
@@ -57,8 +57,12 @@ export default function SearchBar({ onSearch }) {
 
   const handleRegionChange = (value) => {
     setSelectedRegion(value);
-    handleSearch();
+    setSearchValue(""); // Clear search value when region changes
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedRegion]);
 
   return (
     <div className="container mx-auto px-4 py-8">

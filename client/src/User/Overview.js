@@ -124,8 +124,8 @@ export default function TripOverview() {
             role="list"
             className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
           >
-            {tour.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
+            {tour.breadcrumbs.map((breadcrumb, index) => (
+              <li key={breadcrumb.id || index}>
                 <div className="flex items-center">
                   <a
                     href={breadcrumb.href}
@@ -146,7 +146,9 @@ export default function TripOverview() {
                 </div>
               </li>
             ))}
-            <li className="text-sm">{tour.name}</li>
+            <li key="tour-name" className="text-sm">
+              {tour.name}
+            </li>
           </ol>
         </nav>
 
@@ -180,7 +182,10 @@ export default function TripOverview() {
               <h3 className="text-xl font-semibold">ช่วงเวลาเดินทาง</h3>
               <Table
                 columns={columns}
-                dataSource={tour.time_ranges}
+                dataSource={tour.time_ranges.map((item, index) => ({
+                  ...item,
+                  key: `timeRange-${index}`,
+                }))}
                 pagination={false}
               />
             </div>
