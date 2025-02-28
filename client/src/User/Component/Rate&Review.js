@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/Auth.context";
 import ax from "../../conf/ax";
 import { useParams } from "react-router";
 import { Rate, Card, Button, Input, message } from "antd";
-import PaginationComponent from "../../Component/PaginationComponent";
+import PaginationComponent from "../../Component/Pagination/PaginationComponent";
 
 export default function Review() {
   const { state } = useContext(AuthContext);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card } from "antd";
 import ax from "../conf/ax";
 import { useNavigate } from "react-router";
-import PaginationComponent from "../Component/PaginationComponent";
+import PaginationComponent from "../Component/Pagination/PaginationComponent";
 
 export default function TourCard() {
   const [tours, setTours] = useState([]);
