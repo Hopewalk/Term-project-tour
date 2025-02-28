@@ -77,6 +77,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
       >
+        <option value="">ไม่เลือก</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

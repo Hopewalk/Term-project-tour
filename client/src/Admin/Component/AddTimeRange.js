@@ -40,7 +40,6 @@ function AddTimeRange() {
         try {
             const response = await ax.post("/time-ranges", reshowData);
             console.log("Create Tour Time Range Success:", response.data);
-            handleReset();
         } catch (error) {
             console.error("Error creating time range:", error);
         }
@@ -56,7 +55,7 @@ function AddTimeRange() {
 
     const handleSubmit = async () => {
         let newError = {};
-
+    
         if (!selectedTour) newError.tour = "กรุณาเลือกทัวร์";
         if (!startDate) newError.start = "กรุณากรอกวันที่เริ่มต้น";
         if (!endDate) newError.end = "กรุณากรอกวันที่สิ้นสุด";
@@ -64,17 +63,16 @@ function AddTimeRange() {
         if (new Date(startDate) >= new Date(endDate)) {
             newError.dateOrder = "วันที่เริ่มต้นต้องมาก่อนวันที่สิ้นสุด";
         }
-
+    
         if (Object.keys(newError).length > 0) {
             setError(newError);
             return;
-        }else{
+        } else {
             createtimerange();
         }
-
+    
         setError({});
     };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         
