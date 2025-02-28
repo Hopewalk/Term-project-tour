@@ -102,7 +102,7 @@ function AddTimeRange() {
     };
 
     return (
-        <div className="flex flex-col space-y-4">
+        <div >
             <h2 className="text-2xl font-bold mb-4 text-center">
                 Set Tour Schedule
             </h2>
@@ -165,7 +165,7 @@ function AddTimeRange() {
                     onClick={handleReset}
                     className="bg-yellow-500 text-white p-2 rounded-md"
                 >
-                    Reset
+                    Reset data field
                 </Button>
                 <Button
                     onClick={handleSubmit}

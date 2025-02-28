@@ -177,22 +177,22 @@ function AddTour() {
                 Creat Tour
                 </div>
                 <InputField
-                label="Tour Name"
-                type="text"
-                name="tripName"
-                value={tripData.tripName}
-                onChange={handleChange}
-                placeholder="กรอกชื่อทัวร์"
-                error={errors.tripName}
+                    label="Tour Name"
+                    type="text"
+                    name="tripName"
+                    value={tripData.tripName}
+                    onChange={handleChange}
+                    placeholder="กรอกชื่อทัวร์"
+                    error={errors.tripName}
                 />
                 <TextareaField
-                label="Description"
-                name="description"
-                value={tripData.description}
-                onChange={handleChange}
-                placeholder="กรอกอธิบายทัวร์"
-                height="200px"
-                error={errors.description}
+                    label="Description"
+                    name="description"
+                    value={tripData.description}
+                    onChange={handleChange}
+                    placeholder="กรอกอธิบายทัวร์"
+                    height="200px"
+                    error={errors.description}
                 />
                 <div className="flex space-x-4">
                 <div className="w-1/2">
@@ -308,7 +308,7 @@ function AddTour() {
                     onClick={handlereset}
                     className="bg-yellow-500 text-white p-2 rounded-md"
                     >
-                    Reset fill
+                    Reset data field
                     </Button>
                 </div>
                 <div className="text-right mt-8">
