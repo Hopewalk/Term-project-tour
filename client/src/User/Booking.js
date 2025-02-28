@@ -272,7 +272,10 @@ export default function BookingForm() {
               <h3 className="text-xl font-semibold">ช่วงเวลาเดินทาง</h3>
               <Table
                 columns={columns}
-                dataSource={tour.time_ranges}
+                dataSource={tour.time_ranges.map((item, index) => ({
+                  ...item,
+                  key: item.timeId || index,
+                }))}
                 pagination={false}
               />
               {errorMessage && (
@@ -358,7 +361,7 @@ export default function BookingForm() {
             </div>
           </div>
           <Modal
-            visible={isModalVisible}
+            open={isModalVisible}
             onCancel={() => setIsModalVisible(false)}
             footer={[
               <Button type="primary" onClick={handleBooking} disabled={!slip}>

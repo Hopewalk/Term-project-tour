@@ -30,6 +30,11 @@ export default function Review() {
   };
 
   const handleSubmitReview = async () => {
+    if (!state.user) {
+      message.error("กรุณาเข้าสู่ระบบก่อนทำการรีวิว");
+      return;
+    }
+
     if (newRating === 0) {
       alert("โปรดให้ดาวก่อนกดส่ง");
       return;
@@ -112,24 +117,28 @@ export default function Review() {
             </Card>
           ))}
 
-          <div className="space-y-4">
-            <h3 className="font-semibold">Rating & Review</h3>
-            <Rate value={newRating} onChange={setNewRating} />
-            <Input.TextArea
-              placeholder="Share your experience..."
-              className="min-h-[100px]"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <Button
-              type="primary"
-              block
-              onClick={handleSubmitReview}
-              loading={loading}
-            >
-              Submit Review
-            </Button>
-          </div>
+          {state.user ? (
+            <div className="space-y-4">
+              <h3 className="font-semibold">Rating & Review</h3>
+              <Rate value={newRating} onChange={setNewRating} />
+              <Input.TextArea
+                placeholder="Share your experience..."
+                className="min-h-[100px]"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <Button
+                type="primary"
+                block
+                onClick={handleSubmitReview}
+                loading={loading}
+              >
+                Submit Review
+              </Button>
+            </div>
+          ) : (
+            <p className="text-red-500">กรุณาเข้าสู่ระบบก่อนทำการรีวิว</p>
+          )}
         </div>
       </div>
     </div>
