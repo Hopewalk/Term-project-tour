@@ -195,45 +195,62 @@ export default function Trip_statistic() {
         {tours.length === 0 ? (
           <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
         ) : (
-          <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <Tabs.TabPane
-              tab={
-                <span>
-                  <FieldTimeOutlined /> One Day Trip
-                </span>
-              }
-              key="One Day Trip"
-            >
-              <div>
-                <h3 className="text-center text-lg font-semibold mb-4">
-                  One Day Trip
-                </h3>
-                {oneDayTrips.length === 0 ? (
-                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-                ) : (
-                  oneDayTrips.map((tour) => renderTourCard(tour))
-                )}
-              </div>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Package Tours" key="Package Tours">
-              <div>
-                <h3 className="text-center text-lg font-semibold mb-4">
-                  Package with Accommodation
-                </h3>
-                {packageTrips.length === 0 ? (
-                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-                ) : (
-                  packageTrips.map((tour) => renderTourCard(tour))
-                )}
-              </div>
-            </Tabs.TabPane>
-          </Tabs>
+          <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            items={[
+              {
+                key: "One Day Trip",
+                label: (
+                  <span>
+                    <FieldTimeOutlined /> One Day Trip
+                  </span>
+                ),
+                children: (
+                  <div>
+                    <h3 className="text-center text-lg font-semibold mb-4">
+                      One Day Trip
+                    </h3>
+                    {oneDayTrips.length === 0 ? (
+                      <p className="text-center text-gray-500">
+                        ไม่มีข้อมูลทัวร์
+                      </p>
+                    ) : (
+                      oneDayTrips.map((tour) => renderTourCard(tour))
+                    )}
+                  </div>
+                ),
+              },
+              {
+                key: "Package Tours",
+                label: (
+                  <span>
+                    <AppstoreOutlined /> Package Tours
+                  </span>
+                ),
+                children: (
+                  <div>
+                    <h3 className="text-center text-lg font-semibold mb-4">
+                      Package with Accommodation
+                    </h3>
+                    {packageTrips.length === 0 ? (
+                      <p className="text-center text-gray-500">
+                        ไม่มีข้อมูลทัวร์
+                      </p>
+                    ) : (
+                      packageTrips.map((tour) => renderTourCard(tour))
+                    )}
+                  </div>
+                ),
+              },
+            ]}
+          />
         )}
 
         {/* Modal for displaying customer email list */}
         <Modal
           title="รายชื่อลูกค้า"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
         >

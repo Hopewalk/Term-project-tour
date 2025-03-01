@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import FilterSidebar from "./Component/Filters";
-import Category from "./Component/Category";
+import FilterSidebar from "./Component/Filters/Filters";
+import Category from "./Component/Category/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
-import SearchBar from "./Component/Search";
-import TourGrid from "./Component/TourGrid";
+import SearchBar from "./Component/Search/Search";
+import TourGrid from "./Component/TourGrid/TourGrid";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -12,6 +12,7 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState(null);
   const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("all");
 
   useEffect(() => {
     if (maxPrice !== null) {
@@ -19,9 +20,12 @@ export default function Home() {
     }
   }, [maxPrice]);
 
-  const handleSearch = (term) => {
+  const handleSearch = (term, region) => {
     setSearchTerm(term);
+    setSelectedRegion(region);
   };
+
+  console.log("selectedRegion :", selectedRegion);
 
   return (
     <main className="min-h-screen bg-background">
@@ -77,6 +81,7 @@ export default function Home() {
                 setPriceRange={setPriceRange}
                 setMaxPrice={setMaxPrice}
                 searchTerm={searchTerm}
+                selectedRegion={selectedRegion}
               />
             </div>
           </div>

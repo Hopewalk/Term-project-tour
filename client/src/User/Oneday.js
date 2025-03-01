@@ -101,6 +101,9 @@ export default function TourCard() {
             currentPage={currentPage}
             pageSize={pageSize}
             total={totalTours}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} tours`
+            }
             onChange={(page) => setCurrentPage(page)}
           />
         </>
