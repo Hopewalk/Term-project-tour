@@ -15,7 +15,7 @@ function AddTrip(){
   const containerStyle = {
     width: "1000px",
     margin: "0 auto",
-    minHeight: activeTab === "Create Tour Time Range Date" ? "500px" : "1000px"
+    minHeight: activeTab === "Set Tour Schedule" ? "500px" : "1000px"
   };
 
   return (
@@ -37,10 +37,10 @@ function AddTrip(){
         <Tabs.TabPane 
           tab={
             <span>
-              <ScheduleOutlined /> Create Tour Reshow Date
+              <ScheduleOutlined /> Set Tour Schedule
             </span>
           } 
-          key="Create Tour Time Range Date"
+          key="Set Tour Schedule"
         >
           <AddTimeRange />
         </Tabs.TabPane>
