@@ -6,6 +6,7 @@ import PromoBanner from './Component/Homepage/PromoBanner';
 import NavBar from './Component/Homepage/NavBar';
 import ProvincesBar from './Component/Search/ProvinceBar/ProvincesBar';
 import { HandRaisedIcon } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router';
 
 const Home = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -13,6 +14,7 @@ const Home = () => {
     const [tourNames, setTourNames] = useState([]);
     const [filteredTourNames, setFilteredTourNames] = useState([]);
     const [selectedLocation, setSelectedLocation] = useState([]);
+    const navigate = useNavigate();
 
     const handleSearch = (term) => {
         setSearchTerm(term);
@@ -25,7 +27,28 @@ const Home = () => {
 
     const handleTabClick = (tab) => {
         console.log(`Tab clicked: ${tab}`);
-        // Add logic to handle tab click if needed
+        switch (tab) {
+            case 'Attractions':
+                navigate('/Tour');
+                break;
+            case 'Tours':
+                navigate('/Tour');
+                break;
+            case 'One Day Trip':
+                navigate('/Onedaytrip');
+                break;
+            case 'Package with Acommodation':
+                navigate('/Trip&Rest');
+                break;
+            case 'Provinces':
+                navigate('/Tour');
+                break;
+            case 'All':
+                navigate('/Tour');
+                break;
+            default:
+                break;
+        }
     };
 
     const handlePromoButtonClick = () => {
@@ -68,7 +91,7 @@ const Home = () => {
             <section className="py-12 text-center">
                 <h2 className="text-3xl mb-8">Top Attractions</h2>
                 <div className="w-3/4 mx-auto">
-                    <RenderTours category="One Day Trip" />
+                    <RenderTours category="Recommend" />
                 </div>
             </section>
         </div>
