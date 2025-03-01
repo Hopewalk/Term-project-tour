@@ -50,56 +50,60 @@ function Status() {
           Set Status
         </h1>
       </header>
-      {orders.map((order) => (
-        <Card key={order.id} className="mx-auto max-w-7xl mt-2" title="Order">
-          <div className="flex justify-between">
-            <div>
-              {order.image && order.image.url ? (
-                <img
-                  src={`${ax.defaults.baseURL.replace("/api", "")}${
-                    order.image.url
-                  }`}
-                  alt={order.tour.tour_name}
-                  className="w-32 h-32 object-cover mb-2"
-                  onClick={() =>
-                    handlePreview(
-                      `${ax.defaults.baseURL.replace("/api", "")}${
-                        order.image.url
-                      }`
-                    )
+      {[...orders]
+        .sort((a, b) => new Date(b.booking_date) - new Date(a.booking_date))
+        .map((order) => (
+          <Card key={order.id} className="mx-auto max-w-7xl mt-2" title="Order">
+            <div className="flex justify-between">
+              <div>
+                {order.image && order.image.url ? (
+                  <img
+                    src={`${ax.defaults.baseURL.replace("/api", "")}${
+                      order.image.url
+                    }`}
+                    alt={order.tour.tour_name}
+                    className="w-32 h-32 object-cover mb-2"
+                    onClick={() =>
+                      handlePreview(
+                        `${ax.defaults.baseURL.replace("/api", "")}${
+                          order.image.url
+                        }`
+                      )
+                    }
+                  />
+                ) : (
+                  <img
+                    src="http://localhost:1337/uploads/example.png"
+                    alt="Default"
+                    className="w-32 h-32 object-cover mb-2"
+                  />
+                )}
+                <p>{order.tour.tour_name}</p>
+                <p>{order.total_price}</p>
+                <p>{order.tour.destination}</p>
+                <p>
+                  ชื่อคนจอง : {order.users_permissions_user.first_name}{" "}
+                  {order.users_permissions_user.last_name}
+                </p>
+                <p>
+                  วันที่จอง : {new Date(order.booking_date).toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <Select
+                  defaultValue={order.booking_status}
+                  onChange={(value) =>
+                    handleUpdateStatus(order.documentId, value)
                   }
-                />
-              ) : (
-                <img
-                  src="http://localhost:1337/uploads/example.png"
-                  alt="Default"
-                  className="w-32 h-32 object-cover mb-2"
-                />
-              )}
-              <p>{order.tour.tour_name}</p>
-              <p>{order.total_price}</p>
-              <p>{order.tour.destination}</p>
-              <p>
-                ชื่อคนจอง : {order.users_permissions_user.first_name}{" "}
-                {order.users_permissions_user.last_name}
-              </p>
-              <p>วันที่จอง : {new Date(order.booking_date).toLocaleString()}</p>
+                >
+                  <Select.Option value="pending">Pending</Select.Option>
+                  <Select.Option value="confirmed">Confirmed</Select.Option>
+                  <Select.Option value="cancelled">Cancelled</Select.Option>
+                </Select>
+              </div>
             </div>
-            <div>
-              <Select
-                defaultValue={order.booking_status}
-                onChange={(value) =>
-                  handleUpdateStatus(order.documentId, value)
-                }
-              >
-                <Select.Option value="pending">Pending</Select.Option>
-                <Select.Option value="confirmed">Confirmed</Select.Option>
-                <Select.Option value="cancelled">Cancelled</Select.Option>
-              </Select>
-            </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        ))}
       <Modal
         open={isModalOpen}
         footer={null}
