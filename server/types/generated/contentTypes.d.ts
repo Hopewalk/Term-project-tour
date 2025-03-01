@@ -663,7 +663,6 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
     destination: Schema.Attribute.String;
-    end_date: Schema.Attribute.DateTime;
     image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -671,12 +670,10 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::tour.tour'> &
       Schema.Attribute.Private;
-    max_participants: Schema.Attribute.Integer;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     regions: Schema.Attribute.Relation<'manyToMany', 'api::region.region'>;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
-    start_date: Schema.Attribute.DateTime;
     time_ranges: Schema.Attribute.Relation<
       'oneToMany',
       'api::time-range.time-range'
