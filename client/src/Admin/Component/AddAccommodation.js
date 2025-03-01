@@ -79,6 +79,7 @@ function AddAccommodation() {
         if (!AccommodationData.context) newErrors.context = "กรุณากรอกข้อมูลติดต่อ";
     
         if (Object.keys(newErrors).length > 0) {
+            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน")
             setErrors(newErrors);
             return;
         }
