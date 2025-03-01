@@ -80,7 +80,7 @@ export default function Historylist() {
           </Card>
         ))
       ) : (
-        <p>No bookings found for the logged-in user.</p>
+        <p>No bookings found</p>
       )}
     </div>
   );
