@@ -69,6 +69,7 @@ function AddTimeRange() {
         }
         if (Object.keys(newError).length > 0) {
             setError(newError);
+            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน")
             return;
         } else {
             createtimerange();

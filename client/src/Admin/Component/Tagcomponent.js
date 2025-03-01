@@ -91,7 +91,7 @@ const InputField = ({
   // ImageUploader
   const ImageUploader = ({ pictures, handleImageUpload, handleDeleteImage }) => (
     <div className="mb-4">
-      <label className="block text-left mb-2">ภาพ **ภาพแรกที่อัปโหลดจะถูกนำไปใช้เป็น thumnail**</label>
+      <label className="block text-left mb-2">ภาพ (ภาพแรกที่อัปโหลดจะถูกนำไปใช้เป็นปก)</label>
       <input
         type="file"
         multiple
