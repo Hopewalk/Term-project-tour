@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Auth.context";
 import ax from "../../conf/ax";
@@ -17,7 +17,7 @@ export default function Review() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const response = await ax.get(
         `/tours/${documentId}?populate[reviews][populate]=users_permissions_user`
@@ -30,7 +30,7 @@ export default function Review() {
     } catch (error) {
       console.error("Failed to fetch reviews:", error);
     }
-  };
+  }, [documentId]);
 
   const handleSubmitReview = async () => {
     if (!state.user) {
@@ -85,7 +85,7 @@ export default function Review() {
 
   useEffect(() => {
     fetchReviews();
-  }, [documentId]);
+  }, [fetchReviews, documentId]);
 
   const paginatedReviews = reviews.slice(
     (currentPage - 1) * pageSize,
