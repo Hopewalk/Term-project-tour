@@ -1,92 +1,78 @@
-import React, { useState, useEffect } from "react";
-import FilterSidebar from "./Component/Filters/Filters";
-import Category from "./Component/Category/Category";
-import Thailandbg from "./Images/Thailand-bg.png";
-import SearchBar from "./Component/Search/Search";
-import TourGrid from "./Component/TourGrid/TourGrid";
+import React, { useState } from 'react';
+import SearchBar from './Component/Search/SearchBar';
+import RegionsBar from './Component/Search/RegionsBar';
+import RenderTours from './Component/Homepage/RenderTours';
+import PromoBanner from './Component/Homepage/PromoBanner';
+import NavBar from './Component/Homepage/NavBar';
+import ProvincesBar from './Component/Search/ProvinceBar/ProvincesBar';
+import { HandRaisedIcon } from '@heroicons/react/24/outline';
 
-export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedFilters, setSelectedFilters] = useState({ sort: "popular" });
-  const [selectedRatings, setSelectedRatings] = useState([]);
-  const [maxPrice, setMaxPrice] = useState(null);
-  const [selectedPriceRange, setPriceRange] = useState([0, maxPrice]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("all");
+const Home = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedRegion, setSelectedRegion] = useState("all");
+    const [tourNames, setTourNames] = useState([]);
+    const [filteredTourNames, setFilteredTourNames] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState([]);
 
-  useEffect(() => {
-    if (maxPrice !== null) {
-      setPriceRange([0, maxPrice]);
-    }
-  }, [maxPrice]);
+    const handleSearch = (term) => {
+        setSearchTerm(term);
+    };
 
-  const handleSearch = (term, region) => {
-    setSearchTerm(term);
-    setSelectedRegion(region);
-  };
+    const handleRegionChange = (value) => {
+        setSelectedRegion(value);
+        setSearchTerm(""); // Clear search value when region changes
+    };
 
-  console.log("selectedRegion :", selectedRegion);
+    const handleTabClick = (tab) => {
+        console.log(`Tab clicked: ${tab}`);
+        // Add logic to handle tab click if needed
+    };
 
-  return (
-    <main className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div
-        className="h-[400px] relative bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${Thailandbg})`,
-        }}
-      >
-        <div className="absolute inset-0 flex items-center">
-          <SearchBar onSearch={handleSearch} />
-        </div>
-      </div>
+    const handlePromoButtonClick = () => {
+        console.log('Promo button clicked');
+        // Add logic to handle promo button click if needed
+    };
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl pl-8">
-          {/* Title */}
-          <h2 className="text-2xl font-semibold mb-6">ทัวร์และกิจกรรมต่างๆ</h2>
-        </div>
+    const handleSelection = (location) => {
+        setSelectedLocation(location);
+        console.log('Selected:', location); // Example: ["northeastern", "อำนาจเจริญ"]
+    };
 
-        {/* Flexbox for centering Grid, Filters, and Category */}
-        <div className="flex flex-col gap-8 mt-8">
-          {/* Category Selection */}
-          <div className="w-full mb-8">
-            <Category
-              setSelectedCategory={setSelectedCategory}
-              selectedCategory={selectedCategory}
+    return (
+        <div className="bg-gray-50">
+            <header
+                className="relative w-full h-96 bg-cover bg-center flex flex-col justify-center items-center text-white bg-gradient-to-b from-black/50 to-black/50"
+                style={{ backgroundImage: `url(https://i.pinimg.com/originals/a1/ec/7e/a1ec7e2da8725a41ede055bb0e0fe130.jpg` }}>
+                <h1 className="text-5xl font-bold mb-8">Attractions & Tours</h1>
+                <div className="flex gap-4 mb-8 w-full max-w-4xl px-4">
+                    <ProvincesBar onSelect={handleSelection} />
+                    <SearchBar
+                        onSearch={handleSearch}
+                        searchValue={searchTerm}
+                        setSearchValue={setSearchTerm}
+                        tourNames={tourNames}
+                        filteredTourNames={filteredTourNames}
+                        setFilteredTourNames={setFilteredTourNames}
+                    />
+                </div>
+            </header>
+            <NavBar
+                tabs={['Attractions', 'Tours', 'One Day Trip', 'Package with Acommodation', 'Provinces', 'All']}
+                onTabClick={handleTabClick}
             />
-          </div>
-
-          {/* Filters and Tour Grid (Stacked) */}
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left: Filters */}
-            <div className="w-full lg:w-1/5">
-              {maxPrice !== null && (
-                <FilterSidebar
-                  setSelectedFilters={setSelectedFilters}
-                  setSelectedPriceRange={setPriceRange}
-                  setSelectedRatings={setSelectedRatings}
-                  selectedPriceRange={selectedPriceRange}
-                  maxPrice={maxPrice}
-                />
-              )}
-            </div>
-
-            {/* Right: Tour Grid */}
-            <div className="w-full lg:w-4/5">
-              <TourGrid
-                selectedCategory={selectedCategory}
-                selectedFilters={selectedFilters}
-                setPriceRange={setPriceRange}
-                setMaxPrice={setMaxPrice}
-                searchTerm={searchTerm}
-                selectedRegion={selectedRegion}
-              />
-            </div>
-          </div>
+            <PromoBanner
+                message="Use Code: TRAVEL2025 for 5% OFF your first order!"
+                buttonLabel="Claim"
+                onButtonClick={handlePromoButtonClick}
+            />
+            <section className="py-12 text-center">
+                <h2 className="text-3xl mb-8">Top Attractions</h2>
+                <div className="w-3/4 mx-auto">
+                    <RenderTours category="One Day Trip" />
+                </div>
+            </section>
         </div>
-      </div>
-    </main>
-  );
-}
+    );
+};
+
+export default Home;

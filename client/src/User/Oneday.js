@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card } from "antd";
 import ax from "../conf/ax";
 import { useNavigate } from "react-router";
@@ -12,42 +12,45 @@ export default function TourCard() {
 
   const navigate = useNavigate();
 
-  const fetchTour = async (page = 1) => {
-    try {
-      const response = await ax.get("/tours", {
-        params: {
-          populate: "*",
-          "filters[tour_type][$eq]": "One Day Trip",
-          "filters[tour_status][$eq]": "available",
-          "pagination[page]": page,
-          "pagination[pageSize]": pageSize,
-        },
-      });
-      console.log(response.data.data);
-      const tourData = response.data.data.map((item) => ({
-        id: item.id,
-        documentId: item.documentId,
-        name: item.tour_name,
-        description: item.description,
-        image:
-          item.image?.length > 0
-            ? item.image.map((img) => ({
-                src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-              }))
-            : [{ src: "http://localhost:1337/uploads/example.png" }],
-        price: item.price || "N/A",
-      }));
+  const fetchTour = useCallback(
+    async (page = 1) => {
+      try {
+        const response = await ax.get("/tours", {
+          params: {
+            populate: "*",
+            "filters[tour_type][$eq]": "One Day Trip",
+            "filters[tour_status][$eq]": "available",
+            "pagination[page]": page,
+            "pagination[pageSize]": pageSize,
+          },
+        });
 
-      setTours(tourData);
-      setTotalTours(response.data.meta.pagination.total);
-    } catch (error) {
-      console.error("Error fetching tours:", error);
-    }
-  };
+        const tourData = response.data.data.map((item) => ({
+          id: item.id,
+          documentId: item.documentId,
+          name: item.tour_name,
+          description: item.description,
+          image:
+            item.image?.length > 0
+              ? item.image.map((img) => ({
+                  src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+                }))
+              : [{ src: "http://localhost:1337/uploads/example.png" }],
+          price: item.price || "N/A",
+        }));
+
+        setTours(tourData);
+        setTotalTours(response.data.meta.pagination.total);
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+      }
+    },
+    [pageSize]
+  );
 
   useEffect(() => {
     fetchTour(currentPage);
-  }, [currentPage]);
+  }, [fetchTour, currentPage]);
 
   const handleClick = (documentId) => {
     navigate(`/Trip/${documentId}`);
@@ -101,9 +104,7 @@ export default function TourCard() {
             currentPage={currentPage}
             pageSize={pageSize}
             total={totalTours}
-            showTotal={(total, range) =>
-              `${range[0]}-${range[1]} of ${total} tours`
-            }
+            showTotal={(total, range) => `${range[0]}${range[1]}${total}`}
             onChange={(page) => setCurrentPage(page)}
           />
         </>
