@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/Auth.context.js";
-import Home from "./Home.js";
+import TourPage from "./TourPage.js";
 import Login from "./Auth/Login.js";
 import Oneday from "./User/Oneday.js";
 import Triprest from "./User/Triprest.js";
@@ -19,6 +19,7 @@ import Footer from "./Component/Footer.js";
 import Historylist from "./User/History.js";
 import Trip_statistic from "./Admin/Trips_statistic.js";
 import BookingForm from "./User/Booking.js";
+import Home from "./Home.js";
 
 function App() {
   const { state } = useContext(AuthContext);
@@ -41,6 +42,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/Home" />} />
             <Route path="/Home" element={<Home />} />
+            <Route path="/Tour" element={<TourPage />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/Onedaytrip" element={<Oneday />} />
