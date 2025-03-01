@@ -63,12 +63,9 @@ export default function BookingForm() {
         start: item.start_date,
         end: item.end_date,
         time_ranges: timeRanges,
-        image:
-          item.image?.length > 0
-            ? item.image.map((img) => ({
-                src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-              }))
-            : [{ src: "http://localhost:1337/uploads/example.png" }],
+        image: item.image?.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+        })),
       };
       setTour(product);
       console.log(product);
@@ -248,7 +245,7 @@ export default function BookingForm() {
           {/* Left */}
           <div className="col-span-1 bg-gray-100 p-6 w-full rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Tour Information</h2>
-            {tour.image.length > 0 ? (
+            {tour.image?.length > 0 ? (
               <img
                 src={
                   tour.image[tour.image.length - 1].src || "/placeholder.svg"

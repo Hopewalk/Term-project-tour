@@ -4,12 +4,13 @@ import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { useParams, useNavigate } from "react-router";
 import Review from "./Component/Rate&Review";
-import { Table } from "antd";
+import { Table, Modal } from "antd";
 
 export default function TripOverview() {
   const { state } = useContext(AuthContext);
   const { documentId } = useParams();
   const [tour, settour] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchDetail = async () => {
@@ -51,11 +52,9 @@ export default function TripOverview() {
         description: detail.description,
         location: detail.destination,
         time_ranges: timeRanges,
-        images: detail.image?.length
-          ? detail.image.map((img) => ({
-              src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-            }))
-          : [{ src: "http://localhost:1337/uploads/example.png" }],
+        images: detail.image?.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+        })),
         breadcrumbs: [
           { id: 1, name: "Home", href: "/Home" },
           {
@@ -153,17 +152,27 @@ export default function TripOverview() {
         </nav>
 
         {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-          {tour.images.length > 0 ? (
-            tour.images.map((img, index) => (
-              <img
+        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-4 lg:gap-4 lg:px-8">
+          {[...tour.images]
+            .slice(-3)
+            .reverse()
+            .map((img, index) => (
+              <div
                 key={index}
-                src={img.src}
-                className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-auto"
-              />
-            ))
-          ) : (
-            <div>No images available</div>
+                className="w-full h-48 overflow-hidden rounded-lg"
+              >
+                <img src={img.src} className="h-full w-full object-cover" />
+              </div>
+            ))}
+          {tour.images?.length > 3 && (
+            <div
+              className="w-full h-48 bg-gray-900 text-white flex items-center justify-center cursor-pointer rounded-lg"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <span className="text-lg font-semibold">
+                See All {tour.images.length} Photos
+              </span>
+            </div>
           )}
         </div>
 
@@ -220,6 +229,25 @@ export default function TripOverview() {
           <Review />
         </div>
       </div>
+      <Modal
+        title="All Photos"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+      >
+        <div className="grid grid-cols-2 gap-4">
+          {tour.images
+            .slice()
+            .reverse()
+            .map((img, index) => (
+              <img
+                key={index}
+                src={img.src}
+                className="w-full h-48 object-cover rounded-lg"
+              />
+            ))}
+        </div>
+      </Modal>
     </div>
   );
 }

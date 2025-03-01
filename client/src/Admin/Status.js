@@ -72,11 +72,7 @@ function Status() {
                     }
                   />
                 ) : (
-                  <img
-                    src="http://localhost:1337/uploads/example.png"
-                    alt="Default"
-                    className="w-32 h-32 object-cover mb-2"
-                  />
+                  <p>ไม่มีรูปสลิป</p>
                 )}
                 <p>{order.tour.tour_name}</p>
                 <p>{order.total_price}</p>
