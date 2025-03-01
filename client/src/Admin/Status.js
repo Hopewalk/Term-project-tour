@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ax from "../conf/ax";
-import { Select, Card } from "antd";
+import { Select, Card, Modal } from "antd";
 
 function Status() {
   const [orders, setOrders] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchOrders = async () => {
     try {
@@ -36,6 +38,11 @@ function Status() {
     updateStatus(documentId, status);
   };
 
+  const handlePreview = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setIsModalOpen(true);
+  };
+
   return (
     <div>
       <header className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -47,6 +54,28 @@ function Status() {
         <Card key={order.id} className="mx-auto max-w-7xl mt-2" title="Order">
           <div className="flex justify-between">
             <div>
+              {order.image && order.image.url ? (
+                <img
+                  src={`${ax.defaults.baseURL.replace("/api", "")}${
+                    order.image.url
+                  }`}
+                  alt={order.tour.tour_name}
+                  className="w-32 h-32 object-cover mb-2"
+                  onClick={() =>
+                    handlePreview(
+                      `${ax.defaults.baseURL.replace("/api", "")}${
+                        order.image.url
+                      }`
+                    )
+                  }
+                />
+              ) : (
+                <img
+                  src="http://localhost:1337/uploads/example.png"
+                  alt="Default"
+                  className="w-32 h-32 object-cover mb-2"
+                />
+              )}
               <p>{order.tour.tour_name}</p>
               <p>{order.total_price}</p>
               <p>{order.tour.destination}</p>
@@ -71,6 +100,13 @@ function Status() {
           </div>
         </Card>
       ))}
+      <Modal
+        open={isModalOpen}
+        footer={null}
+        onCancel={() => setIsModalOpen(false)}
+      >
+        <img src={previewImage} alt="Preview" className="w-full" />
+      </Modal>
     </div>
   );
 }
