@@ -19,6 +19,7 @@ export default function TourCard() {
         description: item.description,
         start: item.start_date,
         end: item.end_date,
+        timerange: item.time_ranges,
         image:
           item.image?.length > 0
             ? item.image.map((img) => ({

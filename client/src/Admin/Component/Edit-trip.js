@@ -8,7 +8,6 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
 
   useEffect(() => {
     if (tour) {
-      console.log(">>>>>>>", tour);
       setFormData({
         ...formData,
         price: Number(formData.price),
@@ -35,11 +34,10 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
       start_date: formData.start,
       end_date: formData.end,
       price: formData.price,
-      max_participants: formData.max_participants,
       tour_status: formData.status,
     };
     try {
-      const response = await ax.put(`/tours/${tour.documentId}`, {
+      await ax.put(`/tours/${tour.documentId}`, {
         data: dataToSend,
       });
       onUpdate();
@@ -48,6 +46,21 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
       console.error("Error updating tour:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteTimeRange = async (timeRangeId) => {
+    const isConfirmed = window.confirm("ต้องการลบช่วงเวลานี้ใช่หรือไม่?");
+    if (!isConfirmed) return;
+
+    try {
+      await ax.delete(`/time-ranges/${timeRangeId}`);
+      setFormData((prev) => ({
+        ...prev,
+        timerange: prev.timerange.filter((t) => t.documentId !== timeRangeId),
+      }));
+    } catch (error) {
+      console.error("ลบ Time Range ไม่สำเร็จ");
     }
   };
 
@@ -110,6 +123,31 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
         className="mt-2"
         placeholder="Max"
       />
+      <label className="block text-gray-700 mt-2">Time Ranges</label>
+      <div className="border p-2 rounded-md mt-2">
+        {formData.timerange?.length > 0 ? (
+          formData.timerange.map((time) => (
+            <div
+              key={time.documentId}
+              className="flex justify-between items-center border-b pb-1 mb-1"
+            >
+              <span>
+                {new Date(time.createdAt).toLocaleString()} -{" "}
+                {new Date(time.updatedAt).toLocaleString()}
+              </span>
+              <Button
+                danger
+                size="small"
+                onClick={() => handleDeleteTimeRange(time.documentId)}
+              >
+                ลบ
+              </Button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">ไม่มี Time Range</p>
+        )}
+      </div>
       <label className="block text-gray-700 mt-2">Status</label>
       <Select
         value={formData.status}
