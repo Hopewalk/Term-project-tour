@@ -50,7 +50,7 @@ const fetchTour = async () => {
           id: region.id,
           name: region.region,
           province: region.province
-        }))
+        }));
 
         return {
           id: item.id,
@@ -68,7 +68,6 @@ const fetchTour = async () => {
           regions
         };
       });
-
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];

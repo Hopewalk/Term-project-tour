@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Added useNavigate
 import FilterSidebar from "./Component/Filters/Filters";
 import Category from "./Component/Category/Category";
 import Thailandbg from "./Images/Thailand-bg.png";
@@ -8,6 +9,7 @@ import TourGrid from "./Component/TourGrid/TourGrid";
 import ax from './conf/ax';
 
 export default function TourPage() {
+  const navigate = useNavigate(); // Added for navigation
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({ sort: "popular" });
   const [selectedRatings, setSelectedRatings] = useState([]);
@@ -25,38 +27,50 @@ export default function TourPage() {
   }, [maxPrice]);
 
   useEffect(() => {
-    // Fetch tour names when the component mounts
     const fetchTourNames = async () => {
       try {
         const response = await ax.get('/tours', {
           params: {
             'fields[0]': 'tour_name',
+            'fields[1]': 'tour_status',
+            'fields[2]': 'documentId',
             'populate[0]': 'regions',
             'pagination[start]': 0,
-            'pagination[limit]': 100000
-          }
+            'pagination[limit]': 100000,
+          },
         });
-        const names = response.data.data.map(tour => ({
-          name: tour.tour_name,
-          regions: tour.regions.map(region => region.region)
-        }));
+        const names = response.data.data
+          .filter(tour => tour.tour_status === "available")
+          .map(tour => ({
+            name: tour.tour_name,
+            documentId: tour.documentId,
+            regions: tour.regions.map(region => region.region),
+            provinces: tour.regions.map(region => region.province),
+            status: tour.tour_status,
+          }));
         setTourNames(names);
       } catch (error) {
         console.error("Error fetching tour names:", error);
       }
     };
-
     fetchTourNames();
   }, []);
 
-  const handleSearch = (term, region) => {
+  const handleSearch = (term) => {
     setSearchTerm(term);
-    setSelectedRegion(region);
+  };
+
+  const handleChange = (value) => {
+    setSearchTerm(value);
   };
 
   const handleRegionChange = (value) => {
     setSelectedRegion(value);
-    setSearchTerm(""); // Clear search value when region changes
+    setSearchTerm("");
+    if (value !== "all") {
+      navigate(`/tour/${value}`); // Navigate to /tour/[region] for specific regions
+    }
+    // No navigation for "all" since we're already on /Tour
   };
 
   return (
@@ -74,11 +88,13 @@ export default function TourPage() {
               <RegionsBar selectedRegion={selectedRegion} onRegionChange={handleRegionChange} />
               <SearchBar
                 onSearch={handleSearch}
+                onChange={handleChange}
                 searchValue={searchTerm}
                 setSearchValue={setSearchTerm}
                 tourNames={tourNames}
                 filteredTourNames={filteredTourNames}
                 setFilteredTourNames={setFilteredTourNames}
+                selectedRegion={selectedRegion}
               />
             </div>
           </div>
@@ -89,7 +105,7 @@ export default function TourPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl pl-8">
           {/* Title */}
-          <h2 className="text-2xl font-semibold mb-6">ทัวร์และกิจกรรมต่างๆ</h2>
+          <h2 className="text-2xl font-semibold mb-6">ทัวร์ทั้งหมดในประเทศไทย</h2>
         </div>
 
         {/* Flexbox for centering Grid, Filters, and Category */}

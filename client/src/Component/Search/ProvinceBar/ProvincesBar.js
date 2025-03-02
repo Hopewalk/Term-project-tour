@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ax from '../../../conf/ax'; // Assuming 'ax' is your configured Axios instance
+import ax from '../../../conf/ax';
 import DropdownButton from './DropdownButton';
 import TabBar from './TabBar';
 import ProvincesSection from './ProvincesSection';
 
-// Fetch regions and provinces from the /regions endpoint
 const fetchRegions = async () => {
   try {
     const apiUrl = '/regions';
@@ -12,15 +11,8 @@ const fetchRegions = async () => {
       'pagination[start]': 0,
       'pagination[limit]': 100000,
     };
-
-    console.log(
-      'Fetching regions from API:',
-      ax.defaults.baseURL + apiUrl,
-      'with params:',
-      params
-    );
+    console.log('Fetching regions from API:', ax.defaults.baseURL + apiUrl, 'with params:', params);
     const response = await ax.get(apiUrl, { params });
-
     console.log('Regions response:', response.data.data);
     return response.data.data.map((item) => ({
       region: item.region,
@@ -121,10 +113,10 @@ const ProvincesBar = ({ onSelect }) => {
       width: '100%',
     },
     provinceButton: {
-      flex: '1 1 100px', // Increased base width to better accommodate text
-      minWidth: '100px', // Ensure a minimum width
-      maxWidth: '120px', // Allow slightly wider buttons for longer names
-      padding: '8px 8px', // Adjusted padding for better text fit
+      flex: '1 1 100px',
+      minWidth: '100px',
+      maxWidth: '120px',
+      padding: '8px 8px',
       fontSize: '12px',
       color: '#333',
       backgroundColor: '#f9f9f9',
@@ -133,11 +125,11 @@ const ProvincesBar = ({ onSelect }) => {
       cursor: 'pointer',
       transition: 'background-color 0.2s, transform 0.1s',
       textAlign: 'center',
-      whiteSpace: 'normal', // Allow text to wrap
-      wordBreak: 'break-word', // Ensure Thai text breaks properly
-      overflow: 'hidden', // Hide overflow
-      textOverflow: 'ellipsis', // Add ellipsis for overflow (optional, if not wrapping)
-      lineHeight: '1.2', // Adjust line height for better readability
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      lineHeight: '1.2',
     },
     provinceButtonHover: {
       backgroundColor: '#e0e0e0',
@@ -155,34 +147,24 @@ const ProvincesBar = ({ onSelect }) => {
       try {
         setLoading(true);
         const regions = await fetchRegions();
-  
         const regionsMap = {};
         regions.forEach((item) => {
           const regionName = item.region;
           const province = item.province;
-  
           if (!regionsMap[regionName]) {
             regionsMap[regionName] = new Set();
           }
           regionsMap[regionName].add(province);
         });
-  
         const regionOrder = ['northern', 'northeastern', 'central', 'southern'];
-  
         const processedRegionsData = Object.keys(regionsMap)
           .map((regionName) => ({
             name: regionName,
             provinces: Array.from(regionsMap[regionName])
               .sort((a, b) => a.localeCompare(b, 'th'))
               .map((province) => [regionName.toLowerCase(), province]),
-          }));
-  
-        console.log('Regions before sorting:', processedRegionsData);
-  
-        processedRegionsData.sort((a, b) => regionOrder.indexOf(a.name) - regionOrder.indexOf(b.name));
-  
-        console.log('Regions after sorting:', processedRegionsData);
-  
+          }))
+          .sort((a, b) => regionOrder.indexOf(a.name) - regionOrder.indexOf(b.name));
         setRegionsData(processedRegionsData);
         if (processedRegionsData.length > 0) {
           setSelectedRegion(processedRegionsData[0].name);
@@ -202,7 +184,6 @@ const ProvincesBar = ({ onSelect }) => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -223,15 +204,11 @@ const ProvincesBar = ({ onSelect }) => {
     setIsOpen(false);
     const regionLowerCase = region.toLowerCase();
     onSelect([regionLowerCase, province]);
+    window.open(`/tour/${regionLowerCase}/${province.toLowerCase()}`, '_blank'); // Open new window
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (regionsData.length === 0) {
-    return <div>No regions available.</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (regionsData.length === 0) return <div>No regions available.</div>;
 
   const regionDisplayNames = {
     all: 'ทั้งหมด',
@@ -245,9 +222,7 @@ const ProvincesBar = ({ onSelect }) => {
     ? `${regionDisplayNames[selectedRegion.toLowerCase()] || selectedRegion} - ${selectedProvince}`
     : 'เลือกภาคและจังหวัด';
 
-  const selectedRegionData = regionsData.find(
-    (region) => region.name === selectedRegion
-  );
+  const selectedRegionData = regionsData.find((region) => region.name === selectedRegion);
   const provinces = selectedRegionData ? selectedRegionData.provinces : [];
 
   return (
