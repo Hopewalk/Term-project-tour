@@ -332,7 +332,7 @@ export default function BookingForm() {
           {/* Right */}
           <div className="col-span-1 bg-white p-6 rounded-lg shadow-md my-auto">
             <h2 className="text-2xl font-bold">การชำระเงิน</h2>
-            <h2 className="text-1xl font-small">QR CODE</h2>
+            <h2 className="text-1xl font-small">Promptpay QR</h2>
             <p className="text-lg font-semibold mb-4">
               ราคารวม : {totalPrice} ฿
             </p>
