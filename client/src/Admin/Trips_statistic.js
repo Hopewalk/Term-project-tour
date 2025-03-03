@@ -13,30 +13,11 @@ export default function Trip_statistic() {
   const [modalData, setModalData] = useState([]);
   const [sortBy, setSortBy] = useState("participants");
 
-  const columns = [
-    {
-      title: "First Name",
-      dataIndex: "first_name",
-      key: "first_name",
-    },
-    {
-      title: "Last Name",
-      dataIndex: "last_name",
-      key: "last_name",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-  ];
-
   const fetchTour = async () => {
     try {
       const response = await ax.get(
         "/tours?populate=time_ranges.bookings.users_permissions_user"
       );
-      console.log(response.data);
 
       const tourData = response.data.data.map((item) => ({
         id: item.id,
@@ -65,7 +46,6 @@ export default function Trip_statistic() {
           }) || [],
       }));
 
-      console.log("Fetch tours:", tourData);
       setTours(tourData);
     } catch (error) {
       console.error("Error fetching tours:", error);
@@ -118,19 +98,49 @@ export default function Trip_statistic() {
   );
 
   const showModal = (bookings) => {
-    const emailData = bookings.map((b) => ({
-      first_name: b.users_permissions_user?.first_name || "N/A",
-      last_name: b.users_permissions_user?.last_name || "N/A",
-      email: b.users_permissions_user?.email || "N/A",
+    const data = bookings.map((b) => ({
+      first_name: b.users_permissions_user?.first_name || "Null",
+      last_name: b.users_permissions_user?.last_name || "Null",
+      email: b.users_permissions_user?.email || "Null",
+      phone: b.phone || "Null",
+      line: b.line_id || "ไม่มี",
     }));
 
-    setModalData(emailData);
+    setModalData(data);
     setIsModalVisible(true);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const columns = [
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "เบอร์โทร",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "ID line",
+      dataIndex: "line",
+      key: "line",
+    },
+  ];
 
   const renderTourCard = (tour) => {
     return (
@@ -195,52 +205,60 @@ export default function Trip_statistic() {
         {tours.length === 0 ? (
           <p className="text-center text-gray-500">กำลังโหลดข้อมูล...</p>
         ) : (
-          <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <Tabs.TabPane
-              tab={
-                <span>
-                  <FieldTimeOutlined /> One Day Trip
-                </span>
-              }
-              key="One Day Trip"
-            >
-              <div>
-                <h3 className="text-center text-lg font-semibold mb-4">
-                  One Day Trip
-                </h3>
-                {oneDayTrips.length === 0 ? (
-                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-                ) : (
-                  oneDayTrips.map((tour) => renderTourCard(tour))
-                )}
-              </div>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Package Tours" key="Package Tours">
-              <div>
-                <h3 className="text-center text-lg font-semibold mb-4">
-                  Package with Accommodation
-                </h3>
-                {packageTrips.length === 0 ? (
-                  <p className="text-center text-gray-500">ไม่มีข้อมูลทัวร์</p>
-                ) : (
-                  packageTrips.map((tour) => renderTourCard(tour))
-                )}
-              </div>
-            </Tabs.TabPane>
-          </Tabs>
+          <Tabs
+            activeKey={activeTab}
+            onChange={setActiveTab}
+            items={[
+              {
+                key: "One Day Trip",
+                label: (
+                  <span>
+                    <FieldTimeOutlined /> One Day Trip
+                  </span>
+                ),
+                children: (
+                  <div>
+                    {oneDayTrips.length === 0 ? (
+                      <p className="text-gray-500">ไม่มีข้อมูลทัวร์</p>
+                    ) : (
+                      oneDayTrips.map((tour) => renderTourCard(tour))
+                    )}
+                  </div>
+                ),
+              },
+              {
+                key: "Package Tours",
+                label: (
+                  <span>
+                    <AppstoreOutlined /> Package Tours
+                  </span>
+                ),
+                children: (
+                  <div>
+                    {packageTrips.length === 0 ? (
+                      <p className="text-gray-500">ไม่มีข้อมูลทัวร์</p>
+                    ) : (
+                      packageTrips.map((tour) => renderTourCard(tour))
+                    )}
+                  </div>
+                ),
+              },
+            ]}
+          />
         )}
 
-        {/* Modal for displaying customer email list */}
         <Modal
           title="รายชื่อลูกค้า"
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={handleCancel}
           footer={null}
+          width={1000}
+          centered
         >
           <Table
             columns={columns}
             dataSource={modalData}
-            pagination={{ pageSize: 20 }}
+            pagination={{ pageSize: 10 }}
           />
         </Modal>
       </div>

@@ -21,12 +21,6 @@
     "price": {
       "type": "decimal"
     },
-    "start_date": {
-      "type": "datetime"
-    },
-    "end_date": {
-      "type": "datetime"
-    },
     "tour_type": {
       "type": "enumeration",
       "enum": [
@@ -36,9 +30,6 @@
     },
     "destination": {
       "type": "string"
-    },
-    "max_participants": {
-      "type": "integer"
     },
     "tour_status": {
       "type": "enumeration",
@@ -67,14 +58,15 @@
       "mappedBy": "tours"
     },
     "image": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
     },
     "reviews": {
       "type": "relation",
@@ -87,6 +79,12 @@
       "relation": "oneToMany",
       "target": "api::time-range.time-range",
       "mappedBy": "tour"
+    },
+    "regions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::region.region",
+      "mappedBy": "tours"
     }
   }
 }

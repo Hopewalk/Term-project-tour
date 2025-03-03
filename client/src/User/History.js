@@ -18,13 +18,12 @@ export default function Historylist() {
       }
 
       const response = await ax.get(
-        `/bookings?filters[users_permissions_users][id][$eq]=${userId}&populate=*`
+        `/bookings?filters[users_permissions_user][id][$eq]=${userId}&populate=*`
       );
       const data = response.data.data;
-      console.log(data);
       setHistory(data);
     } catch (error) {
-      console.error(error);
+      console.log("No bookings found for the logged-in user.");
     }
   };
 
@@ -57,24 +56,31 @@ export default function Historylist() {
                   <strong>ประเภททัวร์ :</strong> {booking.tour.tour_type}
                 </p>
                 <p>
-                  <strong>ราคาทัวร์ :</strong> {booking.tour.price}
+                  <strong>ราคา :</strong> {booking.total_price}
+                </p>
+                <p>
+                  <strong>จำนวนคน :</strong> {booking.participant}
                 </p>
                 <p>
                   <strong>วันจอง :</strong>
                   {new Date(booking.booking_date).toLocaleString()}
                 </p>
                 <p>
-                  <strong>วันที่และเวลาเริ่มทัวร์ :</strong>
-                  {new Date(booking.tour.start_date).toLocaleString()}
-                  <strong> วันที่และเวลาจบทัวร์ :</strong>
-                  {new Date(booking.tour.end_date).toLocaleString()}
+                  <strong>เวลาเริ่มทัวร์ : </strong>
+                  {new Date(booking.time_range.start_date).toLocaleString()}
+                  <strong> เวลาสิ้นสุดทัวร์ : </strong>
+                  {new Date(booking.time_range.end_date).toLocaleString()}
+                </p>
+                <p>
+                  <strong>สถานะการจอง :</strong>
+                  {booking.booking_status}
                 </p>
               </div>
             </div>
           </Card>
         ))
       ) : (
-        <p>No bookings found for the logged-in user.</p>
+        <p>No bookings found</p>
       )}
     </div>
   );

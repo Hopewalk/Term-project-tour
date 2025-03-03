@@ -429,6 +429,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    image: Schema.Attribute.Media<'images'>;
     line_id: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -442,7 +443,7 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'unpaid'>;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    reshow_tour: Schema.Attribute.Relation<
+    time_range: Schema.Attribute.Relation<
       'manyToOne',
       'api::time-range.time-range'
     >;
@@ -497,6 +498,41 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
+  collectionName: 'regions';
+  info: {
+    displayName: 'Region';
+    pluralName: 'regions';
+    singularName: 'region';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::region.region'
+    > &
+      Schema.Attribute.Private;
+    province: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    region: Schema.Attribute.Enumeration<
+      ['northern', 'northeastern', 'central', 'southern']
+    > &
+      Schema.Attribute.Required;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::tour.tour'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiReviewReview extends Struct.CollectionTypeSchema {
   collectionName: 'reviews';
   info: {
@@ -544,7 +580,7 @@ export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
   collectionName: 'time_ranges';
   info: {
     description: '';
-    displayName: 'reshow-tours';
+    displayName: 'time_range';
     pluralName: 'time-ranges';
     singularName: 'time-range';
   };
@@ -627,7 +663,6 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
     destination: Schema.Attribute.String;
-    end_date: Schema.Attribute.DateTime;
     image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -635,11 +670,10 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::tour.tour'> &
       Schema.Attribute.Private;
-    max_participants: Schema.Attribute.Integer;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
+    regions: Schema.Attribute.Relation<'manyToMany', 'api::region.region'>;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
-    start_date: Schema.Attribute.DateTime;
     time_ranges: Schema.Attribute.Relation<
       'oneToMany',
       'api::time-range.time-range'
@@ -1176,6 +1210,7 @@ declare module '@strapi/strapi' {
       'api::accommodation.accommodation': ApiAccommodationAccommodation;
       'api::booking.booking': ApiBookingBooking;
       'api::payment.payment': ApiPaymentPayment;
+      'api::region.region': ApiRegionRegion;
       'api::review.review': ApiReviewReview;
       'api::time-range.time-range': ApiTimeRangeTimeRange;
       'api::tour-category.tour-category': ApiTourCategoryTourCategory;

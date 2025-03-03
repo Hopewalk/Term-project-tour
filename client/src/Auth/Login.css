@@ -61,16 +61,6 @@ body {
   margin-bottom: 1rem;
 }
 
-.forgot-password {
-  font-size: 1rem;
-  color: #007bff;
-  text-decoration: none;
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
 .login-button {
   width: 100%;
   padding: 1rem;
@@ -109,7 +99,6 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 3rem;
   text-align: center; 
 }
 

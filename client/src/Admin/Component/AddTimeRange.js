@@ -1,136 +1,182 @@
-import React, { useState } from "react";
-import { notification, Button } from "antd";
-import { InputField } from "./Tagcomponent";
+import React, { useState, useEffect } from "react";
+import { Button } from "antd";
+import { InputField, SelectField } from "./Tagcomponent";
+import { useNotification, NotificationContainer } from './notification';
 import ax from "../../conf/ax";
 
 function AddTimeRange() {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [participants, setParticipants] = useState("");
+    const [selectedTour, setSelectedTour] = useState("");
+    const [tours, setTours] = useState([]);
     const [error, setError] = useState({});
-    const [repeatEveryYear, setRepeatEveryYear] = useState(false);
+    const { notifications, removeNotification, showSuccess, showError, showWarning } = useNotification();
 
-    // ฟังก์ชันส่งข้อมูลไปยัง Strapi
-    const createReshow = async () => {
+    useEffect(() => {
+        fetchTours();
+    }, []);
+
+    const fetchTours = async () => {
+        try {
+            const res = await ax.get("/tours");
+            console.log("Tours fetched:", res.data);
+            if (res.data?.data) {
+                setTours(res.data.data);
+            }
+        } catch (err) {
+            console.error("Error fetching tours:", err);
+        }
+    };
+
+    const createtimerange = async () => {
         const reshowData = {
-        data: {
-            Show_date: new Date(startDate).toISOString(),
-            Hide_date: new Date(endDate).toISOString(),
-            repeat_every_year: repeatEveryYear,
-        },
+            data: {
+                start_date: new Date(startDate).toISOString(),
+                end_date: new Date(endDate).toISOString(),
+                max_participants: Number(participants),
+                tour: Number(selectedTour)
+            }
         };
 
         try {
-        const response = await ax.post("/time-ranges", reshowData);
-        console.log("สร้าง Create Tour Reshow Date สำเร็จ");
+            const response = await ax.post("/time-ranges", reshowData);
+            console.log("Create Tour Time Range Success:", response.data);
+            showSuccess("Creat Time Range Success")
         } catch (error) {
-        console.error("Error:", error);
+            showError("Error To Creat Time Range")
+            console.error("Error creating time range:", error);
         }
     };
 
-    const handlereset = () => {
+    const handleReset = () => {
         setStartDate("");
         setEndDate("");
-        setRepeatEveryYear(false);
+        setParticipants("");
+        setSelectedTour("");
         setError({});
     };
 
-    const handlesubmit = async () => {
+    const handleSubmit = async () => {
         let newError = {};
-        if (!startDate) {
-        newError.Start = "กรุณากรอกวันที่เริ่มต้น";
-        }
-        if (!endDate) {
-        newError.End = "กรุณากรอกวันที่สิ้นสุด";
-        }
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        if (start >= end) {
-        newError.dateOrder = "Start date must be before end date";
+    
+        if (!selectedTour) newError.tour = "กรุณาเลือกทัวร์";
+        if (!startDate) newError.start = "กรุณากรอกวันที่เริ่มต้น";
+        if (!endDate) newError.end = "กรุณากรอกวันที่สิ้นสุด";
+        if (!participants) newError.participants = "กรุณากรอกจำนวนผู้เข้าร่วม";
+        if (new Date(startDate) >= new Date(endDate)) {
+            newError.dateOrder = "วันที่เริ่มต้นต้องมาก่อนวันที่สิ้นสุด";
         }
         if (Object.keys(newError).length > 0) {
-        setError(newError);
-        return;
+            setError(newError);
+            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน")
+            return;
+        } else {
+            createtimerange();
         }
+    
         setError({});
-        await createReshow();
     };
-
-    const handleStartDateChange = (e) => {
-        setStartDate(e.target.value);
-        setError((prev) => ({ ...prev, Start: "" }));
-    };
-
-    const handleEndDateChange = (e) => {
-        setEndDate(e.target.value);
-        setError((prev) => ({ ...prev, End: "" }));
-    };
-
-    const handleRepeatChange = (e) => {
-        setRepeatEveryYear(e.target.checked);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        
+        switch (name) {
+            case "startDate":
+                setStartDate(value);
+                setError(prev => ({ ...prev, start: "", dateOrder: "" }));
+                break;
+            case "endDate":
+                setEndDate(value);
+                setError(prev => ({ ...prev, end: "", dateOrder: "" }));
+                break;
+            case "participants":
+                setParticipants(value);
+                setError(prev => ({ ...prev, participants: "" }));
+                break;
+            case "tour":
+                setSelectedTour(value);
+                setError(prev => ({ ...prev, tour: "" }));
+                break;
+            default:
+                break;
+        }
     };
 
     return (
-        <div className="flex flex-col space-y-4">
-        <div className="text-2xl font-bold mb-4 text-center">
-            Create Tour Reshow Date
-        </div>
-        <div className="flex space-x-4">
-            <div className="w-1/2">
-            <InputField
-                label="The beginning of the display"
-                type="datetime-local"
-                name="startDate"
-                value={startDate}
-                onChange={handleStartDateChange}
-                error={error.Start}
-            />
-            </div>
-            <div className="w-1/2">
-            <InputField
-                label="The Ending of the display"
-                type="datetime-local"
-                name="endDate"
-                value={endDate}
-                onChange={handleEndDateChange}
-                error={error.End}
-            />
-            </div>
-        </div>
+        <div >
+            <h2 className="text-2xl font-bold mb-4 text-center">
+                Set Tour Schedule
+            </h2>
 
-        {/* Checkbox for repeat every year */}
-        <div className="flex items-center mt-4">
-            <input
-            type="checkbox"
-            id="repeatEveryYear"
-            checked={repeatEveryYear}
-            onChange={handleRepeatChange}
-            className="form-checkbox h-5 w-5 text-blue-600"
+            <SelectField
+                label="Select Tour"
+                name="tour"
+                value={selectedTour}
+                onChange={handleChange}
+                options={tours.map(tour => ({
+                    value: tour.id,
+                    label: tour.tour_name
+                }))}
+                error={error.tour}
             />
-            <label htmlFor="repeatEveryYear" className="ml-2 text-gray-700">
-            Repeat Every Year
-            </label>
-        </div>
 
-        <div className="flex justify-end space-x-4 mt-4">
-            <div className="text-right mt-8">
-            <Button
-                onClick={handlereset}
-                className="bg-yellow-500 text-white p-2 rounded-md"
-            >
-                Reset fill
-            </Button>
+            <InputField
+                label="Number of Participants"
+                type="number"
+                name="participants"
+                placeholder="กรุณากรอกจำนวนสูงสุดของนักท่องเที่ยว"
+                value={participants}
+                onChange={handleChange}
+                error={error.participants}
+            />
+
+            <div className="flex space-x-4">
+                <div className="w-1/2">
+                    <InputField
+                        label="Start Date"
+                        type="datetime-local"
+                        name="startDate"
+                        value={startDate}
+                        onChange={handleChange}
+                        error={error.start}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <InputField
+                        label="End Date"
+                        type="datetime-local"
+                        name="endDate"
+                        value={endDate}
+                        onChange={handleChange}
+                        error={error.end}
+                    />
+                </div>
             </div>
-            <div className="text-right mt-8">
-            <Button
-                onClick={handlesubmit}
-                className="bg-blue-500 text-white p-2 rounded-md"
-            >
-                Submit
-            </Button>
+
+
+            <div>
+                <NotificationContainer 
+                notifications={notifications}
+                removeNotification={removeNotification}
+                />
             </div>
-        </div>
+
+            <div className="flex justify-end space-x-4 mt-4">
+                <Button
+                    onClick={handleReset}
+                    className="bg-yellow-500 text-white p-2 rounded-md"
+                >
+                    Reset data field
+                </Button>
+                <Button
+                    onClick={handleSubmit}
+                    className="bg-blue-500 text-white p-2 rounded-md"
+                >
+                    Submit
+                </Button>
+            </div>
         </div>
     );
-    }
+}
 
 export default AddTimeRange;

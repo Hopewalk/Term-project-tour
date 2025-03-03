@@ -79,6 +79,7 @@ function AddAccommodation() {
         if (!AccommodationData.context) newErrors.context = "กรุณากรอกข้อมูลติดต่อ";
     
         if (Object.keys(newErrors).length > 0) {
+            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน")
             setErrors(newErrors);
             return;
         }
@@ -171,7 +172,7 @@ function AddAccommodation() {
                     onClick={handlereset}
                     className="bg-yellow-500 text-white p-2 rounded-md"
                     >
-                    Reset fill
+                    Reset data field
                     </Button>
                 </div>
                 <div className="text-right mt-8">

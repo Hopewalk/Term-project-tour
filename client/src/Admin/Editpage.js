@@ -17,15 +17,12 @@ export default function TourCard() {
         name: item.tour_name,
         status: item.tour_status,
         description: item.description,
-        image:
-          item.image?.length > 0
-            ? item.image.map((img) => ({
-                src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-              }))
-            : [{ src: "http://localhost:1337/uploads/example.png" }],
+        timerange: item.time_ranges,
+        image: item.image?.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+        })),
         price: item.price || "N/A",
       }));
-      console.log("Fetch tours:", tourData);
       setTours(tourData);
     } catch (error) {
       console.error("Error fetching tours:", error);
@@ -69,7 +66,7 @@ export default function TourCard() {
             className="w-full mb-4 shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex flex-col md:flex-row gap-20">
-              {tour.image.length > 0 ? (
+              {tour.image?.length > 0 ? (
                 <img
                   src={tour.image[tour.image.length - 1].src}
                   className="size-full w-60 h-40 object-cover sm:rounded-lg"

@@ -63,11 +63,18 @@
     "participant": {
       "type": "integer"
     },
-    "reshow_tour": {
+    "time_range": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::time-range.time-range",
       "inversedBy": "bookings"
+    },
+    "image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

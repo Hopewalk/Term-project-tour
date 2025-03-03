@@ -12,10 +12,16 @@ import AddTimeRange from "./Component/AddTimeRange";
 function AddTrip(){
   const [activeTab, setActiveTab] = useState("Create Tour"); 
 
+  const containerStyle = {
+    width: "1000px",
+    margin: "0 auto",
+    minHeight: activeTab === "Set Tour Schedule" ? "500px" : "1000px"
+  };
+
   return (
     <div
       className="bg-white p-8 rounded-lg shadow-lg"
-      style={{ width: "1000px", margin: "0 auto", minHeight: "1000px" }}
+      style={containerStyle}
     >
       <Tabs activeKey={activeTab} onChange={setActiveTab}>
         <Tabs.TabPane 
@@ -31,10 +37,10 @@ function AddTrip(){
         <Tabs.TabPane 
           tab={
             <span>
-              <ScheduleOutlined /> Create Tour Reshow Date
+              <ScheduleOutlined /> Set Tour Schedule
             </span>
           } 
-          key="Create Tour Reshow Date"
+          key="Set Tour Schedule"
         >
           <AddTimeRange />
         </Tabs.TabPane>

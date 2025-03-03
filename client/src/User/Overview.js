@@ -4,12 +4,13 @@ import { AuthContext } from "../context/Auth.context";
 import ax from "../conf/ax";
 import { useParams, useNavigate } from "react-router";
 import Review from "./Component/Rate&Review";
-import { Table } from "antd";
+import { Table, Modal } from "antd";
 
 export default function TripOverview() {
   const { state } = useContext(AuthContext);
   const { documentId } = useParams();
   const [tour, settour] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchDetail = async () => {
@@ -18,7 +19,6 @@ export default function TripOverview() {
         `/tours/${documentId}?populate=time_ranges.bookings&populate=image&populate=reviews&populate=accommodations&populate=tour_categories`
       );
       const detail = response.data.data;
-      console.log(detail);
 
       const timeRanges =
         detail.time_ranges?.map((range) => {
@@ -44,18 +44,29 @@ export default function TripOverview() {
           };
         }) || [];
 
+      let accommodationsInfo = "";
+      const tourCategory = detail.tour_type;
+      if (tourCategory === "Package with Accommodation") {
+        accommodationsInfo =
+          detail.accommodations.length > 0
+            ? detail.accommodations.map((acc) => acc.name).join(", ")
+            : "No accommodation info available";
+      } else if (tourCategory === "One Day Trip") {
+        accommodationsInfo =
+          detail.accommodations[0]?.name || "No accommodation info available";
+      }
+
       const product = {
         documentId: detail.documentId,
         name: detail.tour_name,
         price: detail.price,
         description: detail.description,
         location: detail.destination,
+        accomodation: accommodationsInfo,
         time_ranges: timeRanges,
-        images: detail.image?.length
-          ? detail.image.map((img) => ({
-              src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-            }))
-          : [{ src: "http://localhost:1337/uploads/example.png" }],
+        images: detail.image?.map((img) => ({
+          src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+        })),
         breadcrumbs: [
           { id: 1, name: "Home", href: "/Home" },
           {
@@ -90,42 +101,35 @@ export default function TripOverview() {
     }
   };
 
-  if (!tour) return <div>ไม่สามารถดูได้</div>;
+  if (!tour)
+    return (
+      <div className="text-center text-gray-500 text-xl py-10">
+        ไม่สามารถดูได้
+      </div>
+    );
 
   const columns = [
-    {
-      title: "วันเริ่มเดินทาง",
-      dataIndex: "start",
-      key: "start",
-    },
-    {
-      title: "วันสิ้นสุด",
-      dataIndex: "end",
-      key: "end",
-    },
+    { title: "วันเริ่มเดินทาง", dataIndex: "start", key: "start" },
+    { title: "วันสิ้นสุด", dataIndex: "end", key: "end" },
     {
       title: "จำนวนที่รองรับ",
       dataIndex: "max_participants",
       key: "max_participants",
     },
-    {
-      title: "จำนวนคนจอง",
-      dataIndex: "total_booked",
-      key: "total_booked",
-    },
+    { title: "จำนวนคนจอง", dataIndex: "total_booked", key: "total_booked" },
   ];
 
   return (
-    <div className="bg-white">
-      <div className="pt-6">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="pt-8">
         {/* Breadcrumbs */}
         <nav aria-label="Breadcrumb">
           <ol
             role="list"
             className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
           >
-            {tour.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
+            {tour.breadcrumbs.map((breadcrumb, index) => (
+              <li key={breadcrumb.id || index}>
                 <div className="flex items-center">
                   <a
                     href={breadcrumb.href}
@@ -146,75 +150,131 @@ export default function TripOverview() {
                 </div>
               </li>
             ))}
-            <li className="text-sm">{tour.name}</li>
+            <li key="tour-name" className="text-sm">
+              {tour.name}
+            </li>
           </ol>
         </nav>
 
         {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-          {tour.images.length > 0 ? (
-            tour.images.map((img, index) => (
-              <img
-                key={index}
-                src={img.src}
-                className="aspect-[4/5] size-full object-cover sm:rounded-lg lg:aspect-auto"
-              />
-            ))
-          ) : (
-            <div>No images available</div>
-          )}
+        <div className="mx-auto mt-8 max-w-7xl px-6 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...tour.images]
+              .slice(-3)
+              .reverse()
+              .map((img, index) => (
+                <div
+                  key={index}
+                  className="relative h-64 w-full overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+                >
+                  <img
+                    src={img.src}
+                    alt={`Tour image ${index + 1}`}
+                    className="h-full w-full object-cover transform hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ))}
+            {tour.images?.length > 3 && (
+              <div
+                className="h-64 bg-gradient-to-br from-gray-800 to-gray-900 text-white flex items-center justify-center rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-all duration-300"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <span className="text-lg font-semibold">
+                  See All {tour.images.length} Photos
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Product info */}
-        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto_auto_1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-3 lg:gap-x-8">
+          <div className="lg:col-span-2">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight sm:text-4xl">
               {tour.name}
             </h1>
-            <p className="mt-2 text-lg text-gray-600">
-              Location: {tour.location}
+            <p className="mt-3 text-lg text-gray-600">
+              จุดหมายปลายทาง: {tour.location}
+            </p>
+            <p className="mt-3 text-lg text-gray-600">
+              ที่พัก: {tour.accomodation}
             </p>
 
-            {/* ตารางแสดงช่วงเวลาเดินทาง */}
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold">ช่วงเวลาเดินทาง</h3>
+            {/* Description */}
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold text-gray-900">Description</h3>
+              <div className="mt-4 prose prose-lg text-gray-700">
+                <p>{tour.description}</p>
+              </div>
+            </div>
+
+            {/* Time ranges table */}
+            <div className="mt-12">
+              <h3 className="text-xl font-semibold text-gray-900">
+                ช่วงเวลาเดินทาง
+              </h3>
               <Table
                 columns={columns}
-                dataSource={tour.time_ranges}
+                dataSource={tour.time_ranges.map((item, index) => ({
+                  ...item,
+                  key: `timeRange-${index}`,
+                }))}
                 pagination={false}
+                className="mt-4 shadow-sm rounded-lg overflow-hidden"
+                rowClassName="hover:bg-gray-100 transition-colors"
               />
             </div>
           </div>
 
-          {/* Options */}
-          <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <p className="text-3xl tracking-tight text-gray-900">
+          {/* Booking section */}
+          <div className="mt-8 lg:mt-0 lg:row-span-3">
+            <p className="text-4xl font-bold text-gray-900 tracking-tight">
               {tour.price} ฿
             </p>
-
             <form className="mt-10">
               <button
                 type="button"
-                className="w-full bg-blue-600 text-white rounded-lg py-3 text-lg font-semibold hover:bg-blue-500"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 px-6 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 text-lg font-semibold"
                 onClick={handleBooking}
               >
-                จอง
+                จองทริปนี้
               </button>
             </form>
           </div>
 
-          <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-            {/* Description */}
-            <div>
-              <h3 className="text-2xl font-bold">Description</h3>
-              <div className="space-y-6">
-                <p className="text-base text-gray-900">{tour.description}</p>
-              </div>
-            </div>
+          <div className="mt-12 lg:col-span-3">
+            <Review />
           </div>
-          <Review />
         </div>
       </div>
+
+      {/* Modal for all photos */}
+      <Modal
+        title={
+          <span className="text-xl font-semibold text-gray-900">
+            All Photos
+          </span>
+        }
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        width={800}
+        className="rounded-lg"
+      >
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 p-4">
+          {tour.images
+            .slice()
+            .reverse()
+            .map((img, index) => (
+              <img
+                key={index}
+                src={img.src}
+                alt={`Tour image ${index + 1}`}
+                className="h-48 w-full object-cover rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+              />
+            ))}
+        </div>
+      </Modal>
     </div>
   );
 }
