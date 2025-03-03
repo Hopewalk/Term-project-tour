@@ -7,6 +7,8 @@ import {
     TextareaField,
     SelectField,
     ImageUploader,
+    option,
+    customStyles,
 } from "./Tagcomponent";
 import ReactSelect from "react-select";
 
@@ -204,66 +206,18 @@ function AddTour() {
         fetchRegions();
     }, []);
 
-    // สร้าง options สำหรับ Categories
-    const categoryOptions = categories.map((category) => ({
-        value: category.id,
-        label: category.category_name,
-    }));
 
-    // สร้าง options สำหรับ Regions
-    const provinceOptions = regions.map((region) => ({
-        value: region.id,
-        label: region.province,
-    }));
+    // สร้าง options สำหรับ Categories,Regions,Accommodations
+    const categoryOptions = option(categories,"category_name")
+    const provinceOptions = option(regions,"province") 
+    const accommodationOptions = option(accommodations,"name")
 
-    // สร้าง options สำหรับ Accommodations
-    const accommodationOptions = accommodations.map((accommodation) => ({
-        value: accommodation.id,
-        label: accommodation.name,
-    }));
-
-    // สไตล์ของ React-Select
-    const customStyles = {
-        multiValue: (base) => ({
-            ...base,
-            backgroundColor: "#D0F2D0",
-            borderRadius: "4px",
-        }),
-        multiValueLabel: (base) => ({
-            ...base,
-            color: "#2E7D32",
-        }),
-        multiValueRemove: (base) => ({
-            ...base,
-            color: "#2E7D32",
-            ":hover": {
-                backgroundColor: "#2E7D32",
-                color: "#FFFFFF",
-            },
-        }),
-    };
-
-    // handleChange สำหรับ Region
-    const handleProvinceChange = (selectedOptions) => {
+    const handleMultiSelectChange = (selectedOptions, field) => {
         const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
-        setTripData({ ...tripData, province: values });
-        setErrors({ ...errors, province: "" });
+        setTripData({ ...tripData, [field]: values });
+        setErrors({ ...errors, [field]: "" });
     };
-
-    // handleChange สำหรับ Accommodation
-    const handleAccommodationChange = (selectedOptions) => {
-        const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
-        setTripData({ ...tripData, accommodation: values });
-        setErrors({ ...errors, accommodation: "" });
-    };
-
-    // handleChange สำหรับ Tour Categories
-    const handleCategoryChange = (selectedOptions) => { // แก้ชื่อให้ชัดเจน
-        const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
-        setTripData({ ...tripData, tour_categories: values });
-        setErrors({ ...errors, tour_categories: "" }); // รีเซ็ต error เมื่อมีการเลือก
-    };
-
+    
     return (
         <div>
             <form onSubmit={handlecreatetrip}>
@@ -356,11 +310,11 @@ function AddTour() {
                             value={provinceOptions.filter((option) =>
                                 tripData.province.includes(option.value)
                             )}
-                            onChange={handleProvinceChange}
+                            onChange={(selectedOptions) =>handleMultiSelectChange(selectedOptions, "province")}
                             placeholder="เลือกจังหวัด"
                             className="w-full"
                             isSearchable
-                            styles={customStyles}
+                            styles={customStyles()}
                         />
                         {errors.province && (
                             <div className="text-red-500 text-xs mt-1">
@@ -379,11 +333,11 @@ function AddTour() {
                             value={accommodationOptions.filter((option) =>
                                 tripData.accommodation.includes(option.value)
                             )}
-                            onChange={handleAccommodationChange}
+                            onChange={(selectedOptions) =>handleMultiSelectChange(selectedOptions, "accommodation")}
                             placeholder="เลือกที่พัก"
                             className="w-full"
                             isSearchable
-                            styles={customStyles}
+                            styles={customStyles()}
                         />
                         {errors.accommodation && (
                             <div className="text-red-500 text-xs mt-1">
@@ -403,11 +357,11 @@ function AddTour() {
                         value={categoryOptions.filter((option) =>
                             tripData.tour_categories.includes(option.value)
                         )}
-                        onChange={handleCategoryChange}
+                        onChange={(selectedOptions) =>handleMultiSelectChange(selectedOptions,"tour_categories")}
                         placeholder="เลือกประเภททัวร์"
                         className="w-full mb-4"
                         isSearchable
-                        styles={customStyles}
+                        styles={customStyles()}
                     />
                     {errors.tour_categories && (
                         <div className="text-red-500 text-xs mt-1">
