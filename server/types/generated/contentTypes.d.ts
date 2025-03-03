@@ -438,7 +438,6 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     participant: Schema.Attribute.Integer;
-    payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
     payment_status: Schema.Attribute.Enumeration<['paid', 'unpaid']> &
       Schema.Attribute.DefaultTo<'unpaid'>;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
@@ -449,45 +448,6 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
     >;
     total_price: Schema.Attribute.Decimal;
     tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    users_permissions_user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
-  };
-}
-
-export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
-  collectionName: 'payments';
-  info: {
-    description: '';
-    displayName: 'Payment';
-    pluralName: 'payments';
-    singularName: 'payment';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    amount: Schema.Attribute.Decimal;
-    bookings: Schema.Attribute.Relation<'oneToMany', 'api::booking.booking'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::payment.payment'
-    > &
-      Schema.Attribute.Private;
-    payment_date: Schema.Attribute.DateTime;
-    payment_method: Schema.Attribute.Enumeration<
-      ['credit card', 'bank transfer', 'paypal', 'cash']
-    >;
-    payment_status: Schema.Attribute.Enumeration<['successful', 'failed']>;
-    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1176,7 +1136,6 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1209,7 +1168,6 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::accommodation.accommodation': ApiAccommodationAccommodation;
       'api::booking.booking': ApiBookingBooking;
-      'api::payment.payment': ApiPaymentPayment;
       'api::region.region': ApiRegionRegion;
       'api::review.review': ApiReviewReview;
       'api::time-range.time-range': ApiTimeRangeTimeRange;
