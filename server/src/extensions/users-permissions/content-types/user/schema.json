@@ -84,12 +84,6 @@
     "last_name": {
       "type": "string",
       "required": true
-    },
-    "payments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::payment.payment",
-      "mappedBy": "users_permissions_user"
     }
   }
 }
