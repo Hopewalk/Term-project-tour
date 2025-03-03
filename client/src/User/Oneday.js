@@ -80,7 +80,9 @@ export default function TourCard() {
                   <div className="flex justify-between items-start">
                     <h2 className="text-xl font-semibold mb-2">{tour.name}</h2>
                   </div>
-                  <p className="text-gray-600 mb-2">{tour.description}</p>
+                  <p className="text-gray-600 mb-2 line-clamp-1">
+                    {tour.description}
+                  </p>
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
                     <div className="mt-2 sm:mt-0">
                       <p className="text-sm text-gray-600">ราคาเริ่มต้น</p>

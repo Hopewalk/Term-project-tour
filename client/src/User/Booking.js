@@ -151,6 +151,7 @@ export default function BookingForm() {
 
       await ax.post("/bookings", bookingData);
       message.success("Booking successful!");
+      navigate(`/History`);
       setIsModalVisible(false);
     } catch (error) {
       message.error("ไม่สามารถชำระเงินได้");
@@ -300,15 +301,20 @@ export default function BookingForm() {
               <Form.Item
                 label="Phone Number"
                 rules={[
-                  { required: true, message: "Please enter your phone number" },
+                  {
+                    required: true,
+                  },
                 ]}
               >
                 <Input
                   name="phone"
                   value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^[0-9]*$/.test(value)) {
+                      setFormData({ ...formData, phone: value });
+                    }
+                  }}
                 />
                 {errorPhone && (
                   <p className="text-red-500 mt-1">{errorPhone}</p>
@@ -367,7 +373,7 @@ export default function BookingForm() {
               </Button>,
             ]}
           >
-            <div className="text-center">
+            <div className="text-center app-container">
               <h2 className="text-lg font-semibold">Scan QR เพื่อชำระเงิน</h2>
               <p className="text-gray-600 mb-2">จำนวนเงิน: {totalPrice} ฿</p>
               {qrCode && (

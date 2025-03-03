@@ -2,7 +2,7 @@ import React from "react";
 import { Layout, Space } from "antd";
 import {
   FacebookOutlined,
-  TwitterOutlined,
+  XOutlined,
   InstagramOutlined,
 } from "@ant-design/icons";
 
@@ -11,7 +11,7 @@ const { Footer } = Layout;
 const webFooter = () => {
   return (
     <Footer className="bg-gray-800 text-white">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
@@ -47,7 +47,7 @@ const webFooter = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <TwitterOutlined style={{ fontSize: "24px" }} />
+                <XOutlined style={{ fontSize: "24px" }} />
               </a>
               <a
                 href="https://www.instagram.com"
@@ -60,7 +60,7 @@ const webFooter = () => {
             </Space>
           </div>
         </div>
-        <div className="mt-8 pt-4 border-t border-gray-700 text-center">
+        <div className="mt-4 border-t border-gray-700 text-center">
           <p>
             &copy; {new Date().getFullYear()} Tour Booking. All rights reserved.
           </p>

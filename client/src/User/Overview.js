@@ -209,7 +209,7 @@ export default function TripOverview() {
               </div>
             </div>
 
-            {/* Time ranges table - Moved below Description */}
+            {/* Time ranges table */}
             <div className="mt-12">
               <h3 className="text-xl font-semibold text-gray-900">
                 ช่วงเวลาเดินทาง

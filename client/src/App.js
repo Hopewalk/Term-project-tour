@@ -55,12 +55,19 @@ function App() {
           )}
         </header>
         <main className="flex-grow">
-          <div className={`page-content ${isTransitioning ? "fade-out" : "fade-in"}`}>
+          <div
+            className={`page-content ${
+              isTransitioning ? "fade-out" : "fade-in"
+            }`}
+          >
             <Routes>
               <Route path="/" element={<Navigate to="/Home" />} />
               <Route path="/Home" element={<Home />} />
               <Route path="/Tour" element={<TourPage />} />
-              <Route path="/tour/:region/:province?" element={<TourProvince />} />
+              <Route
+                path="/tour/:region/:province?"
+                element={<TourProvince />}
+              />
               <Route path="/Login" element={<Login />} />
               <Route path="/Register" element={<Register />} />
               <Route path="/Onedaytrip" element={<Oneday />} />
@@ -73,7 +80,10 @@ function App() {
                   <Route path="/Status" element={<Status />} />
                   <Route path="/Trips/edit" element={<Edittrip />} />
                   <Route path="/Trips/statistic" element={<Trip_statistic />} />
-                  <Route path="/Booking/:documentId" element={<BookingForm />} />
+                  <Route
+                    path="/Booking/:documentId"
+                    element={<BookingForm />}
+                  />
                 </>
               )}
 
@@ -81,15 +91,16 @@ function App() {
                 <>
                   <Route path="/Profile" element={<EditProfile />} />
                   <Route path="/History" element={<Historylist />} />
-                  <Route path="/Booking/:documentId" element={<BookingForm />} />
+                  <Route
+                    path="/Booking/:documentId"
+                    element={<BookingForm />}
+                  />
                 </>
               )}
             </Routes>
           </div>
         </main>
-        <footer>
-          <Footer />
-        </footer>
+        <Footer />
       </BrowserRouter>
     </div>
   );
