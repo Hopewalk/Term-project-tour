@@ -14,7 +14,8 @@ function AddTour() {
     const [pictures, setPictures] = useState([]);
     const [errors, setErrors] = useState({});
     const [accommodations, setAccommodations] = useState([]);
-    const [regions, setRegion] = useState([]);
+    const [categories, setCategories] = useState([]); // แก้จาก categorys เป็น categories
+    const [regions, setRegions] = useState([]); // แก้ชื่อให้ชัดเจน
     const { notifications, removeNotification, showWarning, showSuccess, showError } =
         useNotification();
 
@@ -26,8 +27,9 @@ function AddTour() {
         status: "",
         destination: "",
         typetour: "",
-        accommodation: [], // array รองรับ multi-select ที่พัก
-        province: [],       // array รองรับ multi-select จังหวัด
+        accommodation: [],
+        province: [],
+        tour_categories: [],
     });
 
     // ฟังก์ชันปรับค่าในฟอร์ม
@@ -59,8 +61,22 @@ function AddTour() {
             typetour: "",
             accommodation: [],
             province: [],
+            tour_categories: [],
         });
         setPictures([]);
+        setErrors({}); // รีเซ็ต errors ด้วย
+    };
+
+    // ดึงข้อมูล categories
+    const fetchCategories = async () => { // แก้ชื่อฟังก์ชันให้ชัดเจน
+        try {
+            const res = await ax.get("/tour-categories");
+            if (res.data && res.data.data) {
+                setCategories(res.data.data);
+            }
+        } catch (err) {
+            console.error("Error fetching tour-categories:", err);
+        }
     };
 
     // ดึงข้อมูลที่พัก
@@ -76,11 +92,11 @@ function AddTour() {
     };
 
     // ดึงข้อมูลจังหวัด (Region)
-    const fetchRegion = async () => {
+    const fetchRegions = async () => { // แก้ชื่อให้ชัดเจน
         try {
             const res = await ax.get("/regions");
             if (res.data && res.data.data) {
-                setRegion(res.data.data);
+                setRegions(res.data.data);
             }
         } catch (err) {
             console.error("Error fetching regions:", err);
@@ -117,12 +133,14 @@ function AddTour() {
                     destination: tripData.destination,
                     tour_type: tripData.typetour,
                     image: uploadedFiles ? uploadedFiles.map((file) => file.id) : [],
-                    accommodations: tripData.accommodation, // ส่ง array ของที่พักที่เลือก
-                    regions: tripData.province,             // ส่ง array ของจังหวัดที่เลือก
+                    accommodations: tripData.accommodation,
+                    regions: tripData.province,
+                    tour_categories: tripData.tour_categories,
                 },
             });
 
             showSuccess("Create Tour Success");
+            handlereset(); // รีเซ็ตฟอร์มหลังสำเร็จ
             return res.data;
         } catch (err) {
             showError("Error: " + err.message);
@@ -143,7 +161,6 @@ function AddTour() {
         if (!tripData.status) newErrors.status = "กรุณาเลือกสถานะ";
         if (!tripData.typetour) newErrors.typetour = "กรุณาเลือกประเภททัวร์";
 
-        // ถ้าเป็น Package with Accommodation ต้องเลือกที่พัก
         if (
             tripData.typetour === "Package with Accommodation" &&
             (!tripData.accommodation || tripData.accommodation.length === 0)
@@ -151,14 +168,20 @@ function AddTour() {
             newErrors.accommodation = "กรุณาเลือกที่พักสำหรับแพ็คเกจทัวร์";
         }
 
-        // ต้องเลือกจังหวัดอย่างน้อย 1 จังหวัด
         if (tripData.province.length === 0) {
             newErrors.province = "กรุณาเลือกจังหวัด";
         }
 
+        if (tripData.accommodation.length === 0) {
+            newErrors.accommodation = "กรุณาเลือกที่พัก";
+        }
+
+        if (tripData.tour_categories.length === 0) {
+            newErrors.tour_categories = "กรุณาเลือกประเภททัวร์";
+        }
+
         setErrors(newErrors);
 
-        // ถ้าไม่มี error จึงอัปโหลดรูปและสร้างทัวร์
         if (Object.keys(newErrors).length === 0) {
             let uploadedFiles = null;
             if (pictures.length > 0) {
@@ -168,40 +191,47 @@ function AddTour() {
                     return;
                 }
             }
-            maketrip(uploadedFiles);
-        }else{
-            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน")
-        };
+            await maketrip(uploadedFiles);
+        } else {
+            showWarning("กรุณากรอกข้อมูลให้ครบถ้วน");
+        }
     };
 
     // เรียกใช้ฟังก์ชันดึงข้อมูลเมื่อ component mount
     useEffect(() => {
+        fetchCategories();
         fetchAccommodations();
-        fetchRegion();
+        fetchRegions();
     }, []);
 
-    // สร้าง options สำหรับ Region (จังหวัด)
+    // สร้าง options สำหรับ Categories
+    const categoryOptions = categories.map((category) => ({
+        value: category.id,
+        label: category.category_name,
+    }));
+
+    // สร้าง options สำหรับ Regions
     const provinceOptions = regions.map((region) => ({
         value: region.id,
         label: region.province,
     }));
 
-    // สร้าง options สำหรับ Accommodation (ที่พัก)
+    // สร้าง options สำหรับ Accommodations
     const accommodationOptions = accommodations.map((accommodation) => ({
         value: accommodation.id,
         label: accommodation.name,
     }));
 
-    // สไตล์ของ React-Select (เปลี่ยนสีแท็กที่เลือกเป็นสีเขียว)
+    // สไตล์ของ React-Select
     const customStyles = {
         multiValue: (base) => ({
             ...base,
-            backgroundColor: "#D0F2D0", // เขียวอ่อน
+            backgroundColor: "#D0F2D0",
             borderRadius: "4px",
         }),
         multiValueLabel: (base) => ({
             ...base,
-            color: "#2E7D32", // เขียวเข้ม
+            color: "#2E7D32",
         }),
         multiValueRemove: (base) => ({
             ...base,
@@ -215,22 +245,23 @@ function AddTour() {
 
     // handleChange สำหรับ Region
     const handleProvinceChange = (selectedOptions) => {
-        setTripData({
-            ...tripData,
-            province: selectedOptions
-                ? selectedOptions.map((option) => option.value)
-                : [],
-        });
+        const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
+        setTripData({ ...tripData, province: values });
+        setErrors({ ...errors, province: "" });
     };
 
     // handleChange สำหรับ Accommodation
     const handleAccommodationChange = (selectedOptions) => {
-        setTripData({
-            ...tripData,
-            accommodation: selectedOptions
-                ? selectedOptions.map((option) => option.value)
-                : [],
-        });
+        const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
+        setTripData({ ...tripData, accommodation: values });
+        setErrors({ ...errors, accommodation: "" });
+    };
+
+    // handleChange สำหรับ Tour Categories
+    const handleCategoryChange = (selectedOptions) => { // แก้ชื่อให้ชัดเจน
+        const values = selectedOptions ? selectedOptions.map((option) => option.value) : [];
+        setTripData({ ...tripData, tour_categories: values });
+        setErrors({ ...errors, tour_categories: "" }); // รีเซ็ต error เมื่อมีการเลือก
     };
 
     return (
@@ -238,7 +269,6 @@ function AddTour() {
             <form onSubmit={handlecreatetrip}>
                 <div className="text-2xl font-bold mb-4 text-center">Create Tour</div>
 
-                {/* Tour Name */}
                 <InputField
                     label="Tour Name"
                     type="text"
@@ -249,7 +279,6 @@ function AddTour() {
                     error={errors.tripName}
                 />
 
-                {/* Description */}
                 <TextareaField
                     label="Description"
                     name="description"
@@ -260,7 +289,6 @@ function AddTour() {
                     error={errors.description}
                 />
 
-                {/* Destination / Price */}
                 <div className="flex space-x-4">
                     <div className="w-1/2">
                         <InputField
@@ -285,7 +313,6 @@ function AddTour() {
                     </div>
                 </div>
 
-                {/* Status / Tour Type */}
                 <div className="flex space-x-4">
                     <div className="w-1/2">
                         <SelectField
@@ -318,9 +345,7 @@ function AddTour() {
                     </div>
                 </div>
 
-                {/* Region / Accommodation */}
                 <div className="flex space-x-4">
-                    {/* Region Multi-select */}
                     <div className="w-1/2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Region
@@ -335,30 +360,15 @@ function AddTour() {
                             placeholder="เลือกจังหวัด"
                             className="w-full"
                             isSearchable
-                            styles={customStyles} // เพิ่มสไตล์สำหรับแท็กสีเขียว
+                            styles={customStyles}
                         />
                         {errors.province && (
                             <div className="text-red-500 text-xs mt-1">
                                 {errors.province}
                             </div>
                         )}
-                        {/* แสดงรายการที่เลือกในกล่องสีเขียว (ถ้าต้องการ) */}
-                        {tripData.province.length > 0 && (
-                            <div className="mt-2 text-sm">
-                                <strong>จังหวัดที่เลือก:</strong>
-                                <div className="mt-1 bg-green-100 text-green-800 p-2 rounded">
-                                    {provinceOptions
-                                        .filter((option) =>
-                                            tripData.province.includes(option.value)
-                                        )
-                                        .map((option) => option.label)
-                                        .join(", ")}
-                                </div>
-                            </div>
-                        )}
                     </div>
 
-                    {/* Accommodation Multi-select */}
                     <div className="w-1/2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Accommodation
@@ -373,64 +383,64 @@ function AddTour() {
                             placeholder="เลือกที่พัก"
                             className="w-full"
                             isSearchable
-                            styles={customStyles} // เพิ่มสไตล์สำหรับแท็กสีเขียว
+                            styles={customStyles}
                         />
                         {errors.accommodation && (
                             <div className="text-red-500 text-xs mt-1">
                                 {errors.accommodation}
                             </div>
                         )}
-                        {/* แสดงรายการที่เลือกในกล่องสีเขียว (ถ้าต้องการ) */}
-                        {tripData.accommodation.length > 0 && (
-                            <div className="mt-2 text-sm">
-                                <strong>ที่พักที่เลือก:</strong>
-                                <div className="mt-1 bg-green-100 text-green-800 p-2 rounded">
-                                    {accommodationOptions
-                                        .filter((option) =>
-                                            tripData.accommodation.includes(option.value)
-                                        )
-                                        .map((option) => option.label)
-                                        .join(", ")}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
 
-                {/* Image Uploader */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Tour Categories
+                    </label>
+                    <ReactSelect
+                        isMulti
+                        options={categoryOptions}
+                        value={categoryOptions.filter((option) =>
+                            tripData.tour_categories.includes(option.value)
+                        )}
+                        onChange={handleCategoryChange}
+                        placeholder="เลือกประเภททัวร์"
+                        className="w-full mb-4"
+                        isSearchable
+                        styles={customStyles}
+                    />
+                    {errors.tour_categories && (
+                        <div className="text-red-500 text-xs mt-1">
+                            {errors.tour_categories}
+                        </div>
+                    )}
+                </div>
+
                 <ImageUploader
                     pictures={pictures}
                     handleImageUpload={handleImageUpload}
                     handleDeleteImage={handleDeleteImage}
                 />
 
-                {/* ปุ่ม Reset / Submit */}
                 <div className="flex justify-end space-x-4 mt-4">
-                    <div className="text-right mt-8">
-                        <Button
-                            onClick={handlereset}
-                            className="bg-yellow-500 text-white p-2 rounded-md"
-                        >
-                            Reset data field
-                        </Button>
-                    </div>
-                    <div className="text-right mt-8">
-                        <Button
-                            htmlType="submit"
-                            className="bg-blue-500 text-white p-2 rounded-md"
-                        >
-                            Submit
-                        </Button>
-                    </div>
+                    <Button
+                        onClick={handlereset}
+                        className="bg-yellow-500 text-white p-2 rounded-md"
+                    >
+                        Reset data field
+                    </Button>
+                    <Button
+                        htmlType="submit"
+                        className="bg-blue-500 text-white p-2 rounded-md"
+                    >
+                        Submit
+                    </Button>
                 </div>
 
-                {/* Notification Container */}
-                <div>
-                    <NotificationContainer
-                        notifications={notifications}
-                        removeNotification={removeNotification}
-                    />
-                </div>
+                <NotificationContainer
+                    notifications={notifications}
+                    removeNotification={removeNotification}
+                />
             </form>
         </div>
     );
