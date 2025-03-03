@@ -11,7 +11,6 @@ function Status() {
     try {
       const response = await ax.get("/bookings?populate=*");
       const data = response.data.data;
-      console.log(data);
       setOrders(data);
     } catch (error) {
       console.error(error);

@@ -23,7 +23,6 @@ export default function TourCard() {
         })),
         price: item.price || "N/A",
       }));
-      console.log("Fetch tours:", tourData);
       setTours(tourData);
     } catch (error) {
       console.error("Error fetching tours:", error);

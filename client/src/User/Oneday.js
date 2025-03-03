@@ -31,11 +31,10 @@ export default function TourCard() {
           name: item.tour_name,
           description: item.description,
           image:
-            item.image?.length > 0
-              ? item.image.map((img) => ({
-                  src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
-                }))
-              : [{ src: "http://localhost:1337/uploads/example.png" }],
+            item.image?.length > 0 &&
+            item.image.map((img) => ({
+              src: `${ax.defaults.baseURL.replace("/api", "")}${img.url}`,
+            })),
           price: item.price || "N/A",
         }));
 

@@ -36,7 +36,6 @@ export default function Trip_statistic() {
       const response = await ax.get(
         "/tours?populate=time_ranges.bookings.users_permissions_user"
       );
-      console.log(response.data);
 
       const tourData = response.data.data.map((item) => ({
         id: item.id,
@@ -65,7 +64,6 @@ export default function Trip_statistic() {
           }) || [],
       }));
 
-      console.log("Fetch tours:", tourData);
       setTours(tourData);
     } catch (error) {
       console.error("Error fetching tours:", error);
