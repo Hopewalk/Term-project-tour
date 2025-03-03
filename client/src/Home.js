@@ -8,6 +8,7 @@ import ProvincesBar from './Component/Search/ProvinceBar/ProvincesBar';
 import { HandRaisedIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router';
 import ax from './conf/ax';
+import './Home.css';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -124,8 +125,8 @@ const Home = () => {
         buttonLabel="Claim"
         onButtonClick={handlePromoButtonClick}
       />
-      <section className="py-12 text-center">
-        <h2 className="text-3xl mb-8">Top Attractions</h2>
+      <section className="section-container py-12 text-center">
+        <h2 className="section-heading text-3xl mb-8">Top Attractions</h2>
         <div className="w-3/4 mx-auto">
           <RenderTours category="Recommend" />
         </div>
