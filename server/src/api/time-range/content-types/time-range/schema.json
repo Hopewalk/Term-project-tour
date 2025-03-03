@@ -18,9 +18,9 @@
     "end_date": {
       "type": "datetime"
     },
-    "tour": {
+    "tours": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::tour.tour",
       "inversedBy": "time_ranges"
     },

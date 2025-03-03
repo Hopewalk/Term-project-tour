@@ -562,7 +562,7 @@ export interface ApiTimeRangeTimeRange extends Struct.CollectionTypeSchema {
     max_participants: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     start_date: Schema.Attribute.DateTime;
-    tour: Schema.Attribute.Relation<'manyToOne', 'api::tour.tour'>;
+    tours: Schema.Attribute.Relation<'manyToMany', 'api::tour.tour'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -635,7 +635,7 @@ export interface ApiTourTour extends Struct.CollectionTypeSchema {
     regions: Schema.Attribute.Relation<'manyToMany', 'api::region.region'>;
     reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     time_ranges: Schema.Attribute.Relation<
-      'oneToMany',
+      'manyToMany',
       'api::time-range.time-range'
     >;
     tour_categories: Schema.Attribute.Relation<
