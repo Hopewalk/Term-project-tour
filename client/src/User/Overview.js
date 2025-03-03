@@ -19,7 +19,6 @@ export default function TripOverview() {
         `/tours/${documentId}?populate=time_ranges.bookings&populate=image&populate=reviews&populate=accommodations&populate=tour_categories`
       );
       const detail = response.data.data;
-      console.log(detail);
 
       const timeRanges =
         detail.time_ranges?.map((range) => {

@@ -11,9 +11,7 @@ const fetchRegions = async () => {
       'pagination[start]': 0,
       'pagination[limit]': 100000,
     };
-    console.log('Fetching regions from API:', ax.defaults.baseURL + apiUrl, 'with params:', params);
     const response = await ax.get(apiUrl, { params });
-    console.log('Regions response:', response.data.data);
     return response.data.data.map((item) => ({
       region: item.region,
       province: item.province,

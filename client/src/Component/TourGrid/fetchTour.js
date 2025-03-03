@@ -14,10 +14,8 @@ const fetchTour = async () => {
       'pagination[limit]': 100000
     };
 
-    console.log("Fetching data from API:", ax.defaults.baseURL + apiUrl, "with params:", params);
     const response = await ax.get(apiUrl, { params });
 
-    console.log("response", response.data.data);
     return response.data.data
       .filter(item => item.tour_status === "available")
       .map((item) => {
@@ -43,8 +41,7 @@ const fetchTour = async () => {
         const categories = item.tour_categories?.map(category => category.category_name) || [];
 
         const images = item.image?.length > 0
-          ? item.image.map(img => `${ax.defaults.baseURL.replace("/api", "")}${img.url}`)
-          : ["http://localhost:1337/uploads/example.png"];
+          ? item.image.map(img => `${ax.defaults.baseURL.replace("/api", "")}${img.url}`) : [];
 
         const regions = item.regions?.map(region => ({
           id: region.id,
@@ -60,7 +57,7 @@ const fetchTour = async () => {
           description: item.description || "No description",
           reviews,
           price: item.price,
-          image: images[0] || "http://localhost:1337/uploads/example.png",
+          image: images[0],
           max_participants: item.max_participants,
           categories_name: categories,
           averageRating,

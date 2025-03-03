@@ -128,10 +128,7 @@ const RenderTours = ({ category }) => {
             try {
                 setLoading(true);
                 const toursData = await fetchTour();
-                console.log('Fetched tours:', toursData);
                 const filteredTours = toursData.filter(tour => tour.categories_name.includes(category));
-                console.log('category:', category);
-                console.log('tour category:', toursData.map(tour => tour.categories_name));
                 setTours(Array.isArray(filteredTours) ? filteredTours : []);
                 setError(null);
             } catch (err) {

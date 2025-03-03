@@ -34,7 +34,7 @@ function App() {
       // Simulate a delay for the transition effect
       setTimeout(() => {
         setIsTransitioning(false);
-      }, 300); // Adjust this duration as needed (300ms is subtle but noticeable)
+      }, 300);
     };
 
     // Listen to route changes (this is a simplified approach)

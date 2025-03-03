@@ -1,6 +1,5 @@
 const applyFilters = (tours, selectedFilters, selectedRegion) => {
     if (!selectedFilters) return tours;
-    console.log("fil", selectedFilters);
   
     return tours
       .filter(tour =>

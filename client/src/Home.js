@@ -62,7 +62,6 @@ const Home = () => {
   };
 
   const handleTabClick = (tab) => {
-    console.log(`Tab clicked: ${tab}`);
     switch (tab) {
       case 'Attractions':
         navigate('/Tour');
@@ -87,13 +86,8 @@ const Home = () => {
     }
   };
 
-  const handlePromoButtonClick = () => {
-    console.log('Promo button clicked');
-  };
-
   const handleSelection = (location) => {
     setSelectedLocation(location);
-    console.log('Selected:', location);
   };
 
   return (
@@ -117,13 +111,8 @@ const Home = () => {
         </div>
       </header>
       <NavBar
-        tabs={['Attractions', 'Tours', 'One Day Trip', 'Package with Acommodation', 'Provinces', 'All']}
+        tabs={['Tours', 'One Day Trip', 'Package with Acommodation', 'All']}
         onTabClick={handleTabClick}
-      />
-      <PromoBanner
-        message="Use Code: TRAVEL2025 for 5% OFF your first order!"
-        buttonLabel="Claim"
-        onButtonClick={handlePromoButtonClick}
       />
       <section className="section-container py-12 text-center">
         <h2 className="section-heading text-3xl mb-8">Top Attractions</h2>
