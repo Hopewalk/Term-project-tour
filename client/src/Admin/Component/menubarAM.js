@@ -11,6 +11,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AuthContext } from "../../context/Auth.context";
 import logotour from "../../Images/logotour.png";
+import { UserOutlined } from "@ant-design/icons";
 
 export default function MenuAdmin() {
   const { state: ContextState, logout } = useContext(AuthContext);
@@ -80,12 +81,8 @@ export default function MenuAdmin() {
             {/* Profile dropdown */}
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
+                <MenuButton className="size-7 relative flex rounded-full bg-gray-100 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-100 items-center">
+                  <UserOutlined className="absolute left-[0.4rem] size-7" />
                 </MenuButton>
               </div>
               <MenuItems

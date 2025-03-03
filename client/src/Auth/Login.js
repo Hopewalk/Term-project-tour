@@ -4,7 +4,10 @@ import ax from "../conf/ax";
 import { useSetState } from "react-use";
 import { AuthContext } from "../context/Auth.context";
 import loginpic from "../Images/loginpic.jpg";
-import { useNotification, NotificationContainer } from '../Admin/Component/notification'; // เพิ่มการ import
+import {
+  useNotification,
+  NotificationContainer,
+} from "../Admin/Component/notification"; // เพิ่มการ import
 
 export default function Login() {
   const { state: ContextState, login, setUserRole } = useContext(AuthContext); // ตรวจสอบว่า setUserRole ถูกส่งมาจาก context
@@ -13,13 +16,9 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasShownSuccess, setHasShownSuccess] = useState(false);
   const [hasShownError, setHasShownError] = useState(false);
-  
-  const { 
-    notifications, 
-    removeNotification, 
-    showSuccess, 
-    showError 
-  } = useNotification();
+
+  const { notifications, removeNotification, showSuccess, showError } =
+    useNotification();
 
   const navigate = useNavigate();
 
@@ -29,7 +28,7 @@ export default function Login() {
     setHasShownSuccess(false);
     setHasShownError(false);
     const { username, password } = formState;
-    
+
     try {
       await login(username, password);
     } catch (error) {
@@ -40,19 +39,25 @@ export default function Login() {
 
   useEffect(() => {
     // ตรวจสอบสถานะอย่างชัดเจนและป้องกันการ trigger ซ้ำ
-    if (isLoggedIn === true && (!loginError || loginError === null) && !hasShownSuccess) { // ใช้ === true เพื่อความชัดเจน
+    if (
+      isLoggedIn === true &&
+      (!loginError || loginError === null) &&
+      !hasShownSuccess
+    ) {
+      // ใช้ === true เพื่อความชัดเจน
       showSuccess("เข้าสู่ระบบสำเร็จ");
       setHasShownSuccess(true);
       setIsLoading(false);
-      
+
       const fetchRole = async () => {
         try {
           const result = await ax.get("users/me?populate=role");
           const role = result.data.role?.type; // ใช้ optional chaining
-          if (setUserRole && typeof setUserRole === 'function') { // ตรวจสอบว่า setUserRole เป็น function
+          if (setUserRole && typeof setUserRole === "function") {
+            // ตรวจสอบว่า setUserRole เป็น function
             setUserRole(role);
           } else {
-            console.error('setUserRole is not a function or undefined');
+            console.error("setUserRole is not a function or undefined");
           }
           navigate("/Home", { replace: true });
         } catch (error) {
@@ -62,20 +67,30 @@ export default function Login() {
       };
 
       fetchRole();
-    } else if (isLoggedIn === false && loginError && !hasShownError) { // ใช้ === false เพื่อความชัดเจน
+    } else if (isLoggedIn === false && loginError && !hasShownError) {
+      // ใช้ === false เพื่อความชัดเจน
       showError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
       setHasShownError(true);
       setIsLoading(false);
     }
-  }, [isLoggedIn, loginError, hasShownSuccess, hasShownError, setUserRole, navigate, showSuccess, showError]);
+  }, [
+    isLoggedIn,
+    loginError,
+    hasShownSuccess,
+    hasShownError,
+    setUserRole,
+    navigate,
+    showSuccess,
+    showError,
+  ]);
 
   return (
     <div className="login-wrapper">
-      <NotificationContainer 
-        notifications={notifications} 
-        removeNotification={removeNotification} 
+      <NotificationContainer
+        notifications={notifications}
+        removeNotification={removeNotification}
       />
-      
+
       <div className="login-container">
         <div className="login-left">
           <form className="login-form" onSubmit={onSubmit}>

@@ -29,7 +29,6 @@ export default function BookingForm() {
         `/tours/${documentId}?populate=time_ranges.bookings&populate=image&populate=reviews&populate=accommodations&populate=tour_categories`
       );
       const item = response.data.data;
-      console.log(item);
       const timeRanges =
         item.time_ranges?.map((range) => {
           const confirmedBookings = range.bookings?.filter(
@@ -68,7 +67,6 @@ export default function BookingForm() {
         })),
       };
       setTour(product);
-      console.log(product);
     } catch (error) {
       console.error(error);
     }

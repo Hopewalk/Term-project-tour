@@ -81,6 +81,7 @@ function Status() {
                   ชื่อคนจอง : {order.users_permissions_user.first_name}{" "}
                   {order.users_permissions_user.last_name}
                 </p>
+                <p>เบอร์ผู้ที่จอง : {order.phone}</p>
                 <p>
                   วันที่จอง : {new Date(order.booking_date).toLocaleString()}
                 </p>
