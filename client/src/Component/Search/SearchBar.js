@@ -6,14 +6,14 @@ const { Search } = Input;
 
 export default function SearchBar({ 
   onSearch, 
-  onChange, // Added onChange prop
+  onChange,
   searchValue, 
   setSearchValue, 
   tourNames, 
   filteredTourNames, 
   setFilteredTourNames, 
-  selectedRegion, // Optional prop
-  selectedProvince // Optional prop
+  selectedRegion,
+  selectedProvince
 }) {
   const handleSearch = () => {
     onSearch(searchValue);
