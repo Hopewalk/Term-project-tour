@@ -8,6 +8,7 @@ export const AuthContext = React.createContext(null);
 const initialState = {
   isLoggedIn: false,
   user: null,
+  userRole: null, // Add userRole to track the role
   isLoginPending: false,
   loginError: null,
 };
@@ -27,15 +28,17 @@ export const ContextProvider = (props) => {
   const setLoginPending = (isLoginPending) => setState({ isLoginPending });
   const setLoginSuccess = (isLoggedIn, user) => setState({ isLoggedIn, user });
   const setLoginError = (loginError) => setState({ loginError });
+  const setUserRole = (userRole) => setState({ userRole }); // Add setUserRole function
 
   const fetchRole = async () => {
     try {
       const response = await ax.get(`/users/me?populate=role`);
       if (response.data) {
-        return response.data.role.name;
+        return response.data.role?.name || response.data.role?.type; // Handle both name and type
       }
     } catch (error) {
       console.error("Failed to fetch role:", error);
+      return null;
     }
   };
 
@@ -46,9 +49,10 @@ export const ContextProvider = (props) => {
       if (result.jwt) {
         updateJwt(result.jwt);
       }
-      const role = await fetchRole(result.jwt);
+      const role = await fetchRole();
       const user = { ...result.user, role };
       setLoginSuccess(true, user);
+      setUserRole(role); // Set the role in context
     } else if (error) {
       setLoginError(error);
     }
@@ -72,6 +76,7 @@ export const ContextProvider = (props) => {
     updateJwt(null);
     setLoginSuccess(false);
     setLoginError(null);
+    setUserRole(null); // Clear role on logout
   };
 
   return (
@@ -80,12 +85,15 @@ export const ContextProvider = (props) => {
         state,
         login,
         logout,
+        setUserRole, // Provide setUserRole in context
       }}
     >
       {props.children}
     </AuthContext.Provider>
   );
 };
+
+// Rest of the code (fetchLogin, loadPersistedJwt) remains unchanged
 
 const fetchLogin = async (username, password, callback) => {
   try {

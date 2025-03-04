@@ -7,10 +7,10 @@ import loginpic from "../Images/loginpic.jpg";
 import {
   useNotification,
   NotificationContainer,
-} from "../Admin/Component/notification"; // เพิ่มการ import
+} from "../Admin/Component/notification";
 
 export default function Login() {
-  const { state: ContextState, login, setUserRole } = useContext(AuthContext); // ตรวจสอบว่า setUserRole ถูกส่งมาจาก context
+  const { state: ContextState, login, setUserRole } = useContext(AuthContext);
   const { isLoginPending, isLoggedIn, loginError } = ContextState;
   const [formState, setFormState] = useSetState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -38,13 +38,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    // ตรวจสอบสถานะอย่างชัดเจนและป้องกันการ trigger ซ้ำ
-    if (
-      isLoggedIn === true &&
-      (!loginError || loginError === null) &&
-      !hasShownSuccess
-    ) {
-      // ใช้ === true เพื่อความชัดเจน
+    if (isLoggedIn && !loginError && !hasShownSuccess) {
       showSuccess("เข้าสู่ระบบสำเร็จ");
       setHasShownSuccess(true);
       setIsLoading(false);
@@ -52,23 +46,22 @@ export default function Login() {
       const fetchRole = async () => {
         try {
           const result = await ax.get("users/me?populate=role");
-          const role = result.data.role?.type; // ใช้ optional chaining
+          const role = result.data.role?.type || result.data.role?.name; // Handle both type and name
           if (setUserRole && typeof setUserRole === "function") {
-            // ตรวจสอบว่า setUserRole เป็น function
             setUserRole(role);
+            navigate("/Home", { replace: true });
           } else {
-            console.error("setUserRole is not a function or undefined");
+            console.error("setUserRole is not available");
           }
-          navigate("/Home", { replace: true });
         } catch (error) {
           console.error("Error fetching role:", error);
           showError("เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้");
+          setIsLoading(false);
         }
       };
 
       fetchRole();
-    } else if (isLoggedIn === false && loginError && !hasShownError) {
-      // ใช้ === false เพื่อความชัดเจน
+    } else if (!isLoggedIn && loginError && !hasShownError) {
       showError("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
       setHasShownError(true);
       setIsLoading(false);
@@ -90,7 +83,6 @@ export default function Login() {
         notifications={notifications}
         removeNotification={removeNotification}
       />
-
       <div className="login-container">
         <div className="login-left">
           <form className="login-form" onSubmit={onSubmit}>
@@ -106,7 +98,6 @@ export default function Login() {
                 required
               />
             </div>
-
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -118,11 +109,9 @@ export default function Login() {
                 required
               />
             </div>
-
             <button type="submit" className="login-button" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </button>
-
             <p className="signup-link">
               Don't have an account? <a href="/Register">Sign up</a>
             </p>
