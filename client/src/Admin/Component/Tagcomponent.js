@@ -114,7 +114,37 @@ const InputField = ({
       </div>
     </div>
   );
+
+  // option ต่างๆของ mutiple react select
+  const option =(datas,name)=>{
+    return datas.map((data) => ({
+      value: data.id,
+      label: data[name],
+    }));
+  };
   
+  // สไตล์ของ React-Select
+  const customStyles = () => {
+    return {
+        multiValue: (base) => ({
+            ...base,
+            backgroundColor: "#D0F2D0",
+            borderRadius: "4px",
+        }),
+        multiValueLabel: (base) => ({
+            ...base,
+            color: "#2E7D32",
+        }),
+        multiValueRemove: (base) => ({
+            ...base,
+            color: "#2E7D32",
+            ":hover": {
+                backgroundColor: "#2E7D32",
+                color: "#FFFFFF",
+            },
+        }),
+    };
+  };
 
 
-  export { InputField, TextareaField, SelectField, ImageUploader };
+  export { InputField, TextareaField, SelectField, ImageUploader , option , customStyles };
