@@ -1,25 +1,47 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
-src/Admin/TestAdmin.js
-# testing
+
+# Specific files (already in your .gitignore)
+/src/Admin/TestAdmin.js
+/hidden
+
+# Testing (เพิ่ม Playwright artifacts)
 /coverage
+/test-results/
+/playwright-report/
+/playwright/.cache/
 
-# production
+# Production
 /build
+/dist
 
-# misc
-.DS_Store
+# Environment Variables
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
-hidden
+# OS generated files
+.DS_Store
+*.swp
+
+# IDE config files
+.vscode/
+.idea/
+
+# Build artifacts for Tailwind or other tools
+/tailwind-output.css
+
+# Optional: Ignore specific files if needed
+# example-secrets.txt
