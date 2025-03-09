@@ -73,9 +73,9 @@ function Status() {
                 ) : (
                   <p>ไม่มีรูปสลิป</p>
                 )}
-                <p>{order.tour.tour_name}</p>
-                <p>{order.total_price}</p>
-                <p>{order.tour.destination}</p>
+                <p>ชื่อทัวร์ : {order.tour?.tour_name || "Example"}</p>
+                <p>ราคา : {order.total_price}</p>
+                <p>location : {order.tour?.destination || "Example"}</p>
                 <p>
                   ชื่อคนจอง : {order.users_permissions_user.first_name}{" "}
                   {order.users_permissions_user.last_name}
