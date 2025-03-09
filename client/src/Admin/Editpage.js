@@ -7,6 +7,7 @@ export default function TourCard() {
   const [tours, setTours] = useState([]);
   const [selectedTour, setSelectedTour] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const fetchTour = async () => {
     try {
@@ -16,6 +17,10 @@ export default function TourCard() {
         documentId: item.documentId,
         name: item.tour_name,
         status: item.tour_status,
+        category:
+          item.tour_categories
+            .map((category) => category.category_name)
+            .join(", ") || "ไม่มีหมวดหมู่",
         description: item.description,
         timerange: item.time_ranges,
         image: item.image?.map((img) => ({
@@ -29,8 +34,22 @@ export default function TourCard() {
     }
   };
 
+  const fetchCategory = async () => {
+    try {
+      const response = await ax.get("/tour-categories?populate=*");
+      const categories = response.data.data.map((category) => ({
+        id: category.documentId,
+        name: category.category_name,
+      }));
+      setCategories(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   useEffect(() => {
     fetchTour();
+    fetchCategory();
   }, []);
 
   const deleteTour = async (documentId, name) => {
@@ -44,8 +63,8 @@ export default function TourCard() {
       console.error("Error deleting tour:", error);
     }
   };
+
   const openEditModal = (tour) => {
-    console.log("Editing tour:", tour);
     setSelectedTour(tour);
     setIsModalOpen(true);
   };
@@ -80,7 +99,9 @@ export default function TourCard() {
                 <div className="flex justify-between items-start">
                   <h2 className="text-xl font-semibold mb-2">{tour.name}</h2>
                 </div>
-                <p className="text-gray-600 mb-2">{tour.description}</p>
+                <p className="text-gray-600 mb-2 line-clamp-1">
+                  {tour.description}
+                </p>
 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t">
                   <div className="flex flex-row gap-20"></div>
@@ -89,6 +110,10 @@ export default function TourCard() {
                     <p className="text-2xl font-bold text-blue-600">
                       {tour.price} ฿
                     </p>
+                  </div>
+                  <div className="mt-4">
+                    <p className="text-gray-600">Category</p>
+                    <p className="font-medium">{tour.category}</p>
                   </div>
                   <div className="mt-4">
                     <p className="text-gray-600">สถานะ</p>
@@ -118,6 +143,7 @@ export default function TourCard() {
           visible={isModalOpen}
           onClose={closeEditModal}
           onUpdate={fetchTour}
+          categories={categories}
         />
       )}
     </div>

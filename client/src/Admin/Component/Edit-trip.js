@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Modal, Input, Button, Select } from "antd";
 import ax from "../../conf/ax";
 
-export default function EditTour({ tour, visible, onClose, onUpdate }) {
+export default function EditTour({
+  tour,
+  visible,
+  onClose,
+  onUpdate,
+  categories,
+}) {
   const [formData, setFormData] = useState({ ...tour });
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     if (tour) {
       setFormData({
@@ -23,14 +28,21 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
   const handleStatusChange = (value) => {
     setFormData({ ...formData, status: value });
   };
+  const handleCategoryChange = (value) => {
+    setFormData({ ...formData, categories: value });
+  };
 
   const handleSave = async () => {
+    if (!formData.categories || formData.categories.length === 0) {
+      return;
+    }
     setLoading(true);
     const dataToSend = {
       tour_name: formData.name,
       description: formData.description,
       price: formData.price,
       tour_status: formData.status,
+      tour_categories: formData.categories ? formData.categories : [],
     };
     try {
       await ax.put(`/tours/${tour.documentId}`, {
@@ -89,6 +101,26 @@ export default function EditTour({ tour, visible, onClose, onUpdate }) {
         className="mt-2"
         placeholder="Price"
       />
+      <label className="block text-gray-700 mt-2">Category</label>
+      <Select
+        value={formData.categories}
+        onChange={handleCategoryChange}
+        mode="multiple"
+        className="w-full mt-2"
+        placeholder="Please select categories"
+      >
+        {categories.map((category) => (
+          <Select.Option key={category.id} value={category.id}>
+            {category.name}
+          </Select.Option>
+        ))}
+      </Select>
+      {!formData.categories || formData.categories.length === 0 ? (
+        <div style={{ color: "red", fontSize: "12px" }}>
+          โปรดเลือกอย่างน้อย 1 Category
+        </div>
+      ) : null}
+
       <label className="block text-gray-700 mt-2">Time Ranges</label>
       <div className="border p-2 rounded-md mt-2">
         {formData.timerange?.length > 0 ? (

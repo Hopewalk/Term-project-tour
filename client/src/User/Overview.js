@@ -208,7 +208,7 @@ export default function TripOverview() {
               </div>
             </div>
 
-            {/* Time ranges table */}
+            {/* Time ranges table - Moved below Description */}
             <div className="mt-12">
               <h3 className="text-xl font-semibold text-gray-900">
                 ช่วงเวลาเดินทาง
@@ -231,6 +231,7 @@ export default function TripOverview() {
             <p className="text-4xl font-bold text-gray-900 tracking-tight">
               {tour.price} ฿
             </p>
+
             <form className="mt-10">
               <button
                 type="button"
@@ -241,7 +242,6 @@ export default function TripOverview() {
               </button>
             </form>
           </div>
-
           <div className="mt-12 lg:col-span-3">
             <Review />
           </div>
