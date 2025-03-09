@@ -153,7 +153,9 @@ export default function Trip_statistic() {
             <div className="flex justify-between items-start">
               <h2 className="text-xl font-semibold mb-2">{tour.name}</h2>
             </div>
-            <p className="text-gray-600 mb-2">{tour.description}</p>
+            <p className="text-gray-600 mb-2 line-clamp-1">
+              {tour.description}
+            </p>
             <div className="mt-4 pt-4 border-t">
               {tour.timeRanges.map((range) => (
                 <div key={range.id} className="mb-4 p-4 border rounded-md">
